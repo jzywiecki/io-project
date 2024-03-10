@@ -5,8 +5,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class ServerApplication {
-
-    public static void main(String[] args) {
+    protected ServerApplication() {
+        // SpringBoot's default constructor
+    }
+    /**
+     * Main method.
+     * @param args
+     */
+    public static void main(final String[] args) {
         SpringApplication.run(ServerApplication.class, args);
     }
 
