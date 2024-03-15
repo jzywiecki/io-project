@@ -1,7 +1,13 @@
 package com.example.server.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +15,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Set;
-import java.util.prefs.Preferences;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,27 +22,54 @@ import java.util.prefs.Preferences;
 @Getter
 @Entity
 public class Users {
+    /**
+     *  User id.
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+    /**
+     *  User first name.
+     */
     private String firstName;
 
+    /**
+     *  User last name.
+     */
     private String lastName;
 
-    // TODO: AGH email verification
+    /**
+     *  User email in AGH domain.
+     */
     private String email;
 
+    /**
+     *  User password.
+     */
     private String password;
 
+    /**
+     *  User role.
+     */
     private Role role;
 
+    /**
+     *  User active status.
+     */
     private boolean active;
 
-    @ManyToMany(mappedBy = "joinedUsers", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
+    /**
+     *  User rooms.
+     */
+    @ManyToMany(mappedBy = "joinedUsers", fetch = FetchType.LAZY,
+            cascade = { CascadeType.PERSIST})
     @JsonBackReference
     private Set<Room> joinedRooms;
 
+    /**
+     *  User votes.
+     */
     @OneToMany(mappedBy = "user")
     private List<Vote> votes;
 }

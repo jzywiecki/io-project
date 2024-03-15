@@ -10,16 +10,25 @@ import javax.sql.DataSource;
 
 @Configuration
 public class Configurator {
+    /**
+     *  Environment variable.
+     */
     private final Environment env;
-
+    /**
+     *  Constructor.
+     * @param environment environment.
+     */
     @Autowired
-    public Configurator(Environment env) {
-        this.env = env;
+    public Configurator(final Environment environment) {
+        this.env = environment;
     }
-
+    /**
+     *  Data source.
+     * @return data source.
+     */
     @Bean
     public DataSource dataSource() {
-        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.sqlite.JDBC");
         dataSource.setUrl("jdbc:sqlite:./enroll.sqlite");
         dataSource.setUsername("admin");
