@@ -8,7 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -24,7 +26,7 @@ public class Room {
 
     private String name;
     private String description;
-    private LocalTime deadline;
+    private LocalDateTime deadline;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
     @JoinTable(
@@ -35,9 +37,15 @@ public class Room {
     @JsonManagedReference
     private Set<Users> joinedUsers;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
-    private List<Term> terms;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
+    @JoinTable(
+            name = "room_terms",
+            joinColumns = @JoinColumn(name = "room_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "term_id", referencedColumnName = "id")
+    )
+    @JsonManagedReference
+    private Set<Term> terms;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
     private List<Vote> votes;
 }

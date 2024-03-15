@@ -18,8 +18,8 @@ public class Vote {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
-    List<Term> terms;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
+    private Term term;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
     private Users user;

@@ -1,11 +1,13 @@
 package com.example.server.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @AllArgsConstructor
@@ -20,6 +22,10 @@ public class Term {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
-    private Room room;
+    @ManyToMany(mappedBy = "terms", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
+    @JsonBackReference
+    private Set<Room> rooms;
+
+    @OneToMany(mappedBy = "term", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
+    private List<Vote> votes;
 }
