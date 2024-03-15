@@ -1,12 +1,11 @@
 package com.example.server.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -16,9 +15,11 @@ import java.time.LocalTime;
 public class Term {
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
     private DayOfWeek day;
     private LocalTime startTime;
     private LocalTime endTime;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
+    private Room room;
 }
