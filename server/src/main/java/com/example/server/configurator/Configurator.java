@@ -1,12 +1,21 @@
 package com.example.server.configurator;
 
+import com.example.server.model.Role;
+import com.example.server.model.Room;
+import com.example.server.model.Term;
+import com.example.server.model.User;
+import com.example.server.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Configuration
 public class Configurator {
@@ -34,5 +43,91 @@ public class Configurator {
         dataSource.setUsername("admin");
         dataSource.setPassword("admin");
         return dataSource;
+    }
+
+    /**
+     * Generating example data to database.
+     * @param resultRepository result repository.
+     * @param roomRepository room repository.
+     * @param termRepository term repository.
+     * @param userRepository user repository.
+     * @param voteRepository vote repository.
+     * @return command line runner.
+     *
+     */
+    @Bean
+    CommandLineRunner commandLineRunner(ResultRepository resultRepository,
+                                        RoomRepository roomRepository,
+                                        TermRepository termRepository,
+                                        UserRepository userRepository,
+                                        VoteRepository voteRepository
+    ) {
+        return args -> {
+            if (userRepository.count() == 0) {
+                User exampleStudent1 = User.builder()
+                        .firstName("Jan")
+                        .lastName("Kowalski")
+                        .email("jankowalski@student.agh.edu.pl")
+                        .password("password")
+                        .role(Role.STUDENT)
+                        .active(true)
+                        .build();
+
+                User exampleStudent2 = User.builder()
+                        .firstName("Anna")
+                        .lastName("Kowalska")
+                        .email("annakowalska@student.agh.edu.pl")
+                        .password("password")
+                        .role(Role.STUDENT)
+                        .active(true)
+                        .build();
+
+                User exampleTeacher = User.builder()
+                        .firstName("Piotr")
+                        .lastName("Nowak")
+                        .email("piotrnowak@agh.edu.pl")
+                        .password("password")
+                        .role(Role.TEACHER)
+                        .active(true)
+                        .build();
+
+                //save example users
+                userRepository.save(exampleStudent1);
+                userRepository.save(exampleStudent2);
+                userRepository.save(exampleTeacher);
+
+                Room exampleRoom = Room.builder()
+                        .deadline(LocalDateTime.of(2024, 3, 16, 12, 30))
+                        .description("Example room description")
+                        .name("Example room")
+                        .build();
+
+                //save example room
+                roomRepository.save(exampleRoom);
+
+                Term exampleTerm1 = Term.builder()
+                        .day(DayOfWeek.MONDAY)
+                        .startTime(LocalTime.of(12, 0))
+                        .endTime(LocalTime.of(13, 30))
+                        .build();
+
+                Term exampleTerm2 = Term.builder()
+                        .day(DayOfWeek.WEDNESDAY)
+                        .startTime(LocalTime.of(15, 0))
+                        .endTime(LocalTime.of(16, 30))
+                        .build();
+
+                Term exampleTerm3 = Term.builder()
+                        .day(DayOfWeek.WEDNESDAY)
+                        .startTime(LocalTime.of(17, 0))
+                        .endTime(LocalTime.of(18, 30))
+                        .build();
+
+                //save terms
+                termRepository.save(exampleTerm1);
+                termRepository.save(exampleTerm2);
+                termRepository.save(exampleTerm3);
+            }
+        };
     }
 }
