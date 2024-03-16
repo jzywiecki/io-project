@@ -56,4 +56,10 @@ public class Term {
     @OneToMany(mappedBy = "term", fetch = FetchType.LAZY,
             cascade = { CascadeType.PERSIST})
     private List<Vote> votes;
+    /**
+     * Represents the term that was selected in the algorithm.
+     */
+    @OneToMany(mappedBy = "term", fetch = FetchType.LAZY,
+            cascade = { CascadeType.PERSIST})
+    private List<Result> results;
 }

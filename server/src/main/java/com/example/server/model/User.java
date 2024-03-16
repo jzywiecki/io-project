@@ -21,7 +21,7 @@ import java.util.Set;
 @Builder
 @Getter
 @Entity
-public class Users {
+public class User {
     /**
      *  User id.
      */
@@ -72,4 +72,10 @@ public class Users {
      */
     @OneToMany(mappedBy = "user")
     private List<Vote> votes;
+
+    /**
+     *  Represents the terms assigned to the user by the algorithm.
+     */
+    @OneToMany(mappedBy = "user")
+    private List<Result> results;
 }
