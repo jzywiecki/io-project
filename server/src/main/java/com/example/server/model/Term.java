@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
+import java.sql.Time;
 import java.time.DayOfWeek;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
@@ -38,11 +38,11 @@ public class Term {
     /**
      * Term start time.
      */
-    private LocalTime startTime;
+    private Time startTime;
     /**
      * Term end time.
      */
-    private LocalTime endTime;
+    private Time endTime;
     /**
      * Term room.
      */

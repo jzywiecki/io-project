@@ -13,6 +13,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
+import java.sql.Time;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -97,7 +98,8 @@ public class Configurator {
                 userRepository.save(exampleTeacher);
 
                 Room exampleRoom = Room.builder()
-                        .deadline(LocalDateTime.of(2024, 3, 16, 12, 30))
+                        .deadLineTime(Time.valueOf(LocalTime.of(13, 30)))
+                        .deadlineDate(java.sql.Date.valueOf(LocalDateTime.now().toLocalDate()))
                         .description("Example room description")
                         .name("Example room")
                         .build();
@@ -107,20 +109,20 @@ public class Configurator {
 
                 Term exampleTerm1 = Term.builder()
                         .day(DayOfWeek.MONDAY)
-                        .startTime(LocalTime.of(12, 0))
-                        .endTime(LocalTime.of(13, 30))
+                        .startTime(Time.valueOf(LocalTime.of(13, 30)))
+                        .endTime(Time.valueOf(LocalTime.of(13, 30)))
                         .build();
 
                 Term exampleTerm2 = Term.builder()
                         .day(DayOfWeek.WEDNESDAY)
-                        .startTime(LocalTime.of(15, 0))
-                        .endTime(LocalTime.of(16, 30))
+                        .startTime(Time.valueOf(LocalTime.of(13, 30)))
+                        .endTime(Time.valueOf(LocalTime.of(13, 30)))
                         .build();
 
                 Term exampleTerm3 = Term.builder()
                         .day(DayOfWeek.WEDNESDAY)
-                        .startTime(LocalTime.of(17, 0))
-                        .endTime(LocalTime.of(18, 30))
+                        .startTime(Time.valueOf(LocalTime.of(13, 30)))
+                        .endTime(Time.valueOf(LocalTime.of(13, 30)))
                         .build();
 
                 //save terms
