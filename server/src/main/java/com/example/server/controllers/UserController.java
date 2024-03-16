@@ -10,11 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequestMapping("/api/user")
 public class UserController {
-
+    /**
+     * User service.
+     */
     private final UserService userService;
-
+    /**
+     * Constructor.
+     * @param userServiceInput user service.
+     */
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(final UserService userServiceInput) {
+        this.userService = userServiceInput;
     }
 }

@@ -10,11 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequestMapping("/api/term")
 public class TermController {
-
+    /**
+     * Term service.
+     */
     private final TermService termService;
-
+    /**
+     * Constructor.
+     * @param termServiceInput term service.
+     */
     @Autowired
-    public TermController(TermService termService) {
-        this.termService = termService;
+    public TermController(final TermService termServiceInput) {
+        this.termService = termServiceInput;
     }
 }

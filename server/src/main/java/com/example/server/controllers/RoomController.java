@@ -10,11 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequestMapping("/api/room")
 public class RoomController {
+    /**
+     * Room service.
+     */
     private final RoomService roomService;
-
+    /**
+     * Constructor.
+     * @param roomServiceInput room service.
+     */
     @Autowired
-    public RoomController(RoomService roomService) {
-        this.roomService = roomService;
+    public RoomController(final RoomService roomServiceInput) {
+        this.roomService = roomServiceInput;
     }
 
 }

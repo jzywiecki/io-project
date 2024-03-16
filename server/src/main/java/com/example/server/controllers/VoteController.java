@@ -10,12 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequestMapping("/api/vote")
 public class VoteController {
-
+    /**
+     * Vote service.
+     */
     private final VoteService voteService;
-
+    /**
+     * Constructor.
+     * @param voteServiceInput vote service.
+     */
     @Autowired
-    public VoteController(VoteService voteService) {
-        this.voteService = voteService;
+    public VoteController(final VoteService voteServiceInput) {
+        this.voteService = voteServiceInput;
     }
 
 }
