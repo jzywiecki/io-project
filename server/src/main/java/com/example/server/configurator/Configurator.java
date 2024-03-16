@@ -4,7 +4,11 @@ import com.example.server.model.Role;
 import com.example.server.model.Room;
 import com.example.server.model.Term;
 import com.example.server.model.User;
-import com.example.server.repositories.*;
+import com.example.server.repositories.ResultRepository;
+import com.example.server.repositories.RoomRepository;
+import com.example.server.repositories.TermRepository;
+import com.example.server.repositories.UserRepository;
+import com.example.server.repositories.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -57,14 +61,16 @@ public class Configurator {
      *
      */
     @Bean
-    CommandLineRunner commandLineRunner(ResultRepository resultRepository,
-                                        RoomRepository roomRepository,
-                                        TermRepository termRepository,
-                                        UserRepository userRepository,
-                                        VoteRepository voteRepository
+    CommandLineRunner commandLineRunner(final ResultRepository resultRepository,
+                                        final RoomRepository roomRepository,
+                                        final TermRepository termRepository,
+                                        final UserRepository userRepository,
+                                        final VoteRepository voteRepository
     ) {
         return args -> {
             if (userRepository.count() == 0) {
+                final int exampleHour = 13;
+                final int exampleMinute = 30;
                 User exampleStudent1 = User.builder()
                         .firstName("Jan")
                         .lastName("Kowalski")
@@ -98,31 +104,38 @@ public class Configurator {
                 userRepository.save(exampleTeacher);
 
                 Room exampleRoom = Room.builder()
-                        .deadLineTime(Time.valueOf(LocalTime.of(13, 30)))
-                        .deadlineDate(java.sql.Date.valueOf(LocalDateTime.now().toLocalDate()))
+                        .deadLineTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
+                        .deadlineDate(java.sql.Date.valueOf(
+                                LocalDateTime.now().toLocalDate()))
                         .description("Example room description")
                         .name("Example room")
                         .build();
 
                 //save example room
                 roomRepository.save(exampleRoom);
-
                 Term exampleTerm1 = Term.builder()
                         .day(DayOfWeek.MONDAY)
-                        .startTime(Time.valueOf(LocalTime.of(13, 30)))
-                        .endTime(Time.valueOf(LocalTime.of(13, 30)))
+                        .startTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
+                        .endTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
                         .build();
 
                 Term exampleTerm2 = Term.builder()
                         .day(DayOfWeek.WEDNESDAY)
-                        .startTime(Time.valueOf(LocalTime.of(13, 30)))
-                        .endTime(Time.valueOf(LocalTime.of(13, 30)))
+                        .startTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
+                        .endTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
                         .build();
 
                 Term exampleTerm3 = Term.builder()
                         .day(DayOfWeek.WEDNESDAY)
-                        .startTime(Time.valueOf(LocalTime.of(13, 30)))
-                        .endTime(Time.valueOf(LocalTime.of(13, 30)))
+                        .startTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
+                        .endTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
                         .build();
 
                 //save terms
