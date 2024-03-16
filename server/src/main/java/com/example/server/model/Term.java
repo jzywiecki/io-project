@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
+import java.sql.Time;
 import java.time.DayOfWeek;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
@@ -38,11 +38,11 @@ public class Term {
     /**
      * Term start time.
      */
-    private LocalTime startTime;
+    private Time startTime;
     /**
      * Term end time.
      */
-    private LocalTime endTime;
+    private Time endTime;
     /**
      * Term room.
      */
@@ -56,4 +56,10 @@ public class Term {
     @OneToMany(mappedBy = "term", fetch = FetchType.LAZY,
             cascade = { CascadeType.PERSIST})
     private List<Vote> votes;
+    /**
+     * Represents the term that was selected in the algorithm.
+     */
+    @OneToMany(mappedBy = "term", fetch = FetchType.LAZY,
+            cascade = { CascadeType.PERSIST})
+    private List<Result> results;
 }

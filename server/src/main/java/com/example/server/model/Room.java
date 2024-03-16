@@ -18,7 +18,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 import java.util.Set;
 
@@ -43,28 +45,32 @@ public class Room {
      */
     private String description;
     /**
-     *  Room deadline.
+     *  Room deadline date.
      */
-    private LocalDateTime deadline;
+    private Date deadlineDate;
+    /**
+     *  Room deadline time.
+     */
+    private Time deadLineTime;
     /**
      *  Room owner.
      */
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
     @JoinTable(
-            name = "room_users",
+            name = "room_user",
             joinColumns = @JoinColumn(name = "room_id",
                     referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "users_id",
+            inverseJoinColumns = @JoinColumn(name = "user_id",
                     referencedColumnName = "id")
     )
     @JsonManagedReference
-    private Set<Users> joinedUsers;
+    private Set<User> joinedUsers;
     /**
      *  Room terms.
      */
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
     @JoinTable(
-            name = "room_terms",
+            name = "room_term",
             joinColumns = @JoinColumn(name = "room_id",
                     referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "term_id",
@@ -78,4 +84,11 @@ public class Room {
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY,
             cascade = { CascadeType.PERSIST})
     private List<Vote> votes;
+
+    /**
+     *  Represents the results of the algorithm for the room after stop voting.
+     */
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY,
+            cascade = { CascadeType.PERSIST})
+    private List<Result> results;
 }
