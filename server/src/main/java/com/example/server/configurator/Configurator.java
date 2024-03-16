@@ -131,7 +131,7 @@ public class Configurator {
                         .build();
 
                 Term exampleTerm3 = Term.builder()
-                        .day(DayOfWeek.WEDNESDAY)
+                        .day(DayOfWeek.FRIDAY)
                         .startTime(Time.valueOf(
                                 LocalTime.of(exampleHour, exampleMinute)))
                         .endTime(Time.valueOf(
