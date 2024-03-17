@@ -104,7 +104,7 @@ public class Configurator {
                 userRepository.save(exampleTeacher);
 
                 Room exampleRoom = Room.builder()
-                        .deadLineTime(Time.valueOf(
+                        .deadlineTime(Time.valueOf(
                                 LocalTime.of(exampleHour, exampleMinute)))
                         .deadlineDate(java.sql.Date.valueOf(
                                 LocalDateTime.now().toLocalDate()))

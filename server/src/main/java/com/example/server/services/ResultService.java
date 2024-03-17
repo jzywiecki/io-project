@@ -110,7 +110,7 @@ public class ResultService {
                                   .toLocalDate()
                                   .isEqual(LocalDateTime.now().toLocalDate());
             if (isToday) {
-                boolean isAfterNow = room.getDeadLineTime()
+                boolean isAfterNow = room.getDeadlineTime()
                                          .toLocalTime()
                                          .isAfter(LocalDateTime.now()
                                                         .toLocalTime());
