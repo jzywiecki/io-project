@@ -1,7 +1,11 @@
 import axios from "axios"
 
-const url=""
+const url="http://localhost:8080/api/room/"
 
 export const addRoom=(room)=>{
-    
+    return axios.post(url, room)
+}
+
+export const setTermsInRoom=(terms,roomId)=>{
+    return axios.put(url+`${roomId}/terms`, terms)
 }

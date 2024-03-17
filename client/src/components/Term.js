@@ -26,7 +26,7 @@ const Term = ({
     }
 
     const duration = 6;
-    const column = term.day+2;
+    const column = term.day+3;
 
     const [color, setColor] = useState('bg-white');
 
@@ -48,7 +48,7 @@ const Term = ({
                 <Card
                     className={`${color} flex h-full w-full flex-col items-center justify-center rounded font-medium z-2`}
                 >
-                    <CardDescription className={`flex justify-between`}>
+                    <CardDescription className={`flex justify-between cursor-default`}>
                         <span className="">{startHour}:{startMinute==0?"00":startMinute}</span>
                         <span className="text-md">-</span>
                         <span className="">{endHour}:{endMinute==0?"00":endMinute}</span>

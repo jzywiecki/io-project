@@ -35,7 +35,7 @@ public class RoomController {
         this.roomService = roomServiceInput;
     }
 
-    @PostMapping("")
+    @PostMapping("/")
     public ResponseEntity<Room> createRoom(@RequestBody RoomDto roomDto) {
         Room room = Room.builder()
                 .name(roomDto.name())

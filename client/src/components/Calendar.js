@@ -9,7 +9,7 @@ const Calendar=({terms,setPickedTerms})=>{
     const maxHour = 20
     
     return (
-        <div className="relative h-[60vh] overflow-x-hidden overflow-y-scroll">
+        <div className="relative h-[60vh] overflow-x-hidden overflow-y-scroll p-2">
             <div
                 className="scrollbar sticky left-0 top-0 z-[3] grid w-full bg-white dark:bg-neutral-950"
                 style={{
