@@ -1,10 +1,10 @@
 package com.example.server.controllers;
 
 import com.example.server.dto.RoomDto;
+import com.example.server.dto.TermDto;
 import com.example.server.exceptions.RoomNotFoundException;
 import com.example.server.model.Room;
 import com.example.server.model.Term;
-import com.example.server.dto.TermDto;
 import com.example.server.services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000/")
 @RequestMapping("/api/room")
 public class RoomController {
     /**
@@ -40,7 +40,7 @@ public class RoomController {
         Room room = Room.builder()
                 .name(roomDto.name())
                 .description(roomDto.description())
-                .deadlineDate(roomDto.deadlinedate())
+                .deadlineDate(roomDto.deadlineDate())
                 .deadlineTime(roomDto.deadlineTime())
                 .build();
         Room savedRoom = roomService.saveRoom(room);

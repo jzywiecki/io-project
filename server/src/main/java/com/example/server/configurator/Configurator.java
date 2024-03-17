@@ -4,11 +4,7 @@ import com.example.server.model.Role;
 import com.example.server.model.Room;
 import com.example.server.model.Term;
 import com.example.server.model.User;
-import com.example.server.repositories.ResultRepository;
-import com.example.server.repositories.RoomRepository;
-import com.example.server.repositories.TermRepository;
-import com.example.server.repositories.UserRepository;
-import com.example.server.repositories.VoteRepository;
+import com.example.server.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +13,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
-import java.sql.Time;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -104,8 +99,8 @@ public class Configurator {
                 userRepository.save(exampleTeacher);
 
                 Room exampleRoom = Room.builder()
-                        .deadlineTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
+                        .deadlineTime(
+                                LocalTime.of(exampleHour, exampleMinute))
                         .deadlineDate(java.sql.Date.valueOf(
                                 LocalDateTime.now().toLocalDate()))
                         .description("Example room description")
@@ -116,26 +111,20 @@ public class Configurator {
                 roomRepository.save(exampleRoom);
                 Term exampleTerm1 = Term.builder()
                         .day(DayOfWeek.MONDAY)
-                        .startTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
-                        .endTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
+                        .startTime(LocalTime.of(exampleHour, exampleMinute))
+                        .endTime(LocalTime.of(exampleHour, exampleMinute))
                         .build();
 
                 Term exampleTerm2 = Term.builder()
                         .day(DayOfWeek.WEDNESDAY)
-                        .startTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
-                        .endTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
+                        .startTime(LocalTime.of(exampleHour, exampleMinute))
+                        .endTime(LocalTime.of(exampleHour, exampleMinute))
                         .build();
 
                 Term exampleTerm3 = Term.builder()
                         .day(DayOfWeek.FRIDAY)
-                        .startTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
-                        .endTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
+                        .startTime(LocalTime.of(exampleHour, exampleMinute))
+                        .endTime(LocalTime.of(exampleHour, exampleMinute))
                         .build();
 
                 //save terms

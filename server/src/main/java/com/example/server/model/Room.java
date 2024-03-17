@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
@@ -51,7 +52,7 @@ public class Room {
     /**
      *  Room deadline time.
      */
-    private Time deadlineTime;
+    private LocalTime deadlineTime;
     /**
      *  Room owner.
      */
