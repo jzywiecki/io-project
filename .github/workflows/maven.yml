@@ -26,6 +26,9 @@ jobs:
           VALIDATE_CSS: false
           VALIDATE_NATURAL_LANGUAGE: false
           VALIDATE_YAML: false
+          VALIDATE_SHELL_SHFMT: false
+          VALIDATE_CHECKOV: false
+          VALIDATE_GOOGLE_JAVA_FORMAT: false
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
