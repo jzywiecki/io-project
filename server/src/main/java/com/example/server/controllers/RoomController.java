@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -54,6 +55,7 @@ public class RoomController {
                         .day(termDto.day())
                         .startTime(termDto.startTime())
                         .endTime(termDto.endTime())
+                        .rooms(new HashSet<>())
                         .build()
                 ).collect(Collectors.toSet());
 

@@ -2,25 +2,13 @@ package com.example.server.model;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.GenerationType;
-
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
@@ -71,7 +59,7 @@ public class Room {
      */
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
     @JoinTable(
-            name = "room_term",
+            name = "room_terms",
             joinColumns = @JoinColumn(name = "room_id",
                     referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "term_id",
