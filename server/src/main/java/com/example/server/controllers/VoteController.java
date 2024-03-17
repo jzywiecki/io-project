@@ -1,10 +1,10 @@
 package com.example.server.controllers;
 
+import com.example.server.dto.VoteDto;
 import com.example.server.services.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
@@ -23,4 +23,9 @@ public class VoteController {
         this.voteService = voteServiceInput;
     }
 
+    @PostMapping("/add-vote")
+    public ResponseEntity<?> addVote(@RequestBody VoteDto voteDto) {
+        voteService.addNewVote(voteDto);
+        return ResponseEntity.ok("Vote added successfully");
+    }
 }
