@@ -51,7 +51,7 @@ public class Room {
     /**
      *  Room deadline time.
      */
-    private Time deadLineTime;
+    private Time deadlineTime;
     /**
      *  Room owner.
      */
@@ -91,4 +91,8 @@ public class Room {
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY,
             cascade = { CascadeType.PERSIST})
     private List<Result> results;
+
+    public void setTerms(Set<Term> terms) {
+        this.terms = terms;
+    }
 }
