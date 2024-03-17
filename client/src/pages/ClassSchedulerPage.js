@@ -1,6 +1,9 @@
 import Calendar from "../components/Calendar";
 import { useState } from "react";
+import { Button } from "../ui/button";
+import RoomForm from "../components/RoomForm";
 const ClassSchedulerPage=()=>{
+    const [isForm,setIsForm] = useState(true)
     let terms = Array.from({ length: 5 }, (_, i) => {
         const dayTerms = [];
         let startTime = new Date();
@@ -23,9 +26,10 @@ const ClassSchedulerPage=()=>{
     terms = terms.flat(1)
     console.log(terms)
     const [pickedTerms,setPickedTerms] = useState([])
-    return(<div className="ClassSchedulerPage">
-        <Calendar terms={terms} setPickedTerms={setPickedTerms}/>
-        <button className="mt-5 ml-5 p-2 bg-cyan-500 rounded-md text-white" onClick={()=>{console.log(pickedTerms)}}>Submit</button>
+    return(<div className="ClassSchedulerPage flex item-center flex-col">
+        {isForm&&<RoomForm/>}
+        {!isForm&&<Calendar terms={terms} setPickedTerms={setPickedTerms}/>}
+        {!isForm&&<Button className="mt-5 w-1/2 self-center" onClick={()=>{console.log(pickedTerms)}}>Submit</Button>}
     </div>)
 }
 
