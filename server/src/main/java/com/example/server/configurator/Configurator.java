@@ -1,12 +1,26 @@
 package com.example.server.configurator;
 
+import com.example.server.model.Role;
+import com.example.server.model.Room;
+import com.example.server.model.Term;
+import com.example.server.model.User;
+import com.example.server.repositories.ResultRepository;
+import com.example.server.repositories.RoomRepository;
+import com.example.server.repositories.TermRepository;
+import com.example.server.repositories.UserRepository;
+import com.example.server.repositories.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
+import java.sql.Time;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Configuration
 public class Configurator {
@@ -34,5 +48,101 @@ public class Configurator {
         dataSource.setUsername("admin");
         dataSource.setPassword("admin");
         return dataSource;
+    }
+
+    /**
+     * Generating example data to database.
+     * @param resultRepository result repository.
+     * @param roomRepository room repository.
+     * @param termRepository term repository.
+     * @param userRepository user repository.
+     * @param voteRepository vote repository.
+     * @return command line runner.
+     *
+     */
+    @Bean
+    CommandLineRunner commandLineRunner(final ResultRepository resultRepository,
+                                        final RoomRepository roomRepository,
+                                        final TermRepository termRepository,
+                                        final UserRepository userRepository,
+                                        final VoteRepository voteRepository
+    ) {
+        return args -> {
+            if (userRepository.count() == 0) {
+                final int exampleHour = 13;
+                final int exampleMinute = 30;
+                User exampleStudent1 = User.builder()
+                        .firstName("Jan")
+                        .lastName("Kowalski")
+                        .email("jankowalski@student.agh.edu.pl")
+                        .password("password")
+                        .role(Role.STUDENT)
+                        .active(true)
+                        .build();
+
+                User exampleStudent2 = User.builder()
+                        .firstName("Anna")
+                        .lastName("Kowalska")
+                        .email("annakowalska@student.agh.edu.pl")
+                        .password("password")
+                        .role(Role.STUDENT)
+                        .active(true)
+                        .build();
+
+                User exampleTeacher = User.builder()
+                        .firstName("Piotr")
+                        .lastName("Nowak")
+                        .email("piotrnowak@agh.edu.pl")
+                        .password("password")
+                        .role(Role.TEACHER)
+                        .active(true)
+                        .build();
+
+                //save example users
+                userRepository.save(exampleStudent1);
+                userRepository.save(exampleStudent2);
+                userRepository.save(exampleTeacher);
+
+                Room exampleRoom = Room.builder()
+                        .deadLineTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
+                        .deadlineDate(java.sql.Date.valueOf(
+                                LocalDateTime.now().toLocalDate()))
+                        .description("Example room description")
+                        .name("Example room")
+                        .build();
+
+                //save example room
+                roomRepository.save(exampleRoom);
+                Term exampleTerm1 = Term.builder()
+                        .day(DayOfWeek.MONDAY)
+                        .startTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
+                        .endTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
+                        .build();
+
+                Term exampleTerm2 = Term.builder()
+                        .day(DayOfWeek.WEDNESDAY)
+                        .startTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
+                        .endTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
+                        .build();
+
+                Term exampleTerm3 = Term.builder()
+                        .day(DayOfWeek.FRIDAY)
+                        .startTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
+                        .endTime(Time.valueOf(
+                                LocalTime.of(exampleHour, exampleMinute)))
+                        .build();
+
+                //save terms
+                termRepository.save(exampleTerm1);
+                termRepository.save(exampleTerm2);
+                termRepository.save(exampleTerm3);
+            }
+        };
     }
 }
