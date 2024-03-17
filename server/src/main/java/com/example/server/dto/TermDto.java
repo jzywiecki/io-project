@@ -1,7 +1,7 @@
 package com.example.server.dto;
 
-import java.sql.Time;
 import java.time.DayOfWeek;
+import java.time.LocalTime;
 
-public record TermDto(DayOfWeek day, Time startTime, Time endTime) {
+public record TermDto(DayOfWeek day, LocalTime startTime, LocalTime endTime) {
 }

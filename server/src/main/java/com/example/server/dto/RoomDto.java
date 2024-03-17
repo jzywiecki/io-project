@@ -1,7 +1,7 @@
 package com.example.server.dto;
 
 import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalTime;
 
-public record RoomDto(String name, String description, Date deadlinedate, Time deadlineTime) {
+public record RoomDto(String name, String description, Date deadlineDate, LocalTime deadlineTime) {
 }

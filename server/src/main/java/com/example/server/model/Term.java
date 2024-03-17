@@ -1,21 +1,14 @@
 package com.example.server.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
-
-import java.sql.Time;
 import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
@@ -38,11 +31,11 @@ public class Term {
     /**
      * Term start time.
      */
-    private Time startTime;
+    private LocalTime startTime;
     /**
      * Term end time.
      */
-    private Time endTime;
+    private LocalTime endTime;
     /**
      * Term room.
      */
