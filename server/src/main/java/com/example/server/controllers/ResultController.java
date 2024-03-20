@@ -3,7 +3,7 @@ package com.example.server.controllers;
 import com.example.server.dto.ResultsDto;
 import com.example.server.dto.UserResultsDto;
 import com.example.server.services.ResultService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,20 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 @CrossOrigin
 @RequestMapping("/api/result")
+@AllArgsConstructor
 public class ResultController {
     /**
      * Result service.
      */
     private final ResultService resultService;
-    /**
-     * Constructor.
-     * @param resultServiceInput room service.
-     *
-     */
-    @Autowired
-    public ResultController(final ResultService resultServiceInput) {
-        this.resultService = resultServiceInput;
-    }
 
     /**
      * Get the results of all users in a room.
