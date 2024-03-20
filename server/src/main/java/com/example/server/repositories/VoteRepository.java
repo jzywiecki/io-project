@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VoteRepository extends JpaRepository<Vote, Long> {
+    void deleteAllByUserIdAndRoomId(Long userId, Long roomId);
 }

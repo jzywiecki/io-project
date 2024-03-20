@@ -1,6 +1,6 @@
 package com.example.server.controllers;
 
-import com.example.server.dto.VoteDto;
+import com.example.server.dto.VotesDto;
 import com.example.server.services.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +28,11 @@ public class VoteController {
     }
     /**
      * Add a vote.
-     * @param voteDto the vote dto.
      * @return the response entity.
      */
-    @PostMapping("/add-vote")
-    public ResponseEntity<?> addVote(final @RequestBody VoteDto voteDto) {
-        voteService.addNewVote(voteDto);
-        return ResponseEntity.ok("Vote added successfully");
+    @PostMapping("/vote")
+    public ResponseEntity<?> addVote(final @RequestBody VotesDto votesDto) {
+        voteService.vote(votesDto);
+        return ResponseEntity.ok("Votes added successfully");
     }
 }
