@@ -13,7 +13,6 @@ import com.example.server.repositories.TermRepository;
 import com.example.server.repositories.UserRepository;
 import com.example.server.repositories.VoteRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
