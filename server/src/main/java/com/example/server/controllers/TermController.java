@@ -1,10 +1,13 @@
 package com.example.server.controllers;
 
+import com.example.server.dto.RoomDto;
+import com.example.server.dto.TermDto;
 import com.example.server.services.TermService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -21,5 +24,11 @@ public class TermController {
     @Autowired
     public TermController(final TermService termServiceInput) {
         this.termService = termServiceInput;
+    }
+
+    @GetMapping("/get-terms-by-roomid/{roomId}")
+    public ResponseEntity<List<TermDto>> getTermsByRoomId(@PathVariable Long roomId) {
+        List<TermDto> rooms = termService.getTermsByRoomId(roomId);
+        return ResponseEntity.ok(rooms);
     }
 }

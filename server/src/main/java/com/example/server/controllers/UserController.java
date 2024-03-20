@@ -29,6 +29,6 @@ public class UserController {
     @GetMapping("/get-user-rooms/{userId}")
     public ResponseEntity<List<RoomDto>> getUserRooms(@PathVariable Long userId) {
         List<RoomDto> userRooms = userService.getUserRooms(userId);
-        return new ResponseEntity<>(userRooms, HttpStatus.OK);
+        return ResponseEntity.ok(userRooms);
     }
 }
