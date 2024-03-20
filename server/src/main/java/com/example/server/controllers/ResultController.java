@@ -22,6 +22,7 @@ public class ResultController {
     /**
      * Constructor.
      * @param resultServiceInput room service.
+     *
      */
     @Autowired
     public ResultController(final ResultService resultServiceInput) {
@@ -33,6 +34,7 @@ public class ResultController {
      * @param roomId the room id.
      * @return the results of all users in a room.
      */
+    @CrossOrigin
     @GetMapping("/get-results/{roomId}")
     public ResponseEntity<ResultsDto> getResults(
             final @PathVariable int roomId) {
@@ -45,10 +47,11 @@ public class ResultController {
      * @param userId the user id.
      * @return the results of a user in a room.
      */
+    @CrossOrigin
     @GetMapping("/get-results/{roomId}/{userId}")
     public ResponseEntity<UserResultsDto> getResultsByUser(
-            final @PathVariable int roomId,
-            final @PathVariable int userId) {
+           final @PathVariable int roomId,
+           final @PathVariable int userId) {
         return ResponseEntity.ok(resultService.getUserResults(roomId, userId));
     }
 
