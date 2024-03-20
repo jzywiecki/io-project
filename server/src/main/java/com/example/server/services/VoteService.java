@@ -12,10 +12,12 @@ import com.example.server.repositories.RoomRepository;
 import com.example.server.repositories.TermRepository;
 import com.example.server.repositories.UserRepository;
 import com.example.server.repositories.VoteRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class VoteService {
     /**
      * User repository.
@@ -33,23 +35,7 @@ public class VoteService {
      * Vote repository.
      */
     private final VoteRepository voteRepository;
-    /**
-     * Constructor.
-     * @param userRepositoryInput user repository.
-     * @param termRepositoryInput term repository.
-     * @param roomRepositoryInput room repository.
-     * @param voteRepositoryInput vote repository.
-     */
-    @Autowired
-    public VoteService(final UserRepository userRepositoryInput,
-                       final TermRepository termRepositoryInput,
-                       final RoomRepository roomRepositoryInput,
-                       final VoteRepository voteRepositoryInput) {
-        this.userRepository = userRepositoryInput;
-        this.termRepository = termRepositoryInput;
-        this.roomRepository = roomRepositoryInput;
-        this.voteRepository = voteRepositoryInput;
-    }
+
     /**
      * Add a new vote.
      * @param voteDto the vote dto.
