@@ -29,7 +29,7 @@ public class UserService {
                                 + userId
                                 + " not found.")
                 );
-        List<Room> userRooms = userRepository.getUserRooms(userId);
+        List<Room> userRooms = userRepository.getJoinedRooms(userId);
 
         return userRooms.stream()
                 .map((room) -> new RoomDto (
