@@ -4,6 +4,7 @@ import com.example.server.model.Role;
 import com.example.server.model.Room;
 import com.example.server.model.Term;
 import com.example.server.model.User;
+import com.example.server.model.Result;
 import com.example.server.repositories.ResultRepository;
 import com.example.server.repositories.RoomRepository;
 import com.example.server.repositories.TermRepository;
@@ -99,7 +100,7 @@ public class Configurator {
                         .build();
 
                 //save example users
-                userRepository.save(exampleStudent1);
+//                userRepository.save(exampleStudent1);
                 userRepository.save(exampleStudent2);
                 userRepository.save(exampleTeacher);
 
@@ -113,7 +114,7 @@ public class Configurator {
                         .build();
 
                 //save example room
-                roomRepository.save(exampleRoom);
+//                roomRepository.save(exampleRoom);
                 Term exampleTerm1 = Term.builder()
                         .day(DayOfWeek.MONDAY)
                         .startTime(Time.valueOf(
@@ -138,10 +139,23 @@ public class Configurator {
                                 LocalTime.of(exampleHour, exampleMinute)))
                         .build();
 
+
+                //save example result
+
                 //save terms
-                termRepository.save(exampleTerm1);
+//                termRepository.save(exampleTerm1);
                 termRepository.save(exampleTerm2);
                 termRepository.save(exampleTerm3);
+
+
+                Result exampleResult = Result.builder()
+                        .term(exampleTerm1)
+                        .room(exampleRoom)
+                        .user(exampleStudent1)
+                        .build();
+
+                resultRepository.save(exampleResult);
+
             }
         };
     }

@@ -1,6 +1,7 @@
 package com.example.server.services;
 
 import com.example.server.dto.ResultsDto;
+import com.example.server.dto.TermDto;
 import com.example.server.dto.UserResultsDto;
 import com.example.server.exceptions.DeadlineHasNotPassedException;
 import com.example.server.exceptions.ResultNotFoundException;
@@ -85,13 +86,20 @@ public class ResultService {
                     () -> new ResultNotFoundException("Result not found.")
                 );
 
+        TermDto termDto = TermDto
+                .builder()
+                .day(result.getTerm().getDay())
+                .startTime(result.getTerm().getStartTime())
+                .endTime(result.getTerm().getEndTime())
+                .build();
+
         UserResultsDto userResultsDto = UserResultsDto
                 .builder()
                 .roomId(roomId)
                 .roomName(room.getName())
                 .roomDescription(room.getDescription())
-                .result(result.getTerm())
                 .totalVotes(room.getJoinedUsers().size())
+                .result(termDto)
                 .build();
 
         return userResultsDto;
