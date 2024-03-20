@@ -59,7 +59,7 @@ public class Room {
      */
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
     @JoinTable(
-            name = "room_terms",
+            name = "room_term",
             joinColumns = @JoinColumn(name = "room_id",
                     referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "term_id",
