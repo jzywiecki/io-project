@@ -109,28 +109,20 @@ public class Configurator {
 
                 //save example room
                 roomRepository.save(exampleRoom);
-                Term exampleTerm1 = Term.builder()
-                        .day(DayOfWeek.MONDAY)
-                        .startTime(LocalTime.of(exampleHour, exampleMinute))
-                        .endTime(LocalTime.of(exampleHour, exampleMinute))
-                        .build();
 
-                Term exampleTerm2 = Term.builder()
-                        .day(DayOfWeek.WEDNESDAY)
-                        .startTime(LocalTime.of(exampleHour, exampleMinute))
-                        .endTime(LocalTime.of(exampleHour, exampleMinute))
-                        .build();
-
-                Term exampleTerm3 = Term.builder()
-                        .day(DayOfWeek.FRIDAY)
-                        .startTime(LocalTime.of(exampleHour, exampleMinute))
-                        .endTime(LocalTime.of(exampleHour, exampleMinute))
-                        .build();
-
-                //save terms
-                termRepository.save(exampleTerm1);
-                termRepository.save(exampleTerm2);
-                termRepository.save(exampleTerm3);
+                for (int i=0; i<5; i++) {
+                    DayOfWeek day = DayOfWeek.of(i+1);
+                    LocalTime time = LocalTime.of(8, 0);
+                    for (int j=0; j<7; j++) {
+                        Term term = Term.builder()
+                                .day(day)
+                                .startTime(time)
+                                .endTime(time.plusHours(1).plusMinutes(30))
+                                .build();
+                        termRepository.save(term);
+                        time = time.plusHours(1).plusMinutes(45);
+                    }
+                }
             }
         };
     }
