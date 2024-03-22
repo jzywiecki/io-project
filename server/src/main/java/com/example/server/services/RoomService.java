@@ -26,9 +26,7 @@ public class RoomService {
     }
 
     public void assignTerms(Long id, List<TermDto> termsDto) {
-        Room room = roomRepository.findById(id)
-                .orElseThrow(() -> new RoomNotFoundException("Room with id: " + id + " not found."));
-
+        Room room = getRoom(id);
         Set<Term> terms = termsDto.stream()
                         .map(term -> termRepository.findByDayAndStartTime(term.day(), term.startTime())
                                 .orElseThrow(() -> new TermNotFoundException("Term " + term.day() + " " + term.startTime() + "not found.")))
