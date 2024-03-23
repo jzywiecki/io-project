@@ -34,7 +34,7 @@ const RoomForm=({setRoomId})=>{
                 <h2 className="text-center">Ostateczny Termin</h2>
 
                 <label className="form-label text-mb">Data:</label>
-                <input className="mb-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="deadlinedate" type="date" min={new Date().toISOString().split('T')[0]} {...register("deadlinedate",{
+                <input className="mb-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="deadlineDate" type="date" min={new Date().toISOString().split('T')[0]} {...register("deadlineDate",{
                     required:{
                     value:true,
                     message:"Pole wymagane"
