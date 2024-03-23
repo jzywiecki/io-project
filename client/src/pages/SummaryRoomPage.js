@@ -33,7 +33,7 @@ const SummaryRoomPage=()=>{
             <Div className="text-center">
                 Description: {room.description===""?"brak":room.description}
             </Div>
-            <Calendar terms={room.terms}/>
+            <Calendar noEditTerms={room.terms} className="w-screen h-full"/>
         </>
         }
     </div>)

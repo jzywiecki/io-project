@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { CardDescription, CardTitle } from "../ui/card";
 import Term from "./Term";
+import NoEditTerm from "./NoEditTerm";
 
-
-const Calendar=({terms,setPickedTerms})=>{
+const Calendar=({terms,setPickedTerms, noEditTerms, className})=>{
     console.log(terms)
     const minHour = 8
     const maxHour = 20
     
     return (
-        <div className="relative h-[60vh] overflow-x-hidden overflow-y-scroll p-2">
+        <div className={"relative h-[60vh] overflow-x-hidden overflow-y-scroll p-2 "+className}>
             <div
                 className="scrollbar sticky left-0 top-0 z-[3] grid w-full bg-white dark:bg-neutral-950"
                 style={{
@@ -67,8 +67,11 @@ const Calendar=({terms,setPickedTerms})=>{
                         );
                     }
                 )}
-                {terms.map((term,i)=>(
+                {terms&&terms.map((term,i)=>(
                     <Term term={term} minHour={minHour} setPickedTerms={setPickedTerms} key={i}/>
+                ))}
+                {noEditTerms&&noEditTerms.map((term,i)=>(
+                    <NoEditTerm term={term} minHour={minHour} key={i}/>
                 ))}
             </div>
         </div>
