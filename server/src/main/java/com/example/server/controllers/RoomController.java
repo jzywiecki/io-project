@@ -3,17 +3,13 @@ package com.example.server.controllers;
 import com.example.server.dto.RoomDto;
 import com.example.server.dto.TermDto;
 import com.example.server.model.Room;
-import com.example.server.model.Term;
 import com.example.server.services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.OK;
 
