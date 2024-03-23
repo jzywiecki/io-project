@@ -28,18 +28,17 @@ public class Result {
     /**
      * The term selected by the algorithm.
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
     private Term term;
 
     /**
      * The user selected by the algorithm.
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
     private User user;
-
     /**
      * The room where the vote was cast.
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
     private Room room;
 }

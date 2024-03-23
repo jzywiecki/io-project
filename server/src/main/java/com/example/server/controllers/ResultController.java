@@ -29,7 +29,8 @@ public class ResultController {
     @CrossOrigin
     @GetMapping("/get-results/{roomId}")
     public ResponseEntity<ResultsDto> getResults(
-            final @PathVariable int roomId) {
+            final @PathVariable long roomId) {
+        System.out.println("getResults");
         return ResponseEntity.ok(resultService.getResults(roomId));
     }
 
