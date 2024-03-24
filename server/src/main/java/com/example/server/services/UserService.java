@@ -39,8 +39,8 @@ public class UserService {
                         room.getId(),
                         room.getName(),
                         room.getDescription(),
-                        room.getDeadlineDate().toLocalDate(),
-                        room.getDeadLineTime()
+                        room.getDeadlineDate(),
+                        room.getDeadlineTime()
                 ))
                 .collect(Collectors.toList());
     }
