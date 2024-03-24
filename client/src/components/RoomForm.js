@@ -1,16 +1,21 @@
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import { addRoom } from "../helpers/roomApi";
-const RoomForm=({setRoomId})=>{
+const RoomForm=({setRoomId,setAlert})=>{
     const { handleSubmit, register, formState: { errors } } = useForm();
 
     const submit=async(values)=>{
         console.log(values)
-        let response = await addRoom(values)
-        console.log(response)
-        if(response.data.id !== undefined){
-            setRoomId(response.data.id)
+        try{
+            let response = await addRoom(values)
+            console.log(response)
+            if(response.data.id !== undefined){
+                setRoomId(response.data.id)
+            }
+        }catch(err){
+            setAlert(true)
         }
+        
     }
 
     return(<div className="RoomFormPage">

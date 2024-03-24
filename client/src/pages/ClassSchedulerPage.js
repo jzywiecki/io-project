@@ -6,7 +6,7 @@ import { setTermsInRoom } from "../helpers/roomApi";
 import { useNavigate } from "react-router-dom";
 const ClassSchedulerPage=()=>{
     const [roomId,setRoomId] = useState(null)
-    // const [isAlert,setIsAlert] = useState(false)
+    const [isAlert,setIsAlert] = useState(false)
     const navigate = useNavigate()
     const addZero=(time)=>{
         if(time<10){
@@ -17,10 +17,15 @@ const ClassSchedulerPage=()=>{
     const sendTerms = async(terms)=>{
         let termsToSend = terms.map(term=>({day:term.day,startTime:`${addZero(term.startTime.getHours())}:${addZero(term.startTime.getMinutes())}`,endTime:`${addZero(term.endTime.getHours())}:${addZero(term.endTime.getMinutes())}`}))
         console.log(termsToSend)
-        let response = await setTermsInRoom(termsToSend, roomId)
-        if(response.status==200){
-            navigate(`/room/${roomId}`)
+        try{
+            let response = await setTermsInRoom(termsToSend, roomId)
+            if(response.status==200){
+                navigate(`/room/${roomId}`)
+            }
+        }catch(err){
+            setIsAlert(true)
         }
+        
     }
     let terms = Array.from({ length: 5 }, (_, i) => {
         const dayTerms = [];
@@ -45,13 +50,13 @@ const ClassSchedulerPage=()=>{
     console.log(terms)
     const [pickedTerms,setPickedTerms] = useState([])
     return(<div className={"ClassSchedulerPage p-5" + roomId !== null?"flex flex-col justify-center h-screen":""}>
-        {roomId === null&&<RoomForm setRoomId={setRoomId}/>}
+        {roomId === null&&<RoomForm setRoomId={setRoomId} setAlert={setIsAlert}/>}
         {roomId !==null&&<h1 className="text-center text-3xl font-bold absolute top-5 w-full">Wybierz terminy</h1>}
         {roomId !== null&&<Calendar terms={terms} setPickedTerms={setPickedTerms}/>}
         {roomId !== null&&<Button className="mt-5 w-1/2 justify-self-center" onClick={()=>{sendTerms(pickedTerms)}}>Wyślij</Button>}
-        {/* {isAlert&&<div className="alert alert-success w-fit flex text-center absolute right-3 bottom-0" role="alert">
-            Success
-        </div>} */}
+        {isAlert&&<div className="alert alert-danger w-fit flex text-center absolute right-3 bottom-0" role="alert">
+            Spróbuj ponownie później
+        </div>}
     </div>)
 }
 

@@ -6,36 +6,53 @@ import Calendar from "../components/Calendar";
 const SummaryRoomPage=()=>{
     const {roomId}=useParams()
     const [room,setRoom]=useState(null)
+    const [isAlert,setIsAlert] = useState(false)
     useEffect(()=>{
         const getRoomDetails=async()=>{
-            let response=await getRoomById(roomId);
-            setRoom(response.data)
-            console.log(response)
+            try{
+                let response=await getRoomById(roomId);
+                setRoom(response.data)
+                console.log(response)
+            }catch(err){
+                setIsAlert(true)
+            }
         }
         getRoomDetails()
         return ()=>{}
     },[])
     return(<div className="SummaryRoomPage flex items-center flex-col justify-center h-screen">
-        {room===null?<div>loading</div>:
+        {!isAlert&&(room===null?<div>loading</div>:
         <>
             <Div className="flex justify-between">
-                <div>Name: {room.name}</div>
-                <div>id: {room.id}</div>
-            </Div>
-            <Div className="flex justify-between">
                 <div>
-                    DeadlineDay: {room.deadlineDate}
+                    <span className="font-bold">Name:&nbsp;</span> 
+                    {room.name}
                 </div>
                 <div>
-                    DeadlineTime: {room.deadlineTime}
+                    <span className="font-bold">id: </span> 
+                    {room.id}
                 </div>
             </Div>
-            <Div className="text-center">
-                Description: {room.description===""?"brak":room.description}
+            <Div className="flex">
+                <div className="font-bold">
+                    Deadline:&nbsp;
+                </div>
+                <div>
+                     {room.deadlineDate} {room.deadlineTime}
+                </div>
+            </Div>
+            <Div className='flex'>
+                <div className="font-bold">
+                    Opis:&nbsp;
+                </div>
+                {room.description===""?"brak":room.description}
             </Div>
             <Calendar noEditTerms={room.terms} className="w-screen h-full"/>
         </>
-        }
+        )}
+        {isAlert&&<div className="alert alert-danger w-fit flex text-center absolute right-3 bottom-0" role="alert">
+            Spróbuj ponownie później
+        </div>}
     </div>)
 }
 
