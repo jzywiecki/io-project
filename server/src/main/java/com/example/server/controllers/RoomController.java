@@ -1,6 +1,7 @@
 package com.example.server.controllers;
 
 import com.example.server.dto.RoomDto;
+import com.example.server.dto.RoomSummaryDto;
 import com.example.server.dto.TermDto;
 import com.example.server.model.Room;
 import com.example.server.services.RoomService;
@@ -109,9 +110,9 @@ public class RoomController {
      * @return the room.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Room> getRoom(final @PathVariable Long id) {
-        Room room = roomService.getRoom(id);
-        return new ResponseEntity<>(room, OK);
+    public ResponseEntity<RoomSummaryDto> getRoom(final @PathVariable Long id) {
+        RoomSummaryDto roomSummaryDto = roomService.getRoomInfo(id);
+        return new ResponseEntity<>(roomSummaryDto, OK);
     }
 
     /**

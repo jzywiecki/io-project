@@ -1,5 +1,6 @@
 package com.example.server.services;
 
+import com.example.server.dto.RoomSummaryDto;
 import com.example.server.dto.TermDto;
 import com.example.server.exceptions.RoomNotFoundException;
 import com.example.server.exceptions.TermNotFoundException;
@@ -75,5 +76,14 @@ public class RoomService {
      */
     public List<Room> getRooms() {
         return roomRepository.findAll();
+    }
+
+    public RoomSummaryDto getRoomInfo(final Long id) {
+        Room room = getRoom(id);
+        return new RoomSummaryDto(room.getId(),
+                room.getName(),
+                room.getDescription(),
+                room.getDeadlineDate().toString(),
+                room.getDeadlineTime().toString());
     }
 }
