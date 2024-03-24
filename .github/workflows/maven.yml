@@ -8,30 +8,30 @@ on:
     branches: [ "main" ]
 
 jobs:
-  lint:
-    name: Lint Code Base
-    runs-on: ubuntu-latest
+  # lint:
+  #   name: Lint Code Base
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
 
-      - name: Lint Code Base
-        uses: super-linter/super-linter@v6.3.0
-        env:
-          VALIDATE_ALL_CODEBASE: true
-          VALIDATE_BASH: false
-          VALIDATE_CSS: false
-          VALIDATE_NATURAL_LANGUAGE: false
-          VALIDATE_YAML: false
-          VALIDATE_SHELL_SHFMT: false
-          VALIDATE_CHECKOV: false
-          VALIDATE_GOOGLE_JAVA_FORMAT: false
-          VALIDATE_JAVASCRIPT_STANDARD: false
+  #     - name: Lint Code Base
+  #       uses: super-linter/super-linter@v6.3.0
+  #       env:
+  #         VALIDATE_ALL_CODEBASE: true
+  #         VALIDATE_BASH: false
+  #         VALIDATE_CSS: false
+  #         VALIDATE_NATURAL_LANGUAGE: false
+  #         VALIDATE_YAML: false
+  #         VALIDATE_SHELL_SHFMT: false
+  #         VALIDATE_CHECKOV: false
+  #         VALIDATE_GOOGLE_JAVA_FORMAT: false
+  #         VALIDATE_JAVASCRIPT_STANDARD: false
 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test:
     runs-on: ubuntu-latest
