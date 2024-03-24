@@ -1,6 +1,6 @@
 package com.example.server.services;
 
-import com.example.server.dto.VoteDto;
+import com.example.server.dto.VotesDto;
 import com.example.server.exceptions.RoomNotFoundException;
 import com.example.server.exceptions.TermNotFoundException;
 import com.example.server.exceptions.UserNotFoundException;
@@ -14,6 +14,9 @@ import com.example.server.repositories.UserRepository;
 import com.example.server.repositories.VoteRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -34,42 +37,58 @@ public class VoteService {
      * Vote repository.
      */
     private final VoteRepository voteRepository;
-
+    // IMPORTANT!
+    // vote method should be transactional
+    // and should delete all votes for the
+    // user and room before saving new votes.
+    // Now we can add vote but not remove previous.
+    // FIXME: During call saveAll(List<Vote>),
+    // FIXME: database reports error SQLITE_BUSY.
+    //
     /**
-     * Add a new vote.
-     * @param voteDto the vote dto.
+     * Adding new user votes and deleting previous ones.
+     * @param votesDto
      */
-    public void addNewVote(final VoteDto voteDto) {
+    //@Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void vote(final VotesDto votesDto) {
+
+        List<Vote> votesEntityToSave = new ArrayList<>();
+
         User user = userRepository
-                .findById(voteDto.user_id())
+                .findById(votesDto.user_id())
                 .orElseThrow(
                         () -> new UserNotFoundException("User with id: "
-                                                        + voteDto.user_id()
-                                                        + " not found.")
-                );
-
-        Term term = termRepository
-                .findById(voteDto.term_id())
-                .orElseThrow(
-                        () -> new TermNotFoundException("Term with id: "
-                                                        + voteDto.term_id()
-                                                        + " not found.")
+                                + votesDto.user_id()
+                                + " not found.")
                 );
 
         Room room = roomRepository
-                .findById(voteDto.room_id())
+                .findById(votesDto.room_id())
                 .orElseThrow(
                         () -> new RoomNotFoundException("Room with id: "
-                                                        + voteDto.room_id()
-                                                        + " not found.")
+                                + votesDto.room_id()
+                                + " not found.")
                 );
 
-        Vote vote = Vote.builder()
-                .user(user)
-                .term(term)
-                .room(room)
-                .build();
+        //voteRepository.deleteAllByUserIdAndRoomId(user.getId(), room.getId());
+        for (Long termId : votesDto.terms_id()) {
+            Term term = termRepository
+                    .findById(termId)
+                    .orElseThrow(
+                            () -> new TermNotFoundException("Term with id: "
+                                    + termId
+                                    + " not found.")
+                    );
 
-        voteRepository.save(vote);
+            Vote vote = Vote.builder()
+                    .user(user)
+                    .term(term)
+                    .room(room)
+                    .build();
+
+            votesEntityToSave.add(vote);
+        }
+
+        voteRepository.saveAll(votesEntityToSave);
     }
 }
