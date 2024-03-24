@@ -78,6 +78,7 @@ public class RoomController {
     }
 
 
+    /**
      * Create a room.
      * @param roomDto the room dto.
      * @return the room dto.
