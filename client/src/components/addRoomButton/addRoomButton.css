@@ -1,0 +1,10 @@
+.add-room-button {
+    margin-top: 1.25rem;
+    padding: 0.5rem 1rem;
+    background-color: #48BBEC;
+    border-radius: 0.25rem;
+    display: block;
+    color: #FFFFFF;
+    text-align: center;
+    cursor: pointer;
+}

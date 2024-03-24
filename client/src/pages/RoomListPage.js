@@ -1,8 +1,11 @@
+import React from 'react';
 import { useState } from "react"
 import { useEffect } from "react"
 import { getRoomList } from "../helpers/roomApi"
 import { Div } from "../ui/div"
 import { useNavigate } from "react-router-dom"
+import AddRoomButton from "../components/addRoomButton/addRoomButton";
+
 const RoomListPage=()=>{
     const [roomList,setRoomList]=useState([])
     const [isAlert,setIsAlert] = useState(false)
@@ -33,6 +36,7 @@ const RoomListPage=()=>{
                     {room.id}
                 </div>
             </Div>))}
+            <AddRoomButton/>
         </div>
         {isAlert&&<div className="alert alert-danger w-fit flex text-center absolute right-3 bottom-0" role="alert">
             Spróbuj ponownie później
