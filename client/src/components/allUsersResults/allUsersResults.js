@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
+import ResultsExport from "../resultsExport/resultsExport";
+import daysMap from '../common'
 import "./allUsersResults.css";
 
 const serverUrl = "http://localhost:8080";
-
-const daysMap = {
-    MONDAY: "Poniedziałek",
-    TUESDAY: "Wtorek",
-    WEDNESDAY: "Środa",
-    THURSDAY: "Czwartek",
-    FRIDAY: "Piątek",
-    SATURDAY: "Sobota",
-    SUNDAY: "Niedziela",
-    };
 
 function AllUsersResults({ roomId }) {
     const [results, setResults] = useState([]);
@@ -46,6 +38,23 @@ function AllUsersResults({ roomId }) {
         return null;
     }
 
+    const resultsArray = results.results
+        .sort((a, b) => {
+            // Sort by day
+            const dayA = daysMap[a.result.day];
+            const dayB = daysMap[b.result.day];
+            if (dayA < dayB) return -1;
+            if (dayA > dayB) return 1;
+
+            // Sort by startTime
+            const startTimeA = a.result.startTime;
+            const startTimeB = b.result.startTime;
+            if (startTimeA < startTimeB) return -1;
+            if (startTimeA > startTimeB) return 1;
+
+            return 0;
+        })
+
     return (
         <div className="all-users-results">
             <h2>Wyniki - {results.roomName}</h2>
@@ -63,22 +72,7 @@ function AllUsersResults({ roomId }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {results.results
-                        .sort((a, b) => {
-                            // Sort by day
-                            const dayA = daysMap[a.result.day];
-                            const dayB = daysMap[b.result.day];
-                            if (dayA < dayB) return -1;
-                            if (dayA > dayB) return 1;
-
-                            // Sort by startTime
-                            const startTimeA = a.result.startTime;
-                            const startTimeB = b.result.startTime;
-                            if (startTimeA < startTimeB) return -1;
-                            if (startTimeA > startTimeB) return 1;
-
-                            return 0;
-                        })
+                    {resultsArray
                         .map((result, i) => (
                             <tr key={i}>
                                 <td>{result.firstName}</td>
@@ -90,6 +84,7 @@ function AllUsersResults({ roomId }) {
                         ))}
                 </tbody>
             </table>
+            <ResultsExport results={resultsArray}/>
         </div>
     );
 
