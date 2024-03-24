@@ -3,12 +3,14 @@ package com.example.server.controllers;
 import com.example.server.dto.RoomDto;
 import com.example.server.dto.TermDto;
 import com.example.server.model.Room;
-import com.example.server.services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.example.server.services.RoomService;
+import com.example.server.services.TermService;
+import com.example.server.services.UserService;
+import lombok.AllArgsConstructor;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -16,18 +18,43 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/room")
+@AllArgsConstructor
 public class RoomController {
     /**
      * Room service.
      */
     private final RoomService roomService;
+
     /**
-     * Constructor.
-     * @param roomServiceInput room service.
+     * Term service.
      */
-    @Autowired
-    public RoomController(final RoomService roomServiceInput) {
-        this.roomService = roomServiceInput;
+    private final TermService termService;
+
+    /**
+     * User service.
+     */
+    private final UserService userService;
+
+    /**
+     * Get all rooms to which the user is assigned.
+     * @param userId the user id.
+     * @return the rooms.
+     */
+    @GetMapping("/get-user-rooms/{userId}")
+    public ResponseEntity<List<RoomDto>> getUserRooms(
+            final @PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getUserRooms(userId));
+    }
+
+    /**
+     * Get all terms in the room.
+     * @param roomId the room id.
+     * @return the terms.
+     */
+    @GetMapping("/get-terms-in-room/{roomId}")
+    public ResponseEntity<List<TermDto>> getRoomTerms(
+            final @PathVariable Long roomId) {
+        return ResponseEntity.ok(termService.getRoomTerms(roomId));
     }
 
     @PostMapping("")

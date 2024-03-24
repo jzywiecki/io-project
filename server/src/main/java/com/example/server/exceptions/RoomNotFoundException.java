@@ -9,6 +9,7 @@ public class RoomNotFoundException extends RuntimeException {
      * Constructor.
      * @param message the message of exception.
      */
+
     public RoomNotFoundException(final String message) {
         super(message);
     }

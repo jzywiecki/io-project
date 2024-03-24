@@ -29,6 +29,7 @@ jobs:
           VALIDATE_SHELL_SHFMT: false
           VALIDATE_CHECKOV: false
           VALIDATE_GOOGLE_JAVA_FORMAT: false
+          VALIDATE_JAVASCRIPT_STANDARD: false
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

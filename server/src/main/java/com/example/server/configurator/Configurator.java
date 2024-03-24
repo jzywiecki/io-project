@@ -5,12 +5,15 @@ import com.example.server.model.Room;
 import com.example.server.model.Term;
 import com.example.server.model.User;
 import com.example.server.repositories.*;
+import com.example.server.model.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 
 import javax.sql.DataSource;
 import java.time.DayOfWeek;
@@ -18,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Configuration
+@EnableTransactionManagement
 public class Configurator {
     /**
      *  Environment variable.
@@ -44,6 +48,7 @@ public class Configurator {
         dataSource.setPassword("admin");
         return dataSource;
     }
+
 
     /**
      * Generating example data to database.
@@ -110,6 +115,7 @@ public class Configurator {
                 //save example room
                 roomRepository.save(exampleRoom);
 
+                //save terms              
                 for (int i=0; i<5; i++) {
                     DayOfWeek day = DayOfWeek.of(i+1);
                     LocalTime time = LocalTime.of(8, 0);
@@ -123,6 +129,28 @@ public class Configurator {
                         time = time.plusHours(1).plusMinutes(45);
                     }
                 }
+
+
+                //save example terms
+                termRepository.save(exampleTerm1);
+                termRepository.save(exampleTerm2);
+                termRepository.save(exampleTerm3);
+
+
+                Result exampleResult1 = Result.builder()
+                        .term(exampleTerm1)
+                        .room(exampleRoom)
+                        .user(exampleStudent1)
+                        .build();
+
+                Result exampleResult2 = Result.builder()
+                        .term(exampleTerm2)
+                        .room(exampleRoom)
+                        .user(exampleStudent2)
+                        .build();
+
+                resultRepository.save(exampleResult1);
+                resultRepository.save(exampleResult2);
             }
         };
     }

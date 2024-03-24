@@ -1,6 +1,8 @@
 package com.example.server.services;
 
+import com.example.server.dto.ResultDto;
 import com.example.server.dto.ResultsDto;
+import com.example.server.dto.TermDto;
 import com.example.server.dto.UserResultsDto;
 import com.example.server.exceptions.DeadlineHasNotPassedException;
 import com.example.server.exceptions.ResultNotFoundException;
@@ -8,8 +10,6 @@ import com.example.server.exceptions.RoomNotFoundException;
 import com.example.server.exceptions.UserNotFoundException;
 import com.example.server.model.Result;
 import com.example.server.model.Room;
-import com.example.server.model.Term;
-import com.example.server.model.User;
 import com.example.server.repositories.ResultRepository;
 import com.example.server.repositories.RoomRepository;
 import com.example.server.repositories.UserRepository;
@@ -17,9 +17,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -49,21 +48,35 @@ public class ResultService {
 
         List<Result> resultsList = resultRepository.findAllByRoomId(roomId);
 
-        Map<User, Term> results = new HashMap<>();
+        List<ResultDto> results = new ArrayList<>();
 
         for (Result result : resultsList) {
-            results.put(result.getUser(), result.getTerm());
+
+            TermDto termDto = TermDto
+                    .builder()
+                    .day(result.getTerm().getDay())
+                    .startTime(result.getTerm().getStartTime())
+                    .endTime(result.getTerm().getEndTime())
+                    .build();
+
+            ResultDto resultDto = ResultDto
+                    .builder()
+                    .result(termDto)
+                    .firstName(result.getUser().getFirstName())
+                    .lastName(result.getUser().getLastName())
+                    .email(result.getUser().getEmail())
+                    .build();
+
+            results.add(resultDto);
         }
 
-        ResultsDto resultsDto = ResultsDto
+        return ResultsDto
                 .builder()
                 .roomId(roomId)
                 .roomName(room.getName())
                 .roomDescription(room.getDescription())
                 .results(results)
                 .build();
-
-        return resultsDto;
     }
 
     /**
@@ -85,16 +98,22 @@ public class ResultService {
                     () -> new ResultNotFoundException("Result not found.")
                 );
 
-        UserResultsDto userResultsDto = UserResultsDto
+        TermDto termDto = TermDto
+                .builder()
+                .day(result.getTerm().getDay())
+                .startTime(result.getTerm().getStartTime())
+                .endTime(result.getTerm().getEndTime())
+                .build();
+
+        return UserResultsDto
                 .builder()
                 .roomId(roomId)
                 .roomName(room.getName())
                 .roomDescription(room.getDescription())
-                .result(result.getTerm())
                 .totalVotes(room.getJoinedUsers().size())
+                .result(termDto)
                 .build();
 
-        return userResultsDto;
     }
 
     private void checkDateDeadline(final long roomId) {
