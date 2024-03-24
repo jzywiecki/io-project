@@ -1,3 +1,4 @@
+import React from 'react';
 import "./resultsExport.css";
 import daysMap from '../common'
 
