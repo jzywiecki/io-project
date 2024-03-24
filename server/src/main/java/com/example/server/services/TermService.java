@@ -26,7 +26,12 @@ public class TermService {
      */
     private final RoomRepository roomRepository;
 
-    public List<TermDto> getRoomTerms(Long roomId) {
+    /**
+     * Get all available terms in the room.
+     * @param roomId the room id.
+     * @return the terms.
+     */
+    public List<TermDto> getRoomTerms(final Long roomId) {
         Room room = roomRepository
                 .findById(roomId)
                 .orElseThrow(
@@ -39,6 +44,7 @@ public class TermService {
 
         return terms.stream()
                 .map((term) -> new TermDto(
+                        term.getId(),
                         term.getDay(),
                         term.getStartTime(),
                         term.getEndTime()

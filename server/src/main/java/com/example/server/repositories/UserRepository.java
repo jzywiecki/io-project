@@ -10,6 +10,12 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Query("SELECT DISTINCT r FROM User u JOIN u.joinedRooms r WHERE u.id = :userId")
+    /**
+     * Find rooms where user is member.
+     * @param userId the user id.
+     * @return the rooms.
+     */
+    @Query("SELECT DISTINCT r "
+            + "FROM User u JOIN u.joinedRooms r WHERE u.id = :userId")
     List<Room> getJoinedRooms(Long userId);
 }

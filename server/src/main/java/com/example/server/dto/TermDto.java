@@ -7,6 +7,7 @@ import java.time.DayOfWeek;
 
 @Builder
 public record TermDto(
+        long id,
         DayOfWeek day,
         Time startTime,
         Time endTime

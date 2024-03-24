@@ -7,7 +7,11 @@ import com.example.server.services.TermService;
 import com.example.server.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -33,19 +37,23 @@ public class RoomController {
 
     /**
      * Get all rooms to which the user is assigned.
+     * @param userId the user id.
      * @return the rooms.
      */
     @GetMapping("/get-user-rooms/{userId}")
-    public ResponseEntity<List<RoomDto>> getUserRooms(@PathVariable Long userId) {
+    public ResponseEntity<List<RoomDto>> getUserRooms(
+            final @PathVariable Long userId) {
         return ResponseEntity.ok(userService.getUserRooms(userId));
     }
 
     /**
-     * Get all terms in the room
+     * Get all terms in the room.
+     * @param roomId the room id.
      * @return the terms.
      */
     @GetMapping("/get-terms-in-room/{roomId}")
-    public ResponseEntity<List<TermDto>> getRoomTerms(@PathVariable Long roomId) {
+    public ResponseEntity<List<TermDto>> getRoomTerms(
+            final @PathVariable Long roomId) {
         return ResponseEntity.ok(termService.getRoomTerms(roomId));
     }
 

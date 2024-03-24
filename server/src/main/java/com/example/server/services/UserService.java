@@ -20,11 +20,11 @@ public class UserService {
     private final UserRepository userRepository;
 
     /**
-     * Get all rooms of a user.
+     * Get all rooms where user is a member.
      * @param userId the user id.
      * @return the rooms of a user.
      */
-    public List<RoomDto> getUserRooms(Long userId) {
+    public List<RoomDto> getUserRooms(final Long userId) {
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(
@@ -35,7 +35,7 @@ public class UserService {
         List<Room> userRooms = userRepository.getJoinedRooms(userId);
 
         return userRooms.stream()
-                .map((room) -> new RoomDto (
+                .map((room) -> new RoomDto(
                         room.getId(),
                         room.getName(),
                         room.getDescription(),

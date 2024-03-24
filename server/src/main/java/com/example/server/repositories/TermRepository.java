@@ -9,11 +9,16 @@ import java.util.List;
 
 @Repository
 public interface TermRepository extends JpaRepository<Term, Long> {
+    /**
+     * Find all terms by room id.
+     * @param roomId the room id.
+     * @return the terms.
+     */
     @Query(
-            "SELECT term " +
-                    "FROM Term term " +
-                    "INNER JOIN term.rooms room "  +
-                    "WHERE room.id = :roomId"
+            "SELECT term "
+                    + "FROM Term term "
+                    + "INNER JOIN term.rooms room "
+                    + "WHERE room.id = :roomId"
     )
     List<Term> findAllByRoomId(Long roomId);
 }
