@@ -2,7 +2,16 @@ package com.example.server.model;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +21,7 @@ import java.sql.Date;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
+
 
 @Getter
 @Builder
@@ -81,7 +91,7 @@ public class Room {
             cascade = { CascadeType.PERSIST})
     private List<Result> results;
 
-    public void setTerms(Set<Term> terms) {
-        this.terms = terms;
+    public void setTerms(final Set<Term> termSet) {
+        terms = termSet;
     }
 }

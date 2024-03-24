@@ -4,7 +4,11 @@ import com.example.server.model.Role;
 import com.example.server.model.Room;
 import com.example.server.model.Term;
 import com.example.server.model.User;
-import com.example.server.repositories.*;
+import com.example.server.repositories.ResultRepository;
+import com.example.server.repositories.RoomRepository;
+import com.example.server.repositories.TermRepository;
+import com.example.server.repositories.UserRepository;
+import com.example.server.repositories.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -114,18 +118,31 @@ public class Configurator {
                 //save example room
                 roomRepository.save(exampleRoom);
 
-                //save terms              
-                for (int i=0; i<5; i++) {
-                    DayOfWeek day = DayOfWeek.of(i+1);
-                    LocalTime time = LocalTime.of(8, 0);
-                    for (int j=0; j<7; j++) {
+                //save terms
+                final int days = 5;
+                final int termsPerDay = 7;
+                final int startHour = 8;
+                final int startMinute = 0;
+                final int durationHour = 1;
+                final int durationMinute = 30;
+                final int intervalHour = 1;
+                final int intervalMinute = 45;
+
+                for (int i = 0; i < days; i++) {
+                    DayOfWeek day = DayOfWeek.of(i + 1);
+                    LocalTime time = LocalTime.of(startHour, startMinute);
+                    for (int j = 0; j < termsPerDay; j++) {
                         Term term = Term.builder()
                                 .day(day)
                                 .startTime(time)
-                                .endTime(time.plusHours(1).plusMinutes(30))
+                                .endTime(time
+                                        .plusHours(durationHour)
+                                        .plusMinutes(durationMinute))
                                 .build();
                         termRepository.save(term);
-                        time = time.plusHours(1).plusMinutes(45);
+                        time = time
+                                .plusHours(intervalHour)
+                                .plusMinutes(intervalMinute);
                     }
                 }
             }
