@@ -16,7 +16,6 @@ const RoomListPage=()=>{
             }else{
                 setIsAlert(true)
             }
-            
         }
         getRoomListFunction();
         return ()=>{};
