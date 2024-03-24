@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -69,6 +70,18 @@ public class RoomController {
         List<TermStringDto> terms = termService.getRoomTerms(roomId);
         return ResponseEntity.ok(terms);
     }
+
+    /**
+
+     * Runs the algorithm for a given room.
+     * @param roomId room id
+     */
+    @GetMapping("/stop-voting/{roomId}")
+    public final void stopVoting(
+            final @PathVariable Long roomId) {
+        roomService.runAlgorithm(roomId);
+    }
+
 
     /**
      * Create a room.
