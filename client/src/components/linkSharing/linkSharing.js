@@ -22,6 +22,6 @@ function Sharing({roomID}) {
             <p>{linkInfo}<strong>{link}</strong></p>
         </div>
     );
-};
+}
 
 export default Sharing;
