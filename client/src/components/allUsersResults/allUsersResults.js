@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import ResultsExport from "../resultsExport/resultsExport";
+import { useParams } from "react-router-dom";
 import daysMap from '../common'
 import "./allUsersResults.css";
 
 const serverUrl = "http://localhost:8080";
 
-function AllUsersResults({ roomId }) {
+function AllUsersResults() {
+    const {roomId} = useParams();
     const [results, setResults] = useState([]);
 
     useEffect(() => {
@@ -57,9 +59,8 @@ function AllUsersResults({ roomId }) {
 
     return (
         <div className="all-users-results">
-            <h2>Wyniki - {results.roomName}</h2>
+            <h1>Wyniki - {results.roomName}</h1>
             <div className="description">{results.roomDescription}</div>
-            <div className="total-votes">{results.totalVotes} wyników</div>
             
             <table>
                 <thead>
@@ -79,7 +80,13 @@ function AllUsersResults({ roomId }) {
                                 <td>{result.lastName}</td>
                                 <td>{result.email}</td>
                                 <td>{daysMap[result.result.day]}</td>
-                                <td>{result.result.startTime}-{result.result.endTime}</td>
+                                <td>
+                                    {result.result.startTime[0].toString().padStart(2, '0')}:
+                                    {result.result.startTime[1].toString().padStart(2, '0')}- 
+                                    {result.result.endTime[0].toString().padStart(2, '0')}:
+                                    {result.result.endTime[1].toString().padStart(2, '0')}
+                                </td>
+
                             </tr>
                         ))}
                 </tbody>
