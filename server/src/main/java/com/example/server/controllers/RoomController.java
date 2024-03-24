@@ -7,11 +7,12 @@ import com.example.server.services.TermService;
 import com.example.server.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
 
 import java.util.List;
 
@@ -55,6 +56,17 @@ public class RoomController {
     public ResponseEntity<List<TermDto>> getRoomTerms(
             final @PathVariable Long roomId) {
         return ResponseEntity.ok(termService.getRoomTerms(roomId));
+    }
+
+    /**
+     * Runs the algorithm for a given room.
+     * @param roomId room id
+     */
+    @GetMapping("/stop-voting/{roomId}")
+    public final void stopVoting(
+            final @PathVariable Long roomId) {
+        roomService.runAlgorithm(roomId);
+        return;
     }
 
 }
