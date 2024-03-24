@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import ResultsExport from "../resultsExport/resultsExport";
+import { useParams } from "react-router-dom";
 import daysMap from '../common'
 import "./allUsersResults.css";
 
 const serverUrl = "http://localhost:8080";
 
-function AllUsersResults({ roomId }) {
+function AllUsersResults() {
+    const {roomId} = useParams();
     const [results, setResults] = useState([]);
 
     useEffect(() => {

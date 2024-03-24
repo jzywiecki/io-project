@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import "./userResults.css";
 
 const serverUrl = "http://localhost:8080";
@@ -13,7 +14,8 @@ const daysMap = {
   SUNDAY: "Niedziela",
 };
 
-function Results({ roomId, userId }) {
+function Results() {
+  const {roomId, userId} = useParams();
   const [results, setResults] = useState([]);
 
   useEffect(() => {
