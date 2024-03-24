@@ -48,7 +48,7 @@ class RoomControllerTest {
     @Test
     void shouldReturnBadRequestWhenRoomNotFoundException() throws Exception {
         long id = 0;
-        when(roomService.getRoom(id)).thenThrow(RoomNotFoundException.class);
+        when(roomService.getRoomInfo(id)).thenThrow(RoomNotFoundException.class);
 
         mvc.perform(MockMvcRequestBuilders.get(URL + "/" + id))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
