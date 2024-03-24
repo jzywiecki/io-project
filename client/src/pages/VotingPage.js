@@ -2,12 +2,13 @@ import Calendar from "../components/Calendar";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import React, { useEffect } from 'react';
-
+import { useParams } from "react-router-dom";
 
 const serverUrl = "http://localhost:8080";
 
 
-const ClassSchedulerPage=({roomId, userId})=>{
+const VotingPage=()=>{
+    const {roomId,userId} = useParams();
     const [availableTerms, setAvailableTerms] = useState([]);
     const [votingStatus, setVotingStatus] = useState([]);
 
@@ -120,4 +121,4 @@ const ClassSchedulerPage=({roomId, userId})=>{
     </div>)
 }
 
-export default ClassSchedulerPage;
+export default VotingPage;

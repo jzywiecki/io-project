@@ -80,10 +80,13 @@ public class RoomService {
 
     public RoomSummaryDto getRoomInfo(final Long id) {
         Room room = getRoom(id);
+        Set<Term> terms = room.getTerms();
+        List<TermDto> termDtos = terms.stream().map((x)-> new TermDto(x.getDay(), x.getStartTime(), x.getEndTime())).toList();
         return new RoomSummaryDto(room.getId(),
                 room.getName(),
                 room.getDescription(),
                 room.getDeadlineDate().toString(),
-                room.getDeadlineTime().toString());
+                room.getDeadlineTime().toString(),
+                termDtos);
     }
 }
