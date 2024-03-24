@@ -1,9 +1,54 @@
 package com.example.server.services;
 
+import com.example.server.dto.TermDto;
+import com.example.server.dto.TermStringDto;
+import com.example.server.exceptions.RoomNotFoundException;
+import com.example.server.model.Room;
+import com.example.server.model.Term;
+import com.example.server.repositories.RoomRepository;
+import com.example.server.repositories.TermRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class TermService {
+
+    /**
+     * Room repository.
+     */
+    private final TermRepository termRepository;
+
+    /**
+     * Room repository.
+     */
+    private final RoomRepository roomRepository;
+
+    /**
+     * Get all available terms in the room.
+     * @param roomId the room id.
+     * @return the terms.
+     */
+    public List<TermStringDto> getRoomTerms(final Long roomId) {
+        Room room = roomRepository
+                .findById(roomId)
+                .orElseThrow(
+                        () -> new RoomNotFoundException("Room with id: "
+                                + roomId
+                                + " not found.")
+                );
+
+        List<Term> terms = termRepository.findAllByRoomId(roomId);
+
+        return terms.stream()
+                .map(term -> new TermStringDto(
+                        term.getId(),
+                        term.getDay(),
+                        term.getStartTime().toString(),
+                        term.getEndTime().toString()
+                ))
+                .toList();
+    }
 }

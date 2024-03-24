@@ -1,0 +1,12 @@
+.link-sharing {
+    margin-bottom: 20px;
+}
+
+.link-sharing-button {
+    margin-top: 5px;
+    margin-left: 5px;
+    padding: 8px 16px;
+    background-color: #00bcd4;
+    border-radius: 4px;
+    color: white;
+}

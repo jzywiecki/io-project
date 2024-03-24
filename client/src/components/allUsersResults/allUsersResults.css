@@ -1,0 +1,36 @@
+
+.all-users-results {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.all-users-results table {
+    width: 90%;
+    border-collapse: collapse;
+
+}
+
+.all-users-results th,
+.all-users-results td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.all-users-results th {
+    background-color: #f2f2f2;
+}
+
+.all-users-results tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.description {
+    font-size: 1.2em;
+}
+
+.total-votes {
+    margin: 20px;
+}

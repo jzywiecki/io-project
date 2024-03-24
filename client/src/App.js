@@ -1,8 +1,25 @@
+import React from "react";
 import './App.css'
+import ClassSchedulerPage from './pages/ClassSchedulerPage'
+import RoomListPage from './pages/RoomListPage'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SummaryRoomPage from './pages/SummaryRoomPage';
+import VotingPage from './pages/VotingPage';
 
 function App () {
   return (
-    <div className='App' />
+    <div className='App' >
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<RoomListPage />}/>
+          <Route path="/room/:roomId" element={<SummaryRoomPage />}/>
+          <Route path="/addRoom" element={<ClassSchedulerPage />}/>
+          <Route path="/enroll/:roomId/:userId" element={<VotingPage />}/>
+        </Routes>
+      </BrowserRouter>
+      {/* <ClassSchedulerPage/>
+      <RoomListPage/> */}
+    </div>
   )
 }
 
