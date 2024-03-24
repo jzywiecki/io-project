@@ -30,7 +30,7 @@ const SummaryRoomPage=()=>{
         <>
             <Div className="flex justify-between">
                 <div>
-                    <span className="font-bold">Name:&nbsp;</span> 
+                    <span className="font-bold">Nazwa:&nbsp;</span> 
                     {room.name}
                 </div>
                 <div>

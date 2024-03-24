@@ -61,7 +61,7 @@ function Results() {
         </p>
         <p>
           <strong>Otrzymany termin:</strong> {results.result.day},{" "}
-          {results.result.startTime} - {results.result.endTime}
+          {results.result.startTime[0]}:{results.result.startTime[1]} - {results.result.endTime[0]}:{results.result.endTime[1]}
         </p>
       </div>
     </div>
