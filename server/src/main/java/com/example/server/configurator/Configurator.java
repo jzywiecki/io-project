@@ -4,7 +4,6 @@ import com.example.server.model.Role;
 import com.example.server.model.Room;
 import com.example.server.model.Term;
 import com.example.server.model.User;
-import com.example.server.model.Result;
 import com.example.server.repositories.ResultRepository;
 import com.example.server.repositories.RoomRepository;
 import com.example.server.repositories.TermRepository;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 import javax.sql.DataSource;
-import java.sql.Time;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -109,8 +107,8 @@ public class Configurator {
                 userRepository.save(exampleTeacher);
 
                 Room exampleRoom = Room.builder()
-                        .deadLineTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
+                        .deadlineTime(
+                                LocalTime.of(exampleHour, exampleMinute))
                         .deadlineDate(java.sql.Date.valueOf(
                                 LocalDateTime.now().toLocalDate()))
                         .description("Example room description")
@@ -119,52 +117,34 @@ public class Configurator {
 
                 //save example room
                 roomRepository.save(exampleRoom);
-                Term exampleTerm1 = Term.builder()
-                        .day(DayOfWeek.MONDAY)
-                        .startTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
-                        .endTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
-                        .build();
-
-                Term exampleTerm2 = Term.builder()
-                        .day(DayOfWeek.WEDNESDAY)
-                        .startTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
-                        .endTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
-                        .build();
-
-                Term exampleTerm3 = Term.builder()
-                        .day(DayOfWeek.FRIDAY)
-                        .startTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
-                        .endTime(Time.valueOf(
-                                LocalTime.of(exampleHour, exampleMinute)))
-                        .build();
-
-
 
                 //save terms
-                termRepository.save(exampleTerm1);
-                termRepository.save(exampleTerm2);
-                termRepository.save(exampleTerm3);
+                final int days = 5;
+                final int termsPerDay = 7;
+                final int startHour = 8;
+                final int startMinute = 0;
+                final int durationHour = 1;
+                final int durationMinute = 30;
+                final int intervalHour = 1;
+                final int intervalMinute = 45;
 
-
-                Result exampleResult1 = Result.builder()
-                        .term(exampleTerm1)
-                        .room(exampleRoom)
-                        .user(exampleStudent1)
-                        .build();
-
-                Result exampleResult2 = Result.builder()
-                        .term(exampleTerm2)
-                        .room(exampleRoom)
-                        .user(exampleStudent2)
-                        .build();
-
-                resultRepository.save(exampleResult1);
-                resultRepository.save(exampleResult2);
+                for (int i = 0; i < days; i++) {
+                    DayOfWeek day = DayOfWeek.of(i + 1);
+                    LocalTime time = LocalTime.of(startHour, startMinute);
+                    for (int j = 0; j < termsPerDay; j++) {
+                        Term term = Term.builder()
+                                .day(day)
+                                .startTime(time)
+                                .endTime(time
+                                        .plusHours(durationHour)
+                                        .plusMinutes(durationMinute))
+                                .build();
+                        termRepository.save(term);
+                        time = time
+                                .plusHours(intervalHour)
+                                .plusMinutes(intervalMinute);
+                    }
+                }
             }
         };
     }

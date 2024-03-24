@@ -1,14 +1,15 @@
 package com.example.server.dto;
 
-import java.sql.Time;
-import java.time.LocalDate;
+import lombok.Builder;
 
-public record RoomDto(
-        long id,
-        String name,
-        String description,
-        LocalDate deadlineDate,
-        Time deadlineTime
+import java.sql.Date;
+import java.time.LocalTime;
+
+@Builder
+public record RoomDto(Long id,
+                      String name,
+                      String description,
+                      Date deadlineDate,
+                      LocalTime deadlineTime
 ) {
-
 }

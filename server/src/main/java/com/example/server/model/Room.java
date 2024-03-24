@@ -2,27 +2,26 @@ package com.example.server.model;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.GenerationType;
-
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
+
 
 @Getter
 @Builder
@@ -51,7 +50,7 @@ public class Room {
     /**
      *  Room deadline time.
      */
-    private Time deadLineTime;
+    private LocalTime deadlineTime;
     /**
      *  Room owner.
      */
@@ -91,4 +90,12 @@ public class Room {
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY,
             cascade = { CascadeType.PERSIST})
     private List<Result> results;
+
+    /**
+     *  Terms setter.
+     * @param termSet Set of terms to be set.
+     */
+    public void setTerms(final Set<Term> termSet) {
+        this.terms = termSet;
+    }
 }
