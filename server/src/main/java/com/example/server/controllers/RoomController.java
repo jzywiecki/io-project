@@ -66,7 +66,6 @@ public class RoomController {
     public final void stopVoting(
             final @PathVariable Long roomId) {
         roomService.runAlgorithm(roomId);
-        return;
     }
 
 }
