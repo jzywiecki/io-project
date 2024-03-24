@@ -9,10 +9,13 @@ import com.example.server.model.Result;
 import com.example.server.model.Vote;
 import com.example.server.dto.RoomSummaryDto;
 import com.example.server.dto.TermDto;
+import com.example.server.dto.TermStringDto;
 import com.example.server.exceptions.RoomNotFoundException;
 import com.example.server.exceptions.TermNotFoundException;
+import com.example.server.exceptions.UserNotFoundException;
 import com.example.server.repositories.RoomRepository;
 import com.example.server.repositories.TermRepository;
+import com.example.server.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -107,6 +110,8 @@ public class RoomService {
         return resultMap;
     }
 
+    private final UserRepository userRepository;
+
     /**
      * Assign terms to the room.
      * @param id the room id.
@@ -160,11 +165,25 @@ public class RoomService {
 
     public RoomSummaryDto getRoomInfo(final Long id) {
         Room room = getRoom(id);
+        Set<Term> terms = room.getTerms();
+        List<TermStringDto> termDtos = terms.stream().map((x)-> new TermStringDto(x.getId(), x.getDay(), x.getStartTime().toString(), x.getEndTime().toString())).toList();
         return new RoomSummaryDto(room.getId(),
                 room.getName(),
                 room.getDescription(),
                 room.getDeadlineDate().toString(),
-                room.getDeadlineTime().toString());
+                room.getDeadlineTime().toString(),
+                termDtos);
+    }
+
+    public void addUserToRoom(long roomId, long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id: " + userId + " not found."));
+
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RoomNotFoundException("Room with id: " + userId + " not found."));
+
+        room.getJoinedUsers().add(user);
+        roomRepository.save(room);
     }
 
 }

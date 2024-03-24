@@ -1,8 +1,10 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { getRoomById } from "../helpers/roomApi";
 import { Div } from "../ui/div";
 import { useParams } from "react-router-dom";
 import Calendar from "../components/Calendar";
+import Sharing from "../components/linkSharing/linkSharing"
 const SummaryRoomPage=()=>{
     const {roomId}=useParams()
     const [room,setRoom]=useState(null)
@@ -12,6 +14,7 @@ const SummaryRoomPage=()=>{
             try{
                 let response=await getRoomById(roomId);
                 setRoom(response.data)
+                console.log("here")
                 console.log(response)
             }catch(err){
                 setIsAlert(true)
@@ -20,6 +23,8 @@ const SummaryRoomPage=()=>{
         getRoomDetails()
         return ()=>{}
     },[])
+
+
     return(<div className="SummaryRoomPage flex items-center flex-col justify-center h-screen">
         {!isAlert&&(room===null?<div>loading</div>:
         <>
@@ -48,11 +53,13 @@ const SummaryRoomPage=()=>{
                 {room.description===""?"brak":room.description}
             </Div>
             <Calendar noEditTerms={room.terms} className="w-3/4 h-full"/>
+            <Sharing roomID={roomId}/>
         </>
         )}
         {isAlert&&<div className="alert alert-danger w-fit flex text-center absolute right-3 bottom-0" role="alert">
             Spróbuj ponownie później
         </div>}
+        
     </div>)
 }
 
