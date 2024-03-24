@@ -9,7 +9,14 @@ import com.example.server.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -57,8 +64,14 @@ public class RoomController {
         return ResponseEntity.ok(termService.getRoomTerms(roomId));
     }
 
+    /**
+     * Create a room.
+     * @param roomDto the room dto.
+     * @return the room dto.
+     */
     @PostMapping("")
-    public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto) {
+    public ResponseEntity<RoomDto> createRoom(
+            final @RequestBody RoomDto roomDto) {
         Room room = Room.builder()
                 .name(roomDto.name())
                 .description(roomDto.description())
@@ -76,18 +89,35 @@ public class RoomController {
         return new ResponseEntity<>(savedRoomDto, OK);
     }
 
+    /**
+     * Assign terms to the room.
+     * @param id the room id.
+     * @param termsDto the terms dto.
+     * @return the http status.
+     */
     @PutMapping("/{id}/terms")
-    public ResponseEntity<HttpStatus> assignTerms(@PathVariable Long id, @RequestBody List<TermDto> termsDto) {
+    public ResponseEntity<HttpStatus> assignTerms(
+            final@PathVariable Long id,
+            final @RequestBody List<TermDto> termsDto) {
         roomService.assignTerms(id, termsDto);
         return new ResponseEntity<>(OK);
     }
 
+    /**
+     * Get the room by id.
+     * @param id the room id.
+     * @return the room.
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<Room> getRoom(@PathVariable Long id) {
+    public ResponseEntity<Room> getRoom(final @PathVariable Long id) {
         Room room = roomService.getRoom(id);
         return new ResponseEntity<>(room, OK);
     }
 
+    /**
+     * Get all rooms.
+     * @return the rooms.
+     */
     @GetMapping("")
     public ResponseEntity<List<RoomDto>> getRooms() {
         List<RoomDto> rooms =  roomService.getRooms().stream()

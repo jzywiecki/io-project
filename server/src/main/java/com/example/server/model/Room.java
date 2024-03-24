@@ -91,7 +91,11 @@ public class Room {
             cascade = { CascadeType.PERSIST})
     private List<Result> results;
 
+    /**
+     *  Terms setter.
+     * @param termSet Set of terms to be set.
+     */
     public void setTerms(final Set<Term> termSet) {
-        terms = termSet;
+        this.terms = termSet;
     }
 }

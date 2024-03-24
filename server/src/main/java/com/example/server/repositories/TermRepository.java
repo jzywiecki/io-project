@@ -12,6 +12,12 @@ import java.util.List;
 
 @Repository
 public interface TermRepository extends JpaRepository<Term, Long> {
+    /**
+     * Find term by day and start time.
+     * @param day
+     * @param startTime
+     * @return the term.
+     */
      Optional<Term> findByDayAndStartTime(DayOfWeek day, LocalTime startTime);
 
     /**
