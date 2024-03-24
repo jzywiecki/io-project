@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import React, { useEffect } from 'react';
 import { useParams } from "react-router-dom";
+import { min } from "lodash";
 
 const serverUrl = "http://localhost:8080";
 
@@ -17,7 +18,7 @@ const VotingPage=()=>{
     const availableTermsFetch = async () => {
         try {
             const res = await fetch(
-                `${serverUrl}/api/room/get-terms-in-room/${roomId}`,
+                `${serverUrl}/api/room/get-terms-in-room/${roomId}/${userId}`,
                 {
                         method: "GET",
                         headers: {
@@ -27,23 +28,28 @@ const VotingPage=()=>{
                     },
                 );
                 const data = await res.json();
+                console.log("data:");
                 console.log(data);
 
                 const termList = [];
                 data.forEach((term) => {
-                    const actualRoomId = term.id;
+                    var startTimeToReturn = new Date();
+                    var endTimeToReturn = new Date();
 
-                    const [hours, minutes, seconds] = term.startTime.split(":").map(Number);
-                    const start = new Date();
-                    start.setHours(hours);
-                    start.setMinutes(minutes);
-                    start.setSeconds(seconds);
-                
-                    const [endHours, endMinutes, endSeconds] = term.endTime.split(":").map(Number);
-                    const end = new Date();
-                    end.setHours(endHours);
-                    end.setMinutes(endMinutes);
-                    end.setSeconds(endSeconds);
+                    const startTime = term.startTime
+                    const endTime = term.endTime
+                    const startHour = startTime.slice(0,2);
+                    const endHour = endTime.slice(0,2);
+                    const endMinute = endTime.slice(3,5);
+                    const startMinute = startTime.slice(3,5);
+
+                    startTimeToReturn.setHours(startHour);
+                    startTimeToReturn.setMinutes(startMinute);
+                    endTimeToReturn.setHours(endHour);
+                    endTimeToReturn.setMinutes(endMinute);
+            
+                    
+                    const actualTermId = term.id;
                 
                     var day;
                     switch (term.day) {
@@ -56,10 +62,10 @@ const VotingPage=()=>{
                     }
 
                     termList.push({
-                        id: actualRoomId,
+                        id: actualTermId,
                         day: day,
-                        startTime: start,
-                        endTime: end,
+                        startTime: startTimeToReturn,
+                        endTime: endTimeToReturn,
                     });
                 });
                 
@@ -110,6 +116,9 @@ const VotingPage=()=>{
                 setVotingStatus("Ups... błąd podczas głosowania :(");
             });
     }
+
+    console.log("elo:")
+    console.log(availableTerms);
 
 
     const [pickedTerms,setPickedTerms] = useState([])

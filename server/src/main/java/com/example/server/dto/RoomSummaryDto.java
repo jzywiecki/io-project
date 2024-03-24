@@ -9,5 +9,5 @@ public record RoomSummaryDto(Long id,
                              String description,
                              String deadlineDate,
                              String deadlineTime,
-                             List<TermDto> terms)  {
+                             List<TermStringDto> terms)  {
 }

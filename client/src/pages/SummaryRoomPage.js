@@ -14,6 +14,7 @@ const SummaryRoomPage=()=>{
             try{
                 let response=await getRoomById(roomId);
                 setRoom(response.data)
+                console.log("here")
                 console.log(response)
             }catch(err){
                 setIsAlert(true)
@@ -22,6 +23,8 @@ const SummaryRoomPage=()=>{
         getRoomDetails()
         return ()=>{}
     },[])
+
+
     return(<div className="SummaryRoomPage flex items-center flex-col justify-center h-screen">
         {!isAlert&&(room===null?<div>loading</div>:
         <>
