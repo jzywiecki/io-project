@@ -5,7 +5,6 @@ import com.example.server.model.Room;
 import com.example.server.model.Term;
 import com.example.server.model.User;
 import com.example.server.repositories.*;
-import com.example.server.model.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -129,28 +128,6 @@ public class Configurator {
                         time = time.plusHours(1).plusMinutes(45);
                     }
                 }
-
-
-                //save example terms
-                termRepository.save(exampleTerm1);
-                termRepository.save(exampleTerm2);
-                termRepository.save(exampleTerm3);
-
-
-                Result exampleResult1 = Result.builder()
-                        .term(exampleTerm1)
-                        .room(exampleRoom)
-                        .user(exampleStudent1)
-                        .build();
-
-                Result exampleResult2 = Result.builder()
-                        .term(exampleTerm2)
-                        .room(exampleRoom)
-                        .user(exampleStudent2)
-                        .build();
-
-                resultRepository.save(exampleResult1);
-                resultRepository.save(exampleResult2);
             }
         };
     }
