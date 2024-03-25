@@ -4,9 +4,16 @@
 
 .link-sharing-button {
     margin-top: 5px;
+    margin-bottom: 5px;
     margin-left: 5px;
     padding: 8px 16px;
     background-color: #00bcd4;
     border-radius: 4px;
     color: white;
+}
+
+.link-sharing-div {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: auto;
 }

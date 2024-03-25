@@ -24,11 +24,11 @@ const RoomListPage=()=>{
         return ()=>{};
     },[])
     return (<div className="h-screen">
-        <h1 className="text-center font-bold text-3xl w-full my-3">Room List</h1>
+        <h1 className="text-center font-bold text-3xl w-full my-3">Lista zajęć</h1>
         <div className="RoomListPage flex flex-col items-center h-fit justify-center">
             {roomList.map(room=>(<Div key={room.id} className="flex justify-between hover:bg-slate-100 cursor-default" onClick={()=>{navigate(`/room/${room.id}`)}}>
                 <div>
-                    <span className="font-bold">Name:&nbsp;</span> 
+                    <span className="font-bold">Nazwa:&nbsp;</span> 
                     {room.name}
                 </div>
                 <div>
