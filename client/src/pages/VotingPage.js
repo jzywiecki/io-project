@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import React, { useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import { min } from "lodash";
+import { getAvailableTermsInRoomByRoomId } from "../helpers/roomApi";
+
 
 const serverUrl = "http://localhost:8080";
 
@@ -15,21 +16,10 @@ const VotingPage=()=>{
 
 
     useEffect(() => {
-    const availableTermsFetch = async () => {
-        try {
-            const res = await fetch(
-                `${serverUrl}/api/room/get-terms-in-room/${roomId}/${userId}`,
-                {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                        },
-                    },
-                );
-                const data = await res.json();
-                console.log("data:");
-                console.log(data);
+        const getAvailableTerms = async () => {
+            try {
+                const response = await getAvailableTermsInRoomByRoomId(roomId, userId);
+                const data = response.data;
 
                 const termList = [];
                 data.forEach((term) => {
@@ -75,7 +65,7 @@ const VotingPage=()=>{
                 console.error(error);
             }
         };
-        availableTermsFetch();
+        getAvailableTerms();
     }, []);
 
     const sendTerms = async(terms)=>{
