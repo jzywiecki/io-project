@@ -63,11 +63,11 @@ public class RoomController {
      */
     //TODO:
     @GetMapping("/get-terms-in-room/{roomId}/{userId}")
-    public ResponseEntity<List<TermStringDto>> getRoomTerms(
+    public ResponseEntity<List<TermDto>> getRoomTerms(
             final @PathVariable Long roomId,
             final @PathVariable Long userId) {
         roomService.addUserToRoom(roomId, userId);
-        List<TermStringDto> terms = termService.getRoomTerms(roomId);
+        List<TermDto> terms = termService.getRoomTerms(roomId);
         return ResponseEntity.ok(terms);
     }
 

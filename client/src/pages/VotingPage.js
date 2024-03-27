@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { getAvailableTermsInRoomByRoomId } from "../helpers/roomApi";
 import { getDayNumber } from "../helpers/common";
+import { vote } from "../helpers/voteApi";
 
 const serverUrl = "http://localhost:8080";
 
@@ -16,6 +17,7 @@ const VotingPage=()=>{
 
 
     useEffect(() => {
+
         const getAvailableTerms = async () => {
             try {
                 const response = await getAvailableTermsInRoomByRoomId(roomId, userId);
@@ -53,44 +55,33 @@ const VotingPage=()=>{
     const sendTerms = async(terms)=>{
 
         setVotingStatus("Trwa wysyłanie głosów...")
+        console.log("userID: " + userId);
+        console.log("roomID: " + roomId);
 
-        const votesData = {
-            user_id: userId,
-            room_id: roomId,
-            terms_id: []
+        const userPreferencesRequestBody = {
+            userId: userId,
+            roomId: roomId,
+            termsId: []
         };
 
         terms.forEach(term => {
-            votesData.terms_id.push(term.id);
+            userPreferencesRequestBody.termsId.push(term.id);
         });
 
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(votesData)
-          };
-
-        fetch(serverUrl + "/api/vote/new-votes", requestOptions)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-               return response.json();
-            })
-            .then(data => {
-                console.log('Sukces:', data);
-                setVotingStatus("Głosowanie zakończone pomyślnie :)");
-            })
-            .catch(error => {
-                console.error('Błąd:', error);
-                setVotingStatus("Ups... błąd podczas głosowania :(");
-            });
+        try {
+            const response = await vote(userPreferencesRequestBody);
+        
+            if (response.status !== 200) {
+                throw new Error('Network response was not 200');
+            }
+        
+            setVotingStatus("Głosowanie zakończone pomyślnie.");
+        } catch (error) {
+            console.error('Error:', error);
+            setVotingStatus("Ups... błąd podczas głosowania :(");
+        }
     }
 
-    console.log("elo:")
-    console.log(availableTerms);
 
 
     const [pickedTerms,setPickedTerms] = useState([])

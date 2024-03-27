@@ -55,23 +55,23 @@ public class VoteService {
         List<Vote> votesEntityToSave = new ArrayList<>();
 
         User user = userRepository
-                .findById(votesDto.user_id())
+                .findById(votesDto.userId())
                 .orElseThrow(
                         () -> new UserNotFoundException("User with id: "
-                                + votesDto.user_id()
+                                + votesDto.userId()
                                 + " not found.")
                 );
 
         Room room = roomRepository
-                .findById(votesDto.room_id())
+                .findById(votesDto.roomId())
                 .orElseThrow(
                         () -> new RoomNotFoundException("Room with id: "
-                                + votesDto.room_id()
+                                + votesDto.roomId()
                                 + " not found.")
                 );
 
         //voteRepository.deleteAllByUserIdAndRoomId(user.getId(), room.getId());
-        for (Long termId : votesDto.terms_id()) {
+        for (Long termId : votesDto.termsId()) {
             Term term = termRepository
                     .findById(termId)
                     .orElseThrow(
