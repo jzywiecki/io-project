@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import React, { useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { getAvailableTermsInRoomByRoomId } from "../helpers/roomApi";
-
+import { getDayNumber } from "../helpers/common";
 
 const serverUrl = "http://localhost:8080";
 
@@ -22,46 +22,28 @@ const VotingPage=()=>{
                 const data = response.data;
 
                 const termList = [];
+
                 data.forEach((term) => {
-                    var startTimeToReturn = new Date();
-                    var endTimeToReturn = new Date();
+                    var startTime = new Date();
+                    var endTime = new Date();
 
-                    const startTime = term.startTime
-                    const endTime = term.endTime
-                    const startHour = startTime.slice(0,2);
-                    const endHour = endTime.slice(0,2);
-                    const endMinute = endTime.slice(3,5);
-                    const startMinute = startTime.slice(3,5);
-
-                    startTimeToReturn.setHours(startHour);
-                    startTimeToReturn.setMinutes(startMinute);
-                    endTimeToReturn.setHours(endHour);
-                    endTimeToReturn.setMinutes(endMinute);
-            
-                    
-                    const actualTermId = term.id;
-                
-                    var day;
-                    switch (term.day) {
-                        case "MONDAY": day = 0; break;
-                        case "TUESDAY": day = 1; break;
-                        case "WEDNESDAY": day = 2; break;
-                        case "THURSDAY": day = 3; break;
-                        case "FRIDAY": day = 4; break;
-                        default: day = 0;
-                    }
+                    startTime.setHours(term.startTime[0]);
+                    startTime.setMinutes(term.startTime[1]);
+                    endTime.setHours(term.endTime[0]);
+                    endTime.setMinutes(term.endTime[1]);
 
                     termList.push({
-                        id: actualTermId,
-                        day: day,
-                        startTime: startTimeToReturn,
-                        endTime: endTimeToReturn,
+                        id: term.id,
+                        day: getDayNumber(term.day),
+                        startTime: startTime,
+                        endTime: endTime,
                     });
                 });
                 
                 setAvailableTerms(termList);
 
             } catch (error) {
+                console.log("Error: during get available terms in room.")
                 console.error(error);
             }
         };
