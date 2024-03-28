@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
@@ -34,6 +36,11 @@ public class Configurator {
      *  Constructor.
      * @param environment environment.
      */
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
     @Autowired
     public Configurator(final Environment environment) {
         this.env = environment;
@@ -145,6 +152,13 @@ public class Configurator {
                                 .plusMinutes(intervalMinute);
                     }
                 }
+
+                //init user
+                User user = User.builder()
+                        .email("malysz@student.agh.edu.pl")
+                        .active(false)
+                        .build();
+                userRepository.save(user);
             }
         };
     }
