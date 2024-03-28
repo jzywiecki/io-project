@@ -7,6 +7,7 @@ import SummaryRoomPage from './pages/SummaryRoomPage';
 import VotingPage from './pages/VotingPage';
 import AllUsersResults from './components/allUsersResults/allUsersResults';
 import Results from './components/userResults/userResults';
+import LoginAndRegisterPage from "./pages/LoginAndRegisterPage";
 
 function App () {
   return (
@@ -19,6 +20,7 @@ function App () {
           <Route path="/enroll/:roomId/:userId" element={<VotingPage />}/>
           <Route path="/results/:roomId" element={<AllUsersResults />}/>
           <Route path="/result/:roomId/:userId" element={<Results />}/>
+          <Route path="/login" element={<LoginAndRegisterPage/>}/>
         </Routes>
       </BrowserRouter>
       {/* <ClassSchedulerPage/>

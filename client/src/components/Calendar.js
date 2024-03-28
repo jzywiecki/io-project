@@ -5,6 +5,7 @@ import NoEditTerm from "./NoEditTerm";
 
 const Calendar=({terms,setPickedTerms, noEditTerms, className})=>{
     console.log(terms)
+    console.log(noEditTerms)
     const minHour = 8
     const maxHour = 20
     
