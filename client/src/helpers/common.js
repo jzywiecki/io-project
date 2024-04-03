@@ -26,8 +26,3 @@ export const getTermFromDto=(termDto)=> {
         endTime: endTime,
     };
 } 
-
-
-export const isTermPicked = (term, pickedTerms) => {
-    return true;
-};
