@@ -16,7 +16,10 @@ import com.example.server.exceptions.UserNotFoundException;
 import com.example.server.repositories.RoomRepository;
 import com.example.server.repositories.TermRepository;
 import com.example.server.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,60 +44,70 @@ public class RoomService {
      *  and saves the results in the database.
      * @param roomID room id.
      *  */
+
+
     public final void runAlgorithm(final long roomID) {
-        List<Term> terms = termRepository.findAllByRoomId(roomID);
+        Optional<Room> roomOptional = roomRepository.findById(roomID);
+        if (roomOptional.isPresent()) {
+            Room room = roomOptional.get();
+            List<Term> terms = termRepository.findAllByRoomId(roomID);
+            Map<User, List<Term>> userChoices = getUserChoices(room);
+            int termCount = terms.size();
 
-        Map<Term, Integer> termToIdx = new HashMap<>();
-        Map<Integer, Term> idxToTerm = new HashMap<>();
-        int tIdx = 0;
-        for (Term term:terms) {
-            termToIdx.put(term, tIdx);
-            idxToTerm.put(tIdx, term);
-            tIdx++;
-        }
-
-        Optional<Room> room = roomRepository.findById(roomID);
-        if (room.isPresent()) {
-            Map<User, List<Term>> map = getUserChoices(room.get());
-            Map<Integer, User> idxToUser = new HashMap<>();
             Map<User, Integer> userToIdx = new HashMap<>();
+            Map<Integer, User> idxToUser = new HashMap<>();
             Map<Integer, int[]> choices = new HashMap<>();
 
-            int uIdx = 0;
-            for (Map.Entry<User, List<Term>> entry:map.entrySet()) {
-                idxToUser.put(uIdx, entry.getKey());
-                userToIdx.put(entry.getKey(), uIdx);
+            int idx = 0;
+            for (Map.Entry<User, List<Term>> entry : userChoices.entrySet()) {
+                User user = entry.getKey();
+                List<Term> userTerms = entry.getValue();
+                userToIdx.put(user, idx);
+                idxToUser.put(idx, user);
 
-                int n = entry.getValue().size();
-                int[] entryChoices = new int[n];
+                int[] userChoicesIdx = userTerms.stream()
+                        .mapToInt(term -> terms.indexOf(term))
+                        .toArray();
+                choices.put(idx, userChoicesIdx);
 
-                for (int i = 0; i < n; i++) {
-                    entryChoices[i] = termToIdx.get(entry.getValue().get(i));
-                }
-
-                choices.put(userToIdx.get(entry.getKey()), entryChoices);
-
-                uIdx++;
+                idx++;
             }
 
-            Algorithm algorithm = new Algorithm(terms.size(), choices);
+            Algorithm algorithm = new Algorithm(termCount, choices);
             int[] assignment = algorithm.run();
-            System.out.println(Arrays.toString(assignment));
-            Map<User, Term> dbAssignment = new HashMap<>();
+            Map<User, Term> userTermMap = new HashMap<>();
             for (int i = 0; i < assignment.length; i++) {
                 User user = idxToUser.get(i);
-                Term term = idxToTerm.get(assignment[i]);
-                dbAssignment.put(user, term);
-                //System.out.println(user.getId() + " : " + term.getId());
+                Term term = terms.get(assignment[i]);
+                userTermMap.put(user, term);
             }
 
-            for (Map.Entry<User, Term> entry : dbAssignment.entrySet()) {
-                Result res = Result.builder()
-                        .room(room.get())
-                        .user(entry.getKey())
-                        .term(entry.getValue())
+            userTermMap.forEach((user, term) -> {
+                Result result = Result.builder()
+                        .room(room)
+                        .user(user)
+                        .term(term)
                         .build();
-                resultRepository.save(res);
+                resultRepository.save(result);
+            });
+        }
+    }
+
+    // checking every minute
+    @Scheduled(cron = "0 * * * * *")
+    public void runAlgorithmIfRoomDeadlinePassed() {
+        List<Room> rooms = roomRepository.findAll();
+        System.out.println("Checking rooms deadlines");
+        for (Room room : rooms) {
+            if ((room.getDeadlineDate().toLocalDate().isBefore(java.time.LocalDate.now()) || room.getDeadlineDate().toLocalDate().isEqual(java.time.LocalDate.now())) && room.getDeadlineTime().isBefore(java.time.LocalTime.now())) {
+                System.out.println("Running algorithm for room " + room.getId());
+                if (room.getVotes().isEmpty()) {
+                    System.out.println("No votes in room " + room.getId());
+                    continue;
+                }
+                System.out.println("Votes in room " + room.getId() + ": " + room.getVotes().size());
+
+                runAlgorithm(room.getId());
             }
         }
     }
