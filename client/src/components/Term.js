@@ -33,6 +33,7 @@ const Term = ({
     const [color, setColor] = useState('bg-white');
 
     useEffect(() => {
+        if (!isTermPicked) return;
         if (isTermPicked(term)) {
             setColor('bg-emerald-300');
         } 

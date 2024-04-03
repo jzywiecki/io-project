@@ -106,12 +106,16 @@ const VotingPage=()=>{
         }
     }
 
-
-
+    const  isTermPicked = (term) => {
+        if (!pickedTerms) {
+            return false;
+        }
+        return pickedTerms.some((item) => item.id === term.id);
+    };
 
     return(<div className={"ClassSchedulerPage p-5" + " flex flex-col justify-center h-screen"}>
         {roomId !== null&&<h1 className="text-center text-3xl font-bold absolute top-5 w-full">Wybierz terminy do głosowania.</h1>}
-        {roomId !== null&&<Calendar terms={availableTerms} setPickedTerms={setPickedTerms} pickedTerms={pickedTerms} />}
+        {roomId !== null&&<Calendar terms={availableTerms} setPickedTerms={setPickedTerms} isTermPicked={isTermPicked} />}
         {roomId !== null && <Button className="mt-5 w-1/2 justify-self-center" onClick={() => { sendTerms(pickedTerms) }}>Wyślij</Button>}
         {roomId !== null && <div className="text-center">{votingStatus}</div>}
     </div>)

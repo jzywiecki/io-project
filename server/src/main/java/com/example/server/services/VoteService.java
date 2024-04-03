@@ -16,12 +16,10 @@ import com.example.server.repositories.VoteRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -42,19 +40,11 @@ public class VoteService {
      * Vote repository.
      */
     private final VoteRepository voteRepository;
-    // IMPORTANT!
-    // vote method should be transactional
-    // and should delete all votes for the
-    // user and room before saving new votes.
-    // Now we can add vote but not remove previous.
-    // FIXME: During call saveAll(List<Vote>),
-    // FIXME: database reports error SQLITE_BUSY.
-    //
     /**
      * Adding new user votes and deleting previous ones.
      * @param votesDto
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void vote(final VotesDto votesDto) {
 
         List<Vote> votesEntityToSave = new ArrayList<>();
@@ -96,10 +86,14 @@ public class VoteService {
 
         voteRepository.saveAll(votesEntityToSave);
     }
-
-
-    public List<TermDto> getPreviousVotes(long userId, long roomId) {
-
+    /**
+     * Get previous votes of a user in a room.
+     * @param userId the user id.
+     * @param roomId the room id.
+     * @return the list of terms.
+     */
+    public List<TermDto> getPreviousVotes(final long userId,
+                                          final long roomId) {
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(
@@ -116,7 +110,8 @@ public class VoteService {
                                 + " not found.")
                 );
 
-        List<Vote> previousVotes = voteRepository.findAllByUserAndRoom(user, room);
+        List<Vote> previousVotes = voteRepository
+                .findAllByUserAndRoom(user, room);
         List<Term> selectedTerms = previousVotes.stream()
                 .map(Vote::getTerm)
                 .map(term -> (Term) Hibernate.unproxy(term))

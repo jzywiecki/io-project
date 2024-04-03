@@ -17,7 +17,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-
 import javax.sql.DataSource;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -51,7 +50,6 @@ public class Configurator {
         dataSource.setPassword("admin");
         return dataSource;
     }
-
 
     /**
      * Generating example data to database.

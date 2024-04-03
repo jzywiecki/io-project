@@ -3,17 +3,10 @@ import { CardDescription, CardTitle } from "../ui/card";
 import Term from "./Term";
 import NoEditTerm from "./NoEditTerm";
 
-const Calendar=({terms, pickedTerms, setPickedTerms, noEditTerms, className})=>{
+const Calendar=({terms, isTermPicked, setPickedTerms, noEditTerms, className})=>{
     console.log(terms)
     const minHour = 8
     const maxHour = 20
-
-    const  isTermPicked = (term) => {
-        if (!pickedTerms) {
-            return false;
-        }
-        return pickedTerms.some((item) => item.id === term.id);
-    }
     
     return (
         <div className={"relative h-[60vh] overflow-x-hidden overflow-y-scroll p-2 "+className}>
