@@ -3,10 +3,17 @@ import { CardDescription, CardTitle } from "../ui/card";
 import Term from "./Term";
 import NoEditTerm from "./NoEditTerm";
 
-const Calendar=({terms,setPickedTerms, noEditTerms, className})=>{
+const Calendar=({terms, pickedTerms, setPickedTerms, noEditTerms, className})=>{
     console.log(terms)
     const minHour = 8
     const maxHour = 20
+
+    const  isTermPicked = (term) => {
+        if (!pickedTerms) {
+            return false;
+        }
+        return pickedTerms.some((item) => item.id === term.id);
+    }
     
     return (
         <div className={"relative h-[60vh] overflow-x-hidden overflow-y-scroll p-2 "+className}>
@@ -68,7 +75,7 @@ const Calendar=({terms,setPickedTerms, noEditTerms, className})=>{
                     }
                 )}
                 {terms&&terms.map((term,i)=>(
-                    <Term term={term} minHour={minHour} setPickedTerms={setPickedTerms} key={i}/>
+                    <Term term={term} minHour={minHour} setPickedTerms={setPickedTerms} isTermPicked={isTermPicked} key={i}/>
                 ))}
                 {noEditTerms&&noEditTerms.map((term,i)=>(
                     <NoEditTerm term={term} minHour={minHour} key={i}/>

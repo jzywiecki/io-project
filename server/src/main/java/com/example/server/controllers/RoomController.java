@@ -61,7 +61,6 @@ public class RoomController {
      * @param roomId the room id.
      * @return the terms.
      */
-    //TODO:
     @GetMapping("/get-terms-in-room/{roomId}/{userId}")
     public ResponseEntity<List<TermDto>> getRoomTerms(
             final @PathVariable Long roomId,

@@ -1,5 +1,6 @@
 package com.example.server.services;
 
+import com.example.server.dto.TermDto;
 import com.example.server.dto.VotesDto;
 import com.example.server.exceptions.RoomNotFoundException;
 import com.example.server.exceptions.TermNotFoundException;
@@ -13,10 +14,14 @@ import com.example.server.repositories.TermRepository;
 import com.example.server.repositories.UserRepository;
 import com.example.server.repositories.VoteRepository;
 import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -49,7 +54,7 @@ public class VoteService {
      * Adding new user votes and deleting previous ones.
      * @param votesDto
      */
-    //@Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void vote(final VotesDto votesDto) {
 
         List<Vote> votesEntityToSave = new ArrayList<>();
@@ -70,7 +75,7 @@ public class VoteService {
                                 + " not found.")
                 );
 
-        //voteRepository.deleteAllByUserIdAndRoomId(user.getId(), room.getId());
+        voteRepository.deleteAllByUserIdAndRoomId(user.getId(), room.getId());
         for (Long termId : votesDto.termsId()) {
             Term term = termRepository
                     .findById(termId)
@@ -90,5 +95,41 @@ public class VoteService {
         }
 
         voteRepository.saveAll(votesEntityToSave);
+    }
+
+
+    public List<TermDto> getPreviousVotes(long userId, long roomId) {
+
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(
+                        () -> new UserNotFoundException("User with id: "
+                                + userId
+                                + " not found.")
+                );
+
+        Room room = roomRepository
+                .findById(roomId)
+                .orElseThrow(
+                        () -> new RoomNotFoundException("Room with id: "
+                                + roomId
+                                + " not found.")
+                );
+
+        List<Vote> previousVotes = voteRepository.findAllByUserAndRoom(user, room);
+        List<Term> selectedTerms = previousVotes.stream()
+                .map(Vote::getTerm)
+                .map(term -> (Term) Hibernate.unproxy(term))
+                .toList();
+
+        return selectedTerms.stream()
+                .map(term -> TermDto
+                        .builder()
+                        .id(term.getId())
+                        .day(term.getDay())
+                        .startTime(term.getStartTime())
+                        .endTime(term.getEndTime())
+                        .build())
+                .toList();
     }
 }

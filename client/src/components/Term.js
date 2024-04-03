@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardDescription } from '../ui/card'; 
 import { isEqual } from 'lodash';
+
 const Term = ({
     term,
     minHour,
-    setPickedTerms
+    setPickedTerms,
+    isTermPicked
 }) => {
     const startTime = term.startTime
     const endTime = term.endTime
@@ -29,6 +31,12 @@ const Term = ({
     const column = term.day+3;
 
     const [color, setColor] = useState('bg-white');
+
+    useEffect(() => {
+        if (isTermPicked(term)) {
+            setColor('bg-emerald-300');
+        } 
+    }, []);
 
     return (
         <>

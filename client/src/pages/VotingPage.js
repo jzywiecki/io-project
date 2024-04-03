@@ -4,8 +4,8 @@ import { Button } from "../ui/button";
 import React, { useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { getAvailableTermsInRoomByRoomId } from "../helpers/roomApi";
-import { getDayNumber } from "../helpers/common";
-import { vote } from "../helpers/voteApi";
+import { getTermFromDto } from "../helpers/common";
+import { vote, getUserVotedTermsInRoom } from "../helpers/voteApi";
 
 const serverUrl = "http://localhost:8080";
 
@@ -14,6 +14,7 @@ const VotingPage=()=>{
     const {roomId,userId} = useParams();
     const [availableTerms, setAvailableTerms] = useState([]);
     const [votingStatus, setVotingStatus] = useState([]);
+    const [pickedTerms,setPickedTerms] = useState([])
 
 
     useEffect(() => {
@@ -25,20 +26,14 @@ const VotingPage=()=>{
 
                 const termList = [];
 
-                data.forEach((term) => {
-                    var startTime = new Date();
-                    var endTime = new Date();
-
-                    startTime.setHours(term.startTime[0]);
-                    startTime.setMinutes(term.startTime[1]);
-                    endTime.setHours(term.endTime[0]);
-                    endTime.setMinutes(term.endTime[1]);
+                data.forEach((termDto) => {
+                    const term = getTermFromDto(termDto);
 
                     termList.push({
-                        id: term.id,
-                        day: getDayNumber(term.day),
-                        startTime: startTime,
-                        endTime: endTime,
+                        id: termDto.id,
+                        day: term.day,
+                        startTime: term.startTime,
+                        endTime: term.endTime,
                     });
                 });
                 
@@ -49,7 +44,36 @@ const VotingPage=()=>{
                 console.error(error);
             }
         };
+
+        const getPreviousPreferences = async () => {
+            try {
+                const response = await getUserVotedTermsInRoom(roomId, userId);
+                const data = response.data;
+
+                const termList = [];
+
+                data.forEach((termDto) => {
+                    const term = getTermFromDto(termDto);
+
+                    termList.push({
+                        id: termDto.id,
+                        day: term.day,
+                        startTime: term.startTime,
+                        endTime: term.endTime,
+                    });
+                });
+
+                console.log("Previous preferences: ");
+                console.log(termList);
+                setPickedTerms(termList);
+            } catch (error) {
+                console.log("Error: during get previous voted terms in room.")
+                console.error(error);
+            }
+        }
+
         getAvailableTerms();
+        getPreviousPreferences();
     }, []);
 
     const sendTerms = async(terms)=>{
@@ -84,10 +108,10 @@ const VotingPage=()=>{
 
 
 
-    const [pickedTerms,setPickedTerms] = useState([])
+
     return(<div className={"ClassSchedulerPage p-5" + " flex flex-col justify-center h-screen"}>
         {roomId !== null&&<h1 className="text-center text-3xl font-bold absolute top-5 w-full">Wybierz terminy do głosowania.</h1>}
-        {roomId !== null&&<Calendar terms={availableTerms} setPickedTerms={setPickedTerms}/>}
+        {roomId !== null&&<Calendar terms={availableTerms} setPickedTerms={setPickedTerms} pickedTerms={pickedTerms} />}
         {roomId !== null && <Button className="mt-5 w-1/2 justify-self-center" onClick={() => { sendTerms(pickedTerms) }}>Wyślij</Button>}
         {roomId !== null && <div className="text-center">{votingStatus}</div>}
     </div>)

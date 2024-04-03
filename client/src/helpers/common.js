@@ -10,3 +10,24 @@ export const getDayNumber=(day)=> {
         default: return 0;
     }
 }
+
+export const getTermFromDto=(termDto)=> {
+    var startTime = new Date();
+    var endTime = new Date();
+
+    startTime.setHours(termDto.startTime[0]);
+    startTime.setMinutes(termDto.startTime[1]);
+    endTime.setHours(termDto.endTime[0]);
+    endTime.setMinutes(termDto.endTime[1]);
+
+    return {
+        day: getDayNumber(termDto.day),
+        startTime: startTime,
+        endTime: endTime,
+    };
+} 
+
+
+export const isTermPicked = (term, pickedTerms) => {
+    return true;
+};
