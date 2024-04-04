@@ -102,8 +102,22 @@ public class RoomService {
 
             // send email to all users
             for (Map.Entry<User, Term> entry : dbAssignment.entrySet()) {
-                System.out.println("Sending email to " + entry.getKey().getEmail() + " for term " + entry.getValue().getDay() + " " + entry.getValue().getStartTime());
-                mailService.send(entry.getKey().getEmail(), "[Plan AGH] Twój plan już jest dla przedmiotu " + room.get().getName() + "!", "Otrzymany przez Ciebie termin to " + Utils.getDayInPolish(entry.getValue().getDay()) + " " + entry.getValue().getStartTime() + " - " + entry.getValue().getEndTime() + "!");
+                System.out.println("Sending email to "
+                        + entry.getKey().getEmail()
+                        + " for term "
+                        + entry.getValue().getDay()
+                        + " "
+                        + entry.getValue().getStartTime());
+                mailService.send(entry.getKey().getEmail(),
+                "[Plan AGH] Twój plan już jest dla przedmiotu "
+                        + room.get().getName()
+                        + "!", "Otrzymany przez Ciebie termin to "
+                        + Utils.getDayInPolish(entry.getValue().getDay())
+                        + " "
+                        + entry.getValue().getStartTime()
+                        + " - "
+                        + entry.getValue().getEndTime()
+                        + "!");
             }
         }
     }
