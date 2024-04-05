@@ -6,7 +6,6 @@ const Term = ({
     term,
     minHour,
     setPickedTerms,
-    isTermPicked
 }) => {
     const startTime = term.startTime
     const endTime = term.endTime
@@ -31,13 +30,6 @@ const Term = ({
     const column = term.day+3;
 
     const [color, setColor] = useState('bg-white');
-
-    useEffect(() => {
-        if (!isTermPicked) return;
-        if (isTermPicked(term)) {
-            setColor('bg-emerald-300');
-        } 
-    }, []);
 
     return (
         <>

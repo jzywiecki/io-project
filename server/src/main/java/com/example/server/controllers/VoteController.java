@@ -1,5 +1,6 @@
 package com.example.server.controllers;
 
+import com.example.server.dto.UserPreferences;
 import com.example.server.dto.VotingPageDto;
 import com.example.server.services.VoteService;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,20 @@ public class VoteController {
             final @PathVariable long userId
     ) {
         return ResponseEntity.ok(voteService.getVotingPage(roomId, userId));
+    }
+
+    /**
+     * Save user preferences.
+     * @param roomId, userId, votingPageDto.
+     */
+    @PostMapping(value="/save-preferences/{roomId}/{userId}", consumes="application/json")
+    public ResponseEntity<Void> savePreferences(
+            final @PathVariable long roomId,
+            final @PathVariable long userId,
+            final @RequestBody UserPreferences votingPageDto
+    ) {
+        voteService.savePreferences(roomId, userId, votingPageDto);
+        return ResponseEntity.ok().build();
     }
 
 }

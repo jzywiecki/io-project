@@ -76,6 +76,13 @@ const VotingTerm = ({
         }
     };
 
+    const handleTextareaChange = (e) => {
+        const comment = e.target.value;
+        if (termWithIdComments.current) {
+            termWithIdComments.current.set(term.id.toString(), comment);
+        }
+    };
+
     return (
         <>
             <div
@@ -102,6 +109,7 @@ const VotingTerm = ({
                                 placeholder="Your comment..."
                                 defaultValue={termWithIdComments.current.get(term.id.toString())}
                                 onClick={handleTextareaClick} 
+                                onChange={handleTextareaChange} 
                             />
                             <button className="mt-2 bg-red-500 text-white px-3 py-1 rounded" onClick={handleUnpinComment}>Usuń komentarz</button>
                         </>

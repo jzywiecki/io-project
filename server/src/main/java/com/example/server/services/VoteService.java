@@ -1,15 +1,12 @@
 package com.example.server.services;
 
-import com.example.server.dto.TermDto;
-import com.example.server.dto.VotesDto;
-import com.example.server.dto.VotingPageDto;
+import com.example.server.dto.*;
 import com.example.server.exceptions.RoomNotFoundException;
 import com.example.server.exceptions.TermNotFoundException;
 import com.example.server.exceptions.UserNotFoundException;
 import com.example.server.model.*;
 import com.example.server.repositories.*;
 import lombok.AllArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +39,6 @@ public class VoteService {
      * @param votesDto
      */
     private final CommentRepository commentRepository;
-
-
 
 
 
@@ -114,5 +109,76 @@ public class VoteService {
                 availableTermsDto,
                 termWithIdIsSelected,
                 termWithIdComments);
+    }
+
+
+    /**
+     * Save user preferences.
+     * @param roomId the room id.
+     * @param userId the user id.
+     * @param votingPageDto the voting page dto.
+     */
+    @Transactional
+    public void savePreferences(long roomId, long userId, UserPreferences votingPageDto) {
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(
+                        () -> new UserNotFoundException("User with id: "
+                                + userId
+                                + " not found.")
+                );
+
+        Room room = roomRepository
+                .findById(roomId)
+                .orElseThrow(
+                        () -> new RoomNotFoundException("Room with id: "
+                                + roomId
+                                + " not found.")
+                );
+
+        commentRepository.deleteAllByUserIdAndRoomId(userId, roomId);
+        voteRepository.deleteAllByUserIdAndRoomId(userId, roomId);
+
+        List<Vote> votes = new ArrayList<>();
+        List<Comment> comments = new ArrayList<>();
+
+        for (long termId : votingPageDto.selectedTerms()) {
+            Term term = termRepository
+                    .findById(termId)
+                    .orElseThrow(
+                            () -> new TermNotFoundException("Term with id: "
+                                    + termId
+                                    + " not found.")
+                    );
+            Vote vote = Vote.builder()
+                    .user(user)
+                    .room(room)
+                    .term(term)
+                    .build();
+            votes.add(vote);
+
+        }
+
+        for (CommentDto commentDto : votingPageDto.comments()) {
+            Term term = termRepository
+                    .findById(commentDto.termId())
+                    .orElseThrow(
+                            () -> new TermNotFoundException("Term with id: "
+                                    + commentDto.termId()
+                                    + " not found.")
+                    );
+
+
+            Comment comment = Comment.builder()
+                    .user(user)
+                    .room(room)
+                    .term(term)
+                    .content(commentDto.comment())
+                    .build();
+            comments.add(comment);
+        }
+
+        voteRepository.saveAll(votes);
+        commentRepository.saveAll(comments);
     }
 }
