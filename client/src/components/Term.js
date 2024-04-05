@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { Card, CardDescription } from '../ui/card'; 
 import { isEqual } from 'lodash';
 
 const Term = ({
     term,
     minHour,
-    setPickedTerms,
+    setPickedTerms
 }) => {
     const startTime = term.startTime
     const endTime = term.endTime

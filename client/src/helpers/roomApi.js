@@ -17,7 +17,3 @@ export const getRoomList=()=>{
 export const getRoomById=(id)=>{
     return axios.get(url+`/${id}`)
 }
-
-export const getAvailableTermsInRoomByRoomId=(roomId, userId)=>{
-    return axios.get(url+`/get-terms-in-room/${roomId}/${userId}`)
-}
