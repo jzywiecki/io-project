@@ -2,8 +2,9 @@ import { useState } from "react";
 import { CardDescription, CardTitle } from "../ui/card";
 import Term from "./Term";
 import NoEditTerm from "./NoEditTerm";
+import VotingTerm from "./VotingTerm";
 
-const Calendar=({terms, isTermPicked, setPickedTerms, noEditTerms, className})=>{
+const Calendar=({terms, setPickedTerms, noEditTerms, className, votingTerms, termWithIdIsSelected, termWithIdComments })=>{
     console.log(terms)
     const minHour = 8
     const maxHour = 20
@@ -68,11 +69,14 @@ const Calendar=({terms, isTermPicked, setPickedTerms, noEditTerms, className})=>
                     }
                 )}
                 {terms&&terms.map((term,i)=>(
-                    <Term term={term} minHour={minHour} setPickedTerms={setPickedTerms} isTermPicked={isTermPicked} key={i}/>
+                    <Term term={term} minHour={minHour} setPickedTerms={setPickedTerms} key={i}/>
                 ))}
                 {noEditTerms&&noEditTerms.map((term,i)=>(
                     <NoEditTerm term={term} minHour={minHour} key={i}/>
                 ))}
+                 {votingTerms&&votingTerms.map((term,i)=>(
+                    <VotingTerm term={term} minHour={minHour} key={i} termWithIdIsSelected={termWithIdIsSelected} termWithIdComments={termWithIdComments}/>
+                ))}               
             </div>
         </div>
     );

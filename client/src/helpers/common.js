@@ -21,6 +21,7 @@ export const getTermFromDto=(termDto)=> {
     endTime.setMinutes(termDto.endTime[1]);
 
     return {
+        id: termDto.id,
         day: getDayNumber(termDto.day),
         startTime: startTime,
         endTime: endTime,

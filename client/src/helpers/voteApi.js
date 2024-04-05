@@ -10,3 +10,8 @@ export const vote=(userPreferences)=>{
 export const getUserVotedTermsInRoom=(roomId, userId)=>{
     return axios.get(url + `/get-user-votes/${roomId}/${userId}`)
 }
+
+
+export const getVotingPage=(roomId, userId)=>{
+    return axios.get(url + `/get-voting-page/${roomId}/${userId}`)
+}
