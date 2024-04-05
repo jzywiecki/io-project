@@ -9,9 +9,11 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     /**
-     * Find all comments by room id.
+     * Find all comments by room id and user id.
+     *
      * @param roomId the room id.
-     * @return the comments.
+     * @param userId the user id.
+     * @return the list of comments.
      */
     List<Comment> findAllByRoomIdAndUserId(Long roomId, Long userId);
 

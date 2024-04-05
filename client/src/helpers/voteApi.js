@@ -17,25 +17,6 @@ export const getVotingPage=(roomId, userId)=>{
     return axios.get(url + `/get-voting-page/${roomId}/${userId}`)
 }
 
-export const savePreferences = (roomId, userId, userPreferences) => {
-    let dataBackendFormat = {
-        selectedTerms: [],
-        comments: []
-    }
-
-    for (const [key, _] of userPreferences.termWithIdIsSelected.entries()) {
-        if (userPreferences.termWithIdIsSelected.get(key)) {
-            const parsedKey = parseInt(key, 10);
-            dataBackendFormat.selectedTerms.push(parsedKey);
-        }
-    }
-
-    for (const [key, value] of userPreferences.termWithIdComments.entries()) {
-        if (userPreferences.termWithIdComments.get(key) === "") {
-            continue;
-        }
-        dataBackendFormat.comments.push({termId: key, comment: value});
-    }
-    
-    return axios.post(url + `/save-preferences/${roomId}/${userId}`, dataBackendFormat) ;
+export const savePreferences = (roomId, userId, userPreferences) => {    
+    return axios.post(url + `/save-preferences/${roomId}/${userId}`, userPreferences) ;
 }

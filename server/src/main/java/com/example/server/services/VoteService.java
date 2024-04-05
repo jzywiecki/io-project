@@ -1,11 +1,23 @@
 package com.example.server.services;
 
-import com.example.server.dto.*;
+
+import com.example.server.dto.VotingPageDto;
 import com.example.server.exceptions.RoomNotFoundException;
 import com.example.server.exceptions.TermNotFoundException;
 import com.example.server.exceptions.UserNotFoundException;
-import com.example.server.model.*;
-import com.example.server.repositories.*;
+import com.example.server.model.User;
+import com.example.server.model.Vote;
+import com.example.server.model.Comment;
+import com.example.server.dto.CommentDto;
+import com.example.server.dto.UserPreferences;
+import com.example.server.dto.TermDto;
+import com.example.server.repositories.RoomRepository;
+import com.example.server.repositories.TermRepository;
+import com.example.server.repositories.UserRepository;
+import com.example.server.repositories.VoteRepository;
+import com.example.server.repositories.CommentRepository;
+import com.example.server.model.Room;
+import com.example.server.model.Term;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,15 +52,13 @@ public class VoteService {
      */
     private final CommentRepository commentRepository;
 
-
-
     /**
      * Get voting page.
      * @param roomId the room id.
      * @param userId the user id.
      * @return the voting page dto.
      */
-    public VotingPageDto getVotingPage(long roomId, long userId) {
+    public VotingPageDto getVotingPage(final long roomId, final long userId) {
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(
@@ -98,7 +108,10 @@ public class VoteService {
                         term -> term.getId(),
                         term -> {
                             Comment comment = comments.stream()
-                                    .filter(c -> c.getTerm() != null && c.getTerm().getId().equals(term.getId()))
+                                    .filter(c -> c.getTerm() != null
+                                            && c.getTerm()
+                                            .getId()
+                                            .equals(term.getId()))
                                     .findFirst()
                                     .orElse(null);
                             return comment != null ? comment.getContent() : "";
@@ -119,7 +132,10 @@ public class VoteService {
      * @param votingPageDto the voting page dto.
      */
     @Transactional
-    public void savePreferences(long roomId, long userId, UserPreferences votingPageDto) {
+    public void savePreferences(final long roomId,
+                                final long userId,
+                                final UserPreferences votingPageDto) {
+
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(

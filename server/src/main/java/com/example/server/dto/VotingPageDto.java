@@ -7,5 +7,5 @@ public record VotingPageDto(
         List<TermDto> availableTerms,
         Map<Long, Boolean> termWithIdIsSelected,
         Map<Long, String> termWithIdComments
-){
+) {
 }

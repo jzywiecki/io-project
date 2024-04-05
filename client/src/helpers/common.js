@@ -27,3 +27,27 @@ export const getTermFromDto=(termDto)=> {
         endTime: endTime,
     };
 } 
+
+
+export const prepareUserPreferences=(termWithIdIsSelected, termWithIdComments)=> {
+    let dataBackendFormat = {
+        selectedTerms: [],
+        comments: []
+    }
+
+    for (const [key, _] of termWithIdIsSelected.entries()) {
+        if (termWithIdIsSelected.get(key)) {
+            const parsedKey = parseInt(key, 10);
+            dataBackendFormat.selectedTerms.push(parsedKey);
+        }
+    }
+
+    for (const [key, value] of termWithIdComments.entries()) {
+        if (termWithIdComments.get(key) === "") {
+            continue;
+        }
+        dataBackendFormat.comments.push({termId: key, comment: value}); 
+    }
+
+    return dataBackendFormat;
+}

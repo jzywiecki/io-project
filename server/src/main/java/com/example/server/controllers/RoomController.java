@@ -3,7 +3,6 @@ package com.example.server.controllers;
 import com.example.server.dto.RoomDto;
 import com.example.server.dto.RoomSummaryDto;
 import com.example.server.dto.TermDto;
-import com.example.server.dto.TermStringDto;
 import com.example.server.model.Room;
 import com.example.server.services.RoomService;
 import com.example.server.services.TermService;
