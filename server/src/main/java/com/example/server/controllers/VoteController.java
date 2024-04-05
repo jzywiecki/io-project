@@ -2,6 +2,7 @@ package com.example.server.controllers;
 
 import com.example.server.dto.TermDto;
 import com.example.server.dto.VotesDto;
+import com.example.server.dto.VotingPageDto;
 import com.example.server.services.VoteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,8 +39,15 @@ public class VoteController {
             final @PathVariable long roomId,
             final @PathVariable long userId
     ) {
-
-
         return ResponseEntity.ok(voteService.getPreviousVotes(userId, roomId));
     }
+
+    @GetMapping("/get-voting-page/{roomId}/{userId}")
+    public ResponseEntity<VotingPageDto> getVotingPage(
+            final @PathVariable long roomId,
+            final @PathVariable long userId
+    ) {
+        return ResponseEntity.ok(voteService.getVotingPage(roomId, userId));
+    }
+
 }
