@@ -12,10 +12,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Date;
 import java.time.LocalTime;
@@ -28,6 +25,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Setter
 public class Room {
     /**
      *  Room id.
@@ -39,6 +37,10 @@ public class Room {
      *  Room name.
      */
     private String name;
+    /**
+     *  Room finished status.
+     */    
+    private Boolean finished;
     /**
      *  Room description.
      */

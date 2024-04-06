@@ -17,3 +17,7 @@ export const getRoomList=()=>{
 export const getRoomById=(id)=>{
     return axios.get(url+`/${id}`)
 }
+
+export const stopVoting=(roomId)=>{
+    return axios.post(url+`/stop-voting/${roomId}`)
+}

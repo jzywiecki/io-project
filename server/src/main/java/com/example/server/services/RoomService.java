@@ -16,9 +16,7 @@ import com.example.server.exceptions.UserNotFoundException;
 import com.example.server.repositories.RoomRepository;
 import com.example.server.repositories.TermRepository;
 import com.example.server.repositories.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,9 +44,15 @@ public class RoomService {
 
 
     public final void runAlgorithm(final long roomID) {
+
         Optional<Room> roomOptional = roomRepository.findById(roomID);
         if (roomOptional.isPresent()) {
             Room room = roomOptional.get();
+            room.setFinished(true);
+            if (room.getVotes().isEmpty()) {
+                System.out.println("No votes in room " + room.getId() + ". Skipping algorithm.");
+                return;
+            }
             List<Term> terms = termRepository.findAllByRoomId(roomID);
             Map<User, List<Term>> userChoices = getUserChoices(room);
             int termCount = terms.size();
@@ -73,6 +76,7 @@ public class RoomService {
                 idx++;
             }
 
+            System.out.println("Running algorithm for room " + room.getId() + " with " + userChoices.size() + " users and " + termCount + " terms.");
             Algorithm algorithm = new Algorithm(termCount, choices);
             int[] assignment = algorithm.run();
             Map<User, Term> userTermMap = new HashMap<>();
@@ -99,8 +103,16 @@ public class RoomService {
         List<Room> rooms = roomRepository.findAll();
         System.out.println("Checking rooms deadlines");
         for (Room room : rooms) {
-            if ((room.getDeadlineDate().toLocalDate().isBefore(java.time.LocalDate.now()) || room.getDeadlineDate().toLocalDate().isEqual(java.time.LocalDate.now())) && room.getDeadlineTime().isBefore(java.time.LocalTime.now())) {
-                System.out.println("Running algorithm for room " + room.getId());
+            if (!room.getFinished() 
+                && (room.getDeadlineDate()
+                        .toLocalDate()
+                        .isBefore(java.time.LocalDate.now())
+                    || room.getDeadlineDate()
+                           .toLocalDate()
+                           .isEqual(java.time.LocalDate.now()))
+                && room.getDeadlineTime()
+                       .isBefore(java.time.LocalTime.now())) {
+                roomRepository.save(room);
                 if (room.getVotes().isEmpty()) {
                     System.out.println("No votes in room " + room.getId());
                     continue;
@@ -108,6 +120,7 @@ public class RoomService {
                 System.out.println("Votes in room " + room.getId() + ": " + room.getVotes().size());
 
                 runAlgorithm(room.getId());
+
             }
         }
     }

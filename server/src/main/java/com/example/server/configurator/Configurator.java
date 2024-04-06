@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
@@ -25,6 +26,7 @@ import java.time.LocalTime;
 
 @Configuration
 @EnableTransactionManagement
+@EnableScheduling
 public class Configurator {
     /**
      *  Environment variable.
@@ -51,7 +53,6 @@ public class Configurator {
         dataSource.setPassword("admin");
         return dataSource;
     }
-
 
     /**
      * Generating example data to database.
@@ -113,6 +114,7 @@ public class Configurator {
                                 LocalDateTime.now().toLocalDate()))
                         .description("Example room description")
                         .name("Example room")
+                        .finished(false)
                         .build();
 
                 //save example room

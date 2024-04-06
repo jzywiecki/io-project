@@ -96,6 +96,7 @@ public class RoomController {
                 .description(roomDto.description())
                 .deadlineDate(roomDto.deadlineDate())
                 .deadlineTime(roomDto.deadlineTime())
+                .finished(false)
                 .build();
         Room savedRoom = roomService.saveRoom(room);
         RoomDto savedRoomDto = RoomDto.builder()

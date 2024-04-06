@@ -117,7 +117,6 @@ const VotingPage=()=>{
             });
     }
 
-    console.log("elo:")
     console.log(availableTerms);
 
 

@@ -1,21 +1,15 @@
 import './stopVotingButton.css';
 import React from 'react';
+import { stopVoting } from '../../helpers/roomApi'
 
 function StopVotingButton({ roomId }) {
     return (
         <div className="stop-voting">
-            <button className="stop-voting-button" onClick={() => handleStopVoting(roomId)}>Zakończ głosowanie wcześniej</button>
+            <button className="stop-voting-button" 
+                    onClick={() => {stopVoting(roomId)}}>
+            Zakończ głosowanie wcześniej
+            </button>
         </div>
     );
-}
-
-function handleStopVoting(roomId) {
-    fetch(`http://localhost:8080/api/room/stop-voting/${roomId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-    
 }
 export default StopVotingButton;
