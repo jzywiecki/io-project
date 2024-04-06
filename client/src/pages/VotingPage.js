@@ -3,10 +3,6 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import React, { useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import { min } from "lodash";
-
-const serverUrl = "http://localhost:8080";
-
 
 const VotingPage=()=>{
     const {roomId,userId} = useParams();
@@ -18,7 +14,7 @@ const VotingPage=()=>{
     const availableTermsFetch = async () => {
         try {
             const res = await fetch(
-                `${serverUrl}/api/room/get-terms-in-room/${roomId}/${userId}`,
+                `/api/room/get-terms-in-room/${roomId}/${userId}`,
                 {
                         method: "GET",
                         headers: {
@@ -100,7 +96,7 @@ const VotingPage=()=>{
             body: JSON.stringify(votesData)
           };
 
-        fetch(serverUrl + "/api/vote/new-votes", requestOptions)
+        fetch("/api/vote/new-votes", requestOptions)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

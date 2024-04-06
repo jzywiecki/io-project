@@ -26,7 +26,6 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/room")
 @AllArgsConstructor
 public class RoomController {

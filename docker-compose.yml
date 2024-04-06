@@ -1,27 +1,26 @@
-
+version: '3'
 services:
   app-server:
+    platform: linux/amd64
     build:
-      context: server
+      context: ./server
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080" 
+    container_name: "server"
     restart: always
-    networks: # Networks to join (Services on the same network can communicate with each other using their name)
-      - backend
-      - frontend
 
   app-client:
+    platform: linux/amd64
     build:
-      context: client 
+      context: ./client
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000" 
+    container_name: "client"
     restart: always
-    networks:
-      - frontend  
 
-# Networks to be created to facilitate communication between containers
-networks:
-  backend:
-  frontend:  
+  proxy:
+    platform: linux/amd64
+    build: ./nginx
+    container_name: "proxy"
+    restart: always
+    ports:
+      - "80:80"
+
