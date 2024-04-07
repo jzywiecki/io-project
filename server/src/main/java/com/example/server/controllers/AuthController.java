@@ -25,7 +25,7 @@ public class AuthController {
         String token = authService.login(loginFormDto.email(), loginFormDto.password());
         return ResponseEntity.ok(token);
     }
-    @PostMapping("/email-confirmation/{token}")
+    @GetMapping("/email-confirmation/{token}")
     public String confirmEmail(final @PathVariable String token) {
         return authService.confirmEmail(token);
     }

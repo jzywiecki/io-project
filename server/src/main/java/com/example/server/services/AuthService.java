@@ -19,6 +19,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final MailService mailService;
 
     public String register(UserDto userDto) {
         User user = userRepository.findByEmail(userDto.email())
@@ -34,7 +35,15 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(userDto.password()));
         userRepository.save(user);
 
-        return jwtUtil.generateConfirmationToken(userDto.email());
+        String token = jwtUtil.generateConfirmationToken(userDto.email());
+
+        String msg = "Potwierdź swój email, klikając w link:\n"
+                + "http://localhost:8080/api/auth/email-confirmation/"
+                + token;
+
+        mailService.send(userDto.email(), "Potwierdź swój email", msg);
+
+        return token;
     }
 
     public String login(String email, String password) {
@@ -57,13 +66,13 @@ public class AuthService {
         try {
             email = jwtUtil.extractEmailFromConfirmationToken(token);
         } catch (ExpiredJwtException ex) {
-            return "Token expired";
+            return "Przekroczono czas";
         }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
 
         user.setActive(true);
         userRepository.save(user);
-        return "Email successfully confirmed";
+        return "Adres e-mail potwierdzony";
     }
 }
