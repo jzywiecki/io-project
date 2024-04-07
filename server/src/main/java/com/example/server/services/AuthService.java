@@ -1,5 +1,6 @@
 package com.example.server.services;
 
+import com.example.server.auth.JwtUtil;
 import com.example.server.dto.UserDto;
 import com.example.server.exceptions.AccountAlreadyExistsException;
 import com.example.server.exceptions.UserNotFoundException;
@@ -14,8 +15,9 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class AuthService {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     public User register(UserDto userDto) {
         User user = userRepository.findByEmail(userDto.email())
@@ -35,7 +37,7 @@ public class AuthService {
         return user;
     }
 
-    public User login(String email, String password) {
+    public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(""));
 
@@ -47,6 +49,6 @@ public class AuthService {
             throw new WrongPasswordException();
         }
 
-        return user;
+        return jwtUtil.generateToken(email);
     }
 }
