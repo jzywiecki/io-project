@@ -1,15 +1,14 @@
 package com.example.server.controllers;
 
+import com.example.server.services.AuthService;
 import com.example.server.dto.LoginFormDto;
 import com.example.server.dto.UserDto;
 import com.example.server.model.User;
-import com.example.server.services.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/auth")
@@ -23,8 +22,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginFormDto loginFormDto) {
-        User user = authService.login(loginFormDto.email(), loginFormDto.password());
-        return ResponseEntity.ok(user);
+    public ResponseEntity<String> login(@RequestBody LoginFormDto loginFormDto) {
+        String token = authService.login(loginFormDto.email(), loginFormDto.password());
+        return ResponseEntity.ok(token);
     }
 }
