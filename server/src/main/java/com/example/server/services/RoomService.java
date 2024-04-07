@@ -16,7 +16,6 @@ import com.example.server.exceptions.UserNotFoundException;
 import com.example.server.repositories.RoomRepository;
 import com.example.server.repositories.TermRepository;
 import com.example.server.repositories.UserRepository;
-import com.example.server.utils.Utils;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -38,8 +37,6 @@ public class RoomService {
     private final TermRepository termRepository;
     /** Result repository. */
     private final ResultRepository resultRepository;
-
-    private final MailService mailService;
     /** Runs the algorithm for the given room,
      *  and saves the results in the database.
      * @param roomID room id.
@@ -124,26 +121,6 @@ public class RoomService {
 
                 runAlgorithm(room.getId());
 
-            }
-
-            // send email to all users
-            for (Map.Entry<User, Term> entry : dbAssignment.entrySet()) {
-                System.out.println("Sending email to "
-                        + entry.getKey().getEmail()
-                        + " for term "
-                        + entry.getValue().getDay()
-                        + " "
-                        + entry.getValue().getStartTime());
-                mailService.send(entry.getKey().getEmail(),
-                "[Plan AGH] Twój plan już jest dla przedmiotu "
-                        + room.get().getName()
-                        + "!", "Otrzymany przez Ciebie termin to "
-                        + Utils.getDayInPolish(entry.getValue().getDay())
-                        + " "
-                        + entry.getValue().getStartTime()
-                        + " - "
-                        + entry.getValue().getEndTime()
-                        + "!");
             }
         }
     }

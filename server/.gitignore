@@ -32,6 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-enroll.sqlite-wal
-enroll.sqlite-shm
 enroll.sqlite

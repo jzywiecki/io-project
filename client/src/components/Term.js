@@ -1,7 +1,6 @@
-import { useState} from 'react';
+import { useState } from 'react';
 import { Card, CardDescription } from '../ui/card'; 
 import { isEqual } from 'lodash';
-
 const Term = ({
     term,
     minHour,

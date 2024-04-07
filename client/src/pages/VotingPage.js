@@ -1,70 +1,132 @@
 import Calendar from "../components/Calendar";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import { getVotingPage, vote } from "../helpers/voteApi";
-import { getTermFromDto } from "../helpers/common";
-import { savePreferences } from "../helpers/voteApi";
-import { prepareUserPreferences } from "../helpers/common";
+import { min } from "lodash";
+
+const serverUrl = "http://localhost:8080";
 
 
-const VotingPage = () => {
-    const { roomId, userId } = useParams();
+const VotingPage=()=>{
+    const {roomId,userId} = useParams();
     const [availableTerms, setAvailableTerms] = useState([]);
-    const [votingStatus, setVotingStatus] = useState("");
-    const [isAlert, setIsAlert] = useState(false);
-    const termWithIdIsSelectedRef = useRef(null);
-    const termWithIdCommentsRef = useRef(null);
+    const [votingStatus, setVotingStatus] = useState([]);
+
 
     useEffect(() => {
-        const getVotingPageData = async () => {
-            try {
-                const response = await getVotingPage(roomId, userId);
-                const data = response.data;
-                const availableTermsData = data.availableTerms.map((termDto) => getTermFromDto(termDto));
+    const availableTermsFetch = async () => {
+        try {
+            const res = await fetch(
+                `${serverUrl}/api/room/get-terms-in-room/${roomId}/${userId}`,
+                {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*",
+                        },
+                    },
+                );
+                const data = await res.json();
+                console.log("data:");
+                console.log(data);
 
-                setAvailableTerms(availableTermsData);
-                termWithIdIsSelectedRef.current = new Map(Object.entries(data.termWithIdIsSelected));
-                termWithIdCommentsRef.current = new Map(Object.entries(data.termWithIdComments));
+                const termList = [];
+                data.forEach((term) => {
+                    var startTimeToReturn = new Date();
+                    var endTimeToReturn = new Date();
+
+                    const startTime = term.startTime
+                    const endTime = term.endTime
+                    const startHour = startTime.slice(0,2);
+                    const endHour = endTime.slice(0,2);
+                    const endMinute = endTime.slice(3,5);
+                    const startMinute = startTime.slice(3,5);
+
+                    startTimeToReturn.setHours(startHour);
+                    startTimeToReturn.setMinutes(startMinute);
+                    endTimeToReturn.setHours(endHour);
+                    endTimeToReturn.setMinutes(endMinute);
+            
+                    
+                    const actualTermId = term.id;
+                
+                    var day;
+                    switch (term.day) {
+                        case "MONDAY": day = 0; break;
+                        case "TUESDAY": day = 1; break;
+                        case "WEDNESDAY": day = 2; break;
+                        case "THURSDAY": day = 3; break;
+                        case "FRIDAY": day = 4; break;
+                        default: day = 0;
+                    }
+
+                    termList.push({
+                        id: actualTermId,
+                        day: day,
+                        startTime: startTimeToReturn,
+                        endTime: endTimeToReturn,
+                    });
+                });
+                
+                setAvailableTerms(termList);
+
             } catch (error) {
-                console.error('Error while fetching voting page data:', error);
-                setIsAlert(true);
+                console.error(error);
             }
         };
-        getVotingPageData();
-    }, [roomId, userId]);
+        availableTermsFetch();
+    }, []);
 
-    const sendTerms = async () => {
-        setVotingStatus("Trwa wysyłanie głosów...");
+    const sendTerms = async(terms)=>{
 
-        try {
-            const response = await savePreferences(roomId, userId, 
-                prepareUserPreferences(termWithIdIsSelectedRef.current, termWithIdCommentsRef.current)
-            );
+        setVotingStatus("Trwa wysyłanie głosów...")
 
-            if (response.status !== 200) {
-                throw new Error('Network response was not 200');
-            }
+        const votesData = {
+            user_id: userId,
+            room_id: roomId,
+            terms_id: []
+        };
 
-            setVotingStatus("Głosowanie zakończone pomyślnie.");
-        } catch (error) {
-            console.error('Error:', error);
-            setVotingStatus("Ups... błąd podczas głosowania :(");
-        }
+        terms.forEach(term => {
+            votesData.terms_id.push(term.id);
+        });
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(votesData)
+          };
+
+        fetch(serverUrl + "/api/vote/new-votes", requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+               return response.json();
+            })
+            .then(data => {
+                console.log('Sukces:', data);
+                setVotingStatus("Głosowanie zakończone pomyślnie :)");
+            })
+            .catch(error => {
+                console.error('Błąd:', error);
+                setVotingStatus("Ups... błąd podczas głosowania :(");
+            });
     }
 
+    console.log(availableTerms);
 
-    return (
-        <div className="ClassSchedulerPage p-5 flex flex-col justify-center h-screen">
-            {roomId && !isAlert && <h1 className="text-center text-3xl font-bold absolute top-5 w-full">Wybierz terminy do głosowania.</h1>}
-            {roomId && !isAlert && <Calendar votingTerms={availableTerms} termWithIdIsSelected={termWithIdIsSelectedRef} termWithIdComments={termWithIdCommentsRef} />}
-            {roomId && !isAlert && <Button className="mt-5 w-1/2 justify-self-center" onClick={() => sendTerms()}>Zapisz preferencje</Button>}
-            {roomId && !isAlert && <div className="text-center">{votingStatus}</div>}
-            {isAlert&&<div className="alert alert-danger w-fit flex text-center absolute right-3 bottom-0" role="alert">
-            Nie udało się pobrać zawartości. Spróbuj ponownie później. </div>}
-        </div>
-    );
-};
+
+    const [pickedTerms,setPickedTerms] = useState([])
+    return(<div className={"ClassSchedulerPage p-5" + " flex flex-col justify-center h-screen"}>
+        {roomId !== null&&<h1 className="text-center text-3xl font-bold absolute top-5 w-full">Wybierz terminy do głosowania.</h1>}
+        {roomId !== null&&<Calendar terms={availableTerms} setPickedTerms={setPickedTerms}/>}
+        {roomId !== null && <Button className="mt-5 w-1/2 justify-self-center" onClick={() => { sendTerms(pickedTerms) }}>Wyślij</Button>}
+        {roomId !== null && <div className="text-center">{votingStatus}</div>}
+    </div>)
+}
 
 export default VotingPage;

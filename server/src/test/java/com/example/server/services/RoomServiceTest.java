@@ -41,7 +41,7 @@ class RoomServiceTest {
     @Test
     void shouldThrowExceptionWhenWrongTerm() {
         long id = 0;
-        TermDto termDto = new TermDto(1, DayOfWeek.MONDAY, LocalTime.of(0, 0), LocalTime.of(0, 0));
+        TermDto termDto = new TermDto(DayOfWeek.MONDAY, LocalTime.of(0, 0), LocalTime.of(0, 0));
         when(roomRepository.findById(id)).thenReturn(Optional.of(Room.builder().build()));
         when(termRepository.findByDayAndStartTime(termDto.day(), termDto.startTime())).thenReturn(Optional.empty());
 

@@ -6,5 +6,5 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 @Builder
-public record TermDto(long id, DayOfWeek day, LocalTime startTime, LocalTime endTime) {
+public record TermDto(DayOfWeek day, LocalTime startTime, LocalTime endTime) {
 }
