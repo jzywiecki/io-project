@@ -3,7 +3,6 @@ package com.example.server.controllers;
 import com.example.server.dto.RoomDto;
 import com.example.server.dto.RoomSummaryDto;
 import com.example.server.dto.TermDto;
-import com.example.server.dto.TermStringDto;
 import com.example.server.model.Room;
 import com.example.server.services.RoomService;
 import com.example.server.services.TermService;
@@ -60,13 +59,12 @@ public class RoomController {
      * @param roomId the room id.
      * @return the terms.
      */
-    //TODO:
     @GetMapping("/get-terms-in-room/{roomId}/{userId}")
-    public ResponseEntity<List<TermStringDto>> getRoomTerms(
+    public ResponseEntity<List<TermDto>> getRoomTerms(
             final @PathVariable Long roomId,
             final @PathVariable Long userId) {
         roomService.addUserToRoom(roomId, userId);
-        List<TermStringDto> terms = termService.getRoomTerms(roomId);
+        List<TermDto> terms = termService.getRoomTerms(roomId);
         return ResponseEntity.ok(terms);
     }
 
