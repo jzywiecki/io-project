@@ -73,7 +73,7 @@ public class RoomController {
      * Runs the algorithm for a given room.
      * @param roomId room id
      */
-    @GetMapping("/stop-voting/{roomId}")
+    @PostMapping("/stop-voting/{roomId}")
     public final void stopVoting(
             final @PathVariable Long roomId) {
         roomService.runAlgorithm(roomId);
