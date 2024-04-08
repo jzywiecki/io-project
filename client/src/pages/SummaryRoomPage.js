@@ -52,7 +52,7 @@ const SummaryRoomPage=()=>{
                 </div>
                 {room.description===""?"brak":room.description}
             </Div>
-            <Calendar noEditTerms={room.terms} className="w-3/4 h-full"/>
+            <Calendar roomID={roomId} noEditTerms={room.terms} className="w-3/4 h-full"/>
             <Sharing roomID={roomId}/>
         </>
         )}

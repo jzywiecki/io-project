@@ -1,5 +1,19 @@
+import { getRoomVotesSummaryById } from "../helpers/roomApi";
+import { useEffect, useState } from "react";
 import { CardDescription, Card } from "../ui/card";
-const NoEditTerm=({term ,minHour})=>{
+
+const NoEditTerm=({term ,minHour, roomID})=>{
+    const [roomSummaryVotes,setRoomSummaryVotes]=useState(null)
+    useEffect(()=>{
+        const getRoomSummaryVotes=async()=>{
+            try{
+                let response=await getRoomVotesSummaryById(roomID);
+                setRoomSummaryVotes(response.data)
+            }catch(err){}
+        }
+        getRoomSummaryVotes()
+        return ()=>{}
+    },[])
 
     const convertDayOfWeekToNumber=(dayOfWeekString)=>{
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -47,6 +61,16 @@ const NoEditTerm=({term ,minHour})=>{
                     <span className="">{startHour}:{startMinute==0?"00":startMinute}</span>
                     <span className="text-md">-</span>
                     <span className="">{endHour}:{endMinute==0?"00":endMinute}</span>
+                </CardDescription>
+                <CardDescription>
+                    {(roomSummaryVotes===null?<div>loading</div>:
+                    <>
+                    {roomSummaryVotes.termVotesCount[term.id] === 1 ? `${roomSummaryVotes.termVotesCount[term.id]} głos` :
+                        roomSummaryVotes.termVotesCount[term.id] > 1 && roomSummaryVotes.termVotesCount[term.id] < 5 ? `${roomSummaryVotes.termVotesCount[term.id]} głosy` :
+                        roomSummaryVotes.termVotesCount[term.id] > 4 ? `${roomSummaryVotes.termVotesCount[term.id]} głosów` : ``
+                    }
+                    </>
+                    )}
                 </CardDescription>
             </Card>
         </div>

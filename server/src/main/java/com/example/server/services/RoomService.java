@@ -1,15 +1,13 @@
 package com.example.server.services;
 
 import com.example.server.algorithm.Algorithm;
+import com.example.server.dto.*;
 import com.example.server.repositories.ResultRepository;
 import com.example.server.model.Term;
 import com.example.server.model.Room;
 import com.example.server.model.User;
 import com.example.server.model.Result;
 import com.example.server.model.Vote;
-import com.example.server.dto.RoomSummaryDto;
-import com.example.server.dto.TermDto;
-import com.example.server.dto.TermStringDto;
 import com.example.server.exceptions.RoomNotFoundException;
 import com.example.server.exceptions.TermNotFoundException;
 import com.example.server.exceptions.UserNotFoundException;
@@ -131,6 +129,30 @@ public class RoomService {
                     k -> new ArrayList<>()).add(vote.getTerm());
         }
         return resultMap;
+    }
+
+    public RoomVotesDto getRoomVotes(long roomId) {
+        Room room = roomRepository
+                .findById(roomId)
+                .orElseThrow(
+                        () -> new RoomNotFoundException("Room with id: "
+                                + roomId
+                                + " not found.")
+                );
+
+        Map<Long, Integer> termVotesCount = new HashMap<>();
+
+        for (Vote vote : room.getVotes()) {
+            Long termId = vote.getTerm().getId();
+            if (!termVotesCount.containsKey(termId)) {
+                termVotesCount.put(termId, 0);
+            }
+            termVotesCount.put(termId, termVotesCount.get(termId)+1);
+        }
+
+        return new RoomVotesDto(
+                roomId,
+                termVotesCount);
     }
 
     private final UserRepository userRepository;

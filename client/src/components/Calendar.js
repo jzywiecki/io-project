@@ -4,7 +4,7 @@ import Term from "./Term";
 import NoEditTerm from "./NoEditTerm";
 import VotingTerm from "./VotingTerm";
 
-const Calendar=({terms, setPickedTerms, noEditTerms, className, votingTerms, termWithIdIsSelected, termWithIdComments })=>{
+const Calendar=({terms, setPickedTerms, noEditTerms, className, votingTerms, termWithIdIsSelected, termWithIdComments, roomID })=>{
     console.log(terms)
     const minHour = 8
     const maxHour = 20
@@ -72,7 +72,7 @@ const Calendar=({terms, setPickedTerms, noEditTerms, className, votingTerms, ter
                     <Term term={term} minHour={minHour} setPickedTerms={setPickedTerms} key={i}/>
                 ))}
                 {noEditTerms&&noEditTerms.map((term,i)=>(
-                    <NoEditTerm term={term} minHour={minHour} key={i}/>
+                    <NoEditTerm term={term} minHour={minHour} roomID={roomID} key={i}/>
                 ))}
                  {votingTerms&&votingTerms.map((term,i)=>(
                     <VotingTerm term={term} minHour={minHour} key={i} termWithIdIsSelected={termWithIdIsSelected} termWithIdComments={termWithIdComments}/>

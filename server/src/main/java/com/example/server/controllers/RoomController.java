@@ -2,6 +2,7 @@ package com.example.server.controllers;
 
 import com.example.server.dto.RoomDto;
 import com.example.server.dto.RoomSummaryDto;
+import com.example.server.dto.RoomVotesDto;
 import com.example.server.dto.TermDto;
 import com.example.server.model.Room;
 import com.example.server.services.RoomService;
@@ -146,5 +147,16 @@ public class RoomController {
                         .build())
                 .toList();
         return new ResponseEntity<>(rooms, OK);
+    }
+
+    /**
+     * Get all preferences.
+     * @return room votes summary
+     */
+    @GetMapping(value="/get-preferences/{roomId}")
+    public ResponseEntity<RoomVotesDto> getPreferences(
+            final @PathVariable long roomId
+    ) {
+        return ResponseEntity.ok(roomService.getRoomVotes(roomId));
     }
 }
