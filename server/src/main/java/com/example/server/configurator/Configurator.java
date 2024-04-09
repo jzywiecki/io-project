@@ -4,11 +4,7 @@ import com.example.server.model.Role;
 import com.example.server.model.Room;
 import com.example.server.model.Term;
 import com.example.server.model.User;
-import com.example.server.repositories.ResultRepository;
-import com.example.server.repositories.RoomRepository;
-import com.example.server.repositories.TermRepository;
-import com.example.server.repositories.UserRepository;
-import com.example.server.repositories.VoteRepository;
+import com.example.server.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +31,7 @@ public class Configurator {
      *  Constructor.
      * @param environment environment.
      */
+
     @Autowired
     public Configurator(final Environment environment) {
         this.env = environment;
@@ -146,6 +143,13 @@ public class Configurator {
                                 .plusMinutes(intervalMinute);
                     }
                 }
+
+                //init user
+                User user = User.builder()
+                        .email("malysz@student.agh.edu.pl")
+                        .active(false)
+                        .build();
+                userRepository.save(user);
             }
         };
     }
