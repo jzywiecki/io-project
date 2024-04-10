@@ -13,6 +13,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import org.sqlite.SQLiteConfig;
+import org.sqlite.SQLiteDataSource;
+
 import javax.sql.DataSource;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -40,14 +43,14 @@ public class Configurator {
      */
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.sqlite.JDBC");
+        SQLiteConfig config = new SQLiteConfig();
+        config.setJournalMode(SQLiteConfig.JournalMode.WAL);
+
+        SQLiteDataSource dataSource = new SQLiteDataSource(config);
         dataSource.setUrl("jdbc:sqlite:./enroll.sqlite");
-        dataSource.setUsername("admin");
-        dataSource.setPassword("admin");
+
         return dataSource;
     }
-
 
     /**
      * Generating example data to database.

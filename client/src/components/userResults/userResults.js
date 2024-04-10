@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./userResults.css";
 
-const serverUrl = "http://localhost:8080";
-
 const daysMap = {
   MONDAY: "Poniedziałek",
   TUESDAY: "Wtorek",
@@ -22,7 +20,7 @@ function Results() {
     const fetchResults = async () => {
       try {
         const res = await fetch(
-          `${serverUrl}/api/result/get-results/${roomId}/${userId}`,
+          `/api/result/get-results/${roomId}/${userId}`,
           {
             method: "GET",
             headers: {
