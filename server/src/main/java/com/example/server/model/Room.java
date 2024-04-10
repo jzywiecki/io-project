@@ -12,10 +12,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Date;
 import java.time.LocalTime;
@@ -28,6 +25,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Setter
 public class Room {
     /**
      *  Room id.
@@ -39,6 +37,10 @@ public class Room {
      *  Room name.
      */
     private String name;
+    /**
+     *  Room finished status.
+     */
+    private Boolean finished;
     /**
      *  Room description.
      */
@@ -54,7 +56,7 @@ public class Room {
     /**
      *  Room owner.
      */
-    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST})
     @JoinTable(
             name = "room_user",
             joinColumns = @JoinColumn(name = "room_id",
@@ -67,7 +69,7 @@ public class Room {
     /**
      *  Room terms.
      */
-    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST})
     @JoinTable(
             name = "room_term",
             joinColumns = @JoinColumn(name = "room_id",
@@ -80,14 +82,14 @@ public class Room {
     /**
      *  Room votes.
      */
-    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER,
             cascade = { CascadeType.PERSIST})
     private List<Vote> votes;
 
     /**
      *  Represents the results of the algorithm for the room after stop voting.
      */
-    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER,
             cascade = { CascadeType.PERSIST})
     private List<Result> results;
 

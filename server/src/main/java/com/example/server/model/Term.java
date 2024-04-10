@@ -45,20 +45,20 @@ public class Term {
     /**
      * Term room.
      */
-    @ManyToMany(mappedBy = "terms", fetch = FetchType.LAZY,
+    @ManyToMany(mappedBy = "terms", fetch = FetchType.EAGER,
             cascade = { CascadeType.PERSIST})
     @JsonBackReference
     private Set<Room> rooms;
     /**
      * Term votes.
      */
-    @OneToMany(mappedBy = "term", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "term", fetch = FetchType.EAGER,
             cascade = { CascadeType.PERSIST})
     private List<Vote> votes;
     /**
      * Represents the term that was selected in the algorithm.
      */
-    @OneToMany(mappedBy = "term", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "term", fetch = FetchType.EAGER,
             cascade = { CascadeType.PERSIST})
     private List<Result> results;
 }
