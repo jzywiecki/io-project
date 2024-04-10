@@ -1,18 +1,14 @@
 package com.example.server.services;
 
 import com.example.server.algorithm.Algorithm;
-import com.example.server.repositories.ResultRepository;
-import com.example.server.model.Term;
-import com.example.server.model.Room;
-import com.example.server.model.User;
-import com.example.server.model.Result;
-import com.example.server.model.Vote;
 import com.example.server.dto.RoomSummaryDto;
 import com.example.server.dto.TermDto;
 import com.example.server.dto.TermStringDto;
 import com.example.server.exceptions.RoomNotFoundException;
 import com.example.server.exceptions.TermNotFoundException;
 import com.example.server.exceptions.UserNotFoundException;
+import com.example.server.model.*;
+import com.example.server.repositories.ResultRepository;
 import com.example.server.repositories.RoomRepository;
 import com.example.server.repositories.TermRepository;
 import com.example.server.repositories.UserRepository;
@@ -20,13 +16,7 @@ import com.example.server.utils.Utils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,10 +30,7 @@ public class RoomService {
     private final ResultRepository resultRepository;
 
     private final MailService mailService;
-    /** Runs the algorithm for the given room,
-     *  and saves the results in the database.
-     * @param roomID room id.
-     *  */
+
     public final void runAlgorithm(final long roomID) {
         List<Term> terms = termRepository.findAllByRoomId(roomID);
 
@@ -170,7 +157,7 @@ public class RoomService {
      * @param id the room id.
      * @return the room.
      */
-    public Room getRoom(final Long id) {
+    private Room getRoom(final Long id) {
         return roomRepository.findById(id)
                 .orElseThrow(() ->
                         new RoomNotFoundException("Room with id: "

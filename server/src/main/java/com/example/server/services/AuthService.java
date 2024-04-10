@@ -2,14 +2,13 @@ package com.example.server.services;
 
 import com.example.server.auth.JwtUtil;
 import com.example.server.dto.UserDto;
-import com.example.server.exceptions.AccountAlreadyExistsException;
-import com.example.server.exceptions.UserNotFoundException;
-import com.example.server.exceptions.UserNotRegisteredException;
-import com.example.server.exceptions.WrongPasswordException;
+import com.example.server.exceptions.*;
+import com.example.server.model.Room;
 import com.example.server.model.User;
 import com.example.server.repositories.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -74,5 +73,28 @@ public class AuthService {
         user.setActive(true);
         userRepository.save(user);
         return "Adres e-mail potwierdzony";
+    }
+
+    public void checkUserPermissionsForRoom(long roomId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(""));
+
+        for (Room room : user.getJoinedRooms()) {
+            if (room.getId() == roomId) {
+                return;
+            }
+        }
+
+        throw new NoUserPermissionsForRoom();
+    }
+
+    public void verifyUser(long id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(""));
+        if (id != user.getId()) {
+            throw new WrongUserException();
+        }
     }
 }

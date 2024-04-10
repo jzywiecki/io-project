@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashSet;
 
 @Configuration
 @EnableTransactionManagement
@@ -112,6 +113,7 @@ public class Configurator {
                                 LocalDateTime.now().toLocalDate()))
                         .description("Example room description")
                         .name("Example room")
+                        .joinedUsers(new HashSet<>())
                         .build();
 
                 //save example room
@@ -151,6 +153,9 @@ public class Configurator {
                         .active(false)
                         .build();
                 userRepository.save(user);
+
+                exampleRoom.getJoinedUsers().add(user);
+                roomRepository.save(exampleRoom);
             }
         };
     }

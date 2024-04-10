@@ -2,6 +2,7 @@ package com.example.server.controllers;
 
 import com.example.server.dto.ResultsDto;
 import com.example.server.dto.UserResultsDto;
+import com.example.server.services.AuthService;
 import com.example.server.services.ResultService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class ResultController {
      * Result service.
      */
     private final ResultService resultService;
+    private final AuthService authService;
 
     /**
      * Get the results of all users in a room.
@@ -45,6 +47,8 @@ public class ResultController {
     public ResponseEntity<UserResultsDto> getResultsByUser(
            final @PathVariable int roomId,
            final @PathVariable int userId) {
+
+        authService.verifyUser(userId);
         return ResponseEntity.ok(resultService.getUserResults(roomId, userId));
     }
 

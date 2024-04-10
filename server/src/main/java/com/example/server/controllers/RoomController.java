@@ -4,6 +4,7 @@ import com.example.server.dto.RoomDto;
 import com.example.server.dto.RoomSummaryDto;
 import com.example.server.dto.TermDto;
 import com.example.server.model.Room;
+import com.example.server.services.AuthService;
 import com.example.server.services.RoomService;
 import com.example.server.services.TermService;
 import com.example.server.services.UserService;
@@ -35,6 +36,8 @@ public class RoomController {
      */
     private final UserService userService;
 
+    private final AuthService authService;
+
     /**
      * Get all rooms to which the user is assigned.
      * @param userId the user id.
@@ -43,6 +46,7 @@ public class RoomController {
     @GetMapping("/get-user-rooms/{userId}")
     public ResponseEntity<List<RoomDto>> getUserRooms(
             final @PathVariable Long userId) {
+        authService.verifyUser(userId);
         return ResponseEntity.ok(userService.getUserRooms(userId));
     }
 
@@ -55,7 +59,7 @@ public class RoomController {
     public ResponseEntity<List<TermDto>> getRoomTerms(
             final @PathVariable Long roomId,
             final @PathVariable Long userId) {
-        roomService.addUserToRoom(roomId, userId);
+        authService.checkUserPermissionsForRoom(roomId);
         List<TermDto> terms = termService.getRoomTerms(roomId);
         return ResponseEntity.ok(terms);
     }
