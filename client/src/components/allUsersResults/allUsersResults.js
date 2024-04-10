@@ -4,6 +4,9 @@ import { useParams } from "react-router-dom";
 import daysMap from '../common'
 import "./allUsersResults.css";
 
+// const url = "http://localhost:8080"
+const url = ""
+
 function AllUsersResults() {
     const {roomId} = useParams();
     const [results, setResults] = useState([]);
@@ -12,7 +15,7 @@ function AllUsersResults() {
         const fetchResults = async () => {
             try {
                 const res = await fetch(
-                    `/api/result/get-results/${roomId}`,
+                    url+`/api/result/get-results/${roomId}`,
                     {
                         method: "GET",
                         headers: {
