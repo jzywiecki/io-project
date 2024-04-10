@@ -6,6 +6,7 @@ import com.example.server.services.AuthService;
 import com.example.server.services.ResultService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,6 +30,7 @@ public class ResultController {
      * @return the results of all users in a room.
      */
     @CrossOrigin
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("/get-results/{roomId}")
     public ResponseEntity<ResultsDto> getResults(
             final @PathVariable long roomId) {

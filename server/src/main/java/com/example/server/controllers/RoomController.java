@@ -11,6 +11,7 @@ import com.example.server.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,6 +70,7 @@ public class RoomController {
      * Runs the algorithm for a given room.
      * @param roomId room id
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("/stop-voting/{roomId}")
     public final void stopVoting(
             final @PathVariable Long roomId) {
@@ -81,6 +83,7 @@ public class RoomController {
      * @param roomDto the room dto.
      * @return the room dto.
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("")
     public ResponseEntity<RoomDto> createRoom(
             final @RequestBody RoomDto roomDto) {
@@ -107,9 +110,10 @@ public class RoomController {
      * @param termsDto the terms dto.
      * @return the http status.
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/{id}/terms")
     public ResponseEntity<HttpStatus> assignTerms(
-            final@PathVariable Long id,
+            final @PathVariable Long id,
             final @RequestBody List<TermDto> termsDto) {
         roomService.assignTerms(id, termsDto);
         return new ResponseEntity<>(OK);
@@ -120,6 +124,7 @@ public class RoomController {
      * @param id the room id.
      * @return the room.
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("/{id}")
     public ResponseEntity<RoomSummaryDto> getRoom(final @PathVariable Long id) {
         RoomSummaryDto roomSummaryDto = roomService.getRoomInfo(id);
@@ -130,6 +135,7 @@ public class RoomController {
      * Get all rooms.
      * @return the rooms.
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("")
     public ResponseEntity<List<RoomDto>> getRooms() {
         List<RoomDto> rooms =  roomService.getRooms().stream()
