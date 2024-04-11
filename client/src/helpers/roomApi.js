@@ -21,6 +21,7 @@ export const getRoomById=(id)=>{
 
 export const getRoomPreferencesById=(id)=>{
     return axios.get(url+`/get-preferences/${id}`)
+}
 
 export const stopVoting=(roomId)=>{
     return axios.post(url+`/stop-voting/${roomId}`)
