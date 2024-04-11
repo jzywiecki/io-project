@@ -1,5 +1,3 @@
-import { Navigate } from "react-router-dom";
-
 export const getDayNumber=(day)=> {
     switch (day) {
         case "MONDAY": return 0;
@@ -55,5 +53,11 @@ export const prepareUserPreferences=(termWithIdIsSelected, termWithIdComments)=>
 }
 
 export const checkAfterResponse=(error)=>{
-    Navigate("/login");
+    console.log(error)
+    if(error?.response?.data?.message==="Forbidden" || error?.response?.data?.message==="permission denied"){
+        return "/noPermition"
+    }else if(error?.response?.data?.message==="token expired"){
+        return "/login"
+    }
+    return null;
 }

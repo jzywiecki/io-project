@@ -2,15 +2,26 @@ import { values } from "lodash";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form"
 import { registerUser } from "../helpers/loginApi";
+import { useState } from "react";
 const RegisterForm=({setIsLogin})=>{
     const { handleSubmit, register, formState: { errors }, watch } = useForm();
+    const [message,setMessage]=useState(null)
     const submit=async(values)=>{
         console.log(values)
         try{
             let response=await registerUser(values)
             console.log(response.data);
+            console.log(response)
+            if(response.data){
+                setIsLogin(true)
+            }
         }catch(err){
-
+            console.log(err)
+            if(err?.response?.data?.message==="Account already exists."){
+                setMessage("Ten email jest już wykorzystany")
+            }else if(err?.response?.data?.message==="User not found."){
+                setMessage("Email nie jest przypisany do żadnego pokoju")
+            }
         }
         
     }
@@ -71,7 +82,7 @@ const RegisterForm=({setIsLogin})=>{
                         }
                 }})}></input>
                 {errors.repeatPassword&&<p className="text-red-600">{errors.repeatPassword.message}</p>}
-
+                {message&&<p className="text-red-600">{message}</p>}
                 <Button className="p-2 bg-sky-500 rounded w-full self-center text-white my-2" type='submit'>Zajerestruj</Button>
             </form>
     </div>)

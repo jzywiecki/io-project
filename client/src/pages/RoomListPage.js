@@ -5,6 +5,7 @@ import { getRoomList } from "../helpers/roomApi"
 import { Div } from "../ui/div"
 import { useNavigate } from "react-router-dom"
 import AddRoomButton from "../components/addRoomButton/addRoomButton";
+import { checkAfterResponse } from '../helpers/common';
 
 const RoomListPage=()=>{
     const [roomList,setRoomList]=useState([])
@@ -12,11 +13,23 @@ const RoomListPage=()=>{
     const navigate = useNavigate();
     useEffect(()=>{
         const getRoomListFunction=async()=>{
-            let response = await getRoomList()
-            console.log(response)
-            if(response.status===200){
-                setRoomList(response.data)
-            }else{
+            try{
+                let response = await getRoomList()
+                console.log(response)
+                if(response.status===200){
+                    setRoomList(response.data)
+                }else{
+                    setIsAlert(true)
+                }
+            }catch(err){
+                console.log(err)
+                let redirect=checkAfterResponse(err)
+                if(redirect==="/login"){
+                    localStorage.setItem("redirect","/")
+                }
+                if(redirect){
+                    navigate(redirect)
+                }
                 setIsAlert(true)
             }
         }

@@ -1,21 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loginUser } from "../helpers/loginApi";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 const LoginForm=({setIsLogin})=>{
     const { handleSubmit, register, formState: { errors } } = useForm();
     const [message,setMessage]=useState(null)
+    const navigate=useNavigate()
+    const redirect=(localStorage.getItem("redirect")).slice()
+    console.log(redirect)
+    // useEffect(()=>{
+    //     localStorage.setItem("redirect","");
+    // },[])
     const submit=async(values)=>{
         console.log(values)
         try{
             let response=await loginUser(values)
             console.log(response.data)
+            localStorage.setItem("token",response.data);
+            if(redirect!==""){
+                navigate(redirect)
+            }
         }catch(err){
             console.log(err)
             setMessage("Złe hasło lub email")
         }
-        
-       
     }
     return(<div className="LoginForm flex justify-center h-screen items-center flex-col">
         <form className="lg:w-1/3 md:w-1/2 w-3/4 flex justify-center flex-col p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
@@ -48,6 +57,9 @@ const LoginForm=({setIsLogin})=>{
                     Nie masz konta? <span className="underline text-cyan-500 cursor-pointer hover:text-cyan-700" onClick={()=>{setIsLogin(false)}}> Zajerestruj się</span>
                 </div>
             </form>
+            {localStorage.getItem("redirect")&&<div className="alert alert-danger w-fit flex text-center absolute right-3 bottom-0" role="alert">
+                Sesja wygasła
+            </div>}
     </div>)
 }
 

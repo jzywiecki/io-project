@@ -5,7 +5,10 @@ import { Div } from "../ui/div";
 import { useParams } from "react-router-dom";
 import Calendar from "../components/Calendar";
 import Sharing from "../components/linkSharing/linkSharing"
+import { checkAfterResponse } from "../helpers/common";
+import { useNavigate } from "react-router-dom";
 const SummaryRoomPage=()=>{
+    const navigate=useNavigate()
     const {roomId}=useParams()
     const [room,setRoom]=useState(null)
     const [isAlert,setIsAlert] = useState(false)
@@ -14,9 +17,15 @@ const SummaryRoomPage=()=>{
             try{
                 let response=await getRoomById(roomId);
                 setRoom(response.data)
-                console.log("here")
                 console.log(response)
             }catch(err){
+                let redirect=checkAfterResponse(err)
+                if(redirect==="/login"){
+                    localStorage.setItem("redirect",`/room/${roomId}`)
+                }
+                if(redirect){
+                    navigate(redirect)
+                }
                 setIsAlert(true)
             }
         }

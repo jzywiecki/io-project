@@ -98,7 +98,7 @@ public class Configurator {
                         .firstName("Piotr")
                         .lastName("Nowak")
                         .email("piotrnowak@agh.edu.pl")
-                        .password(passwordEncoder.encode("teacher"))
+                        .password(passwordEncoder.encode("password"))
                         .role(Role.TEACHER)
                         .active(true)
                         .build();
