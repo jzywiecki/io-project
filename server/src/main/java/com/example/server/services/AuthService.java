@@ -89,12 +89,10 @@ public class AuthService {
         throw new NoUserPermissionsForRoom();
     }
 
-    public void verifyUser(long id) {
+    public long getUserIdFromContext() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(""));
-        if (id != user.getId()) {
-            throw new WrongUserException();
-        }
+        return user.getId();
     }
 }

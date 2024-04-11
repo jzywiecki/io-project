@@ -31,7 +31,7 @@ public class ResultController {
      */
     @CrossOrigin
     @PreAuthorize("hasRole('TEACHER')")
-    @GetMapping("/get-results/{roomId}")
+    @GetMapping("/teacher/{roomId}")
     public ResponseEntity<ResultsDto> getResults(
             final @PathVariable long roomId) {
         System.out.println("getResults");
@@ -41,16 +41,13 @@ public class ResultController {
     /**
      * Get the results of a user in a room.
      * @param roomId the room id.
-     * @param userId the user id.
      * @return the results of a user in a room.
      */
     @CrossOrigin
-    @GetMapping("/get-results/{roomId}/{userId}")
+    @GetMapping("/user/{roomId}")
     public ResponseEntity<UserResultsDto> getResultsByUser(
-           final @PathVariable int roomId,
-           final @PathVariable int userId) {
-
-        authService.verifyUser(userId);
+           final @PathVariable int roomId) {
+        long userId = authService.getUserIdFromContext();
         return ResponseEntity.ok(resultService.getUserResults(roomId, userId));
     }
 
