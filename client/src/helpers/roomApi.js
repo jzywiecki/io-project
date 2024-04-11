@@ -11,7 +11,7 @@ export const addRoom=(room)=>{
 }
 
 export const setTermsInRoom=(terms,roomId)=>{
-    return axios.put(url+`/${roomId}/terms`, terms,{
+    return axios.post(url+`/${roomId}/terms`, terms,{
         headers:{
             'Authorization': 'Bearer ' + localStorage.getItem("token")
         }

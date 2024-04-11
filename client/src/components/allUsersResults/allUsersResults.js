@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from "react";
 import ResultsExport from "../resultsExport/resultsExport";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import daysMap from '../common'
 import "./allUsersResults.css";
-
+import { getTeacherResult } from "../../helpers/resultApi";
+import { checkAfterResponse } from "../../helpers/common";
 function AllUsersResults() {
     const {roomId} = useParams();
     const [results, setResults] = useState([]);
-
+    const navigate=useNavigate()
     useEffect(() => {
         const fetchResults = async () => {
             try {
-                const res = await fetch(
-                    `/api/result/get-results/${roomId}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*",
-                        },
-                    },
-                );
-                const data = await res.json();
+                const res = await getTeacherResult()
+                const data = res.data
 
                 console.log(data);
 
                 setResults(data);
             } catch (error) {
-                console.error(error);
+                let redirect=checkAfterResponse(error)
+                if(redirect==="/login"){
+                    localStorage.setItem("redirect",`/room/${roomId}`)
+                }
+                if(redirect){
+                    navigate(redirect)
+                }
+                console.log(error)
             }
         };
 

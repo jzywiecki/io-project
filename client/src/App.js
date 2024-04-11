@@ -19,16 +19,14 @@ function App () {
           <Route path="/" element={<RoomListPage />}/>
           <Route path="/room/:roomId" element={<SummaryRoomPage />}/>
           <Route path="/addRoom" element={<ClassSchedulerPage />}/>
-          <Route path="/enroll/:roomId/:userId" element={<VotingPage />}/>
+          <Route path="/enroll/:roomId" element={<VotingPage />}/>
           <Route path="/results/:roomId" element={<AllUsersResults />}/>
-          <Route path="/result/:roomId/:userId" element={<Results />}/>
+          <Route path="/result/:roomId" element={<Results />}/>
           <Route path="/login" element={<LoginAndRegisterPage/>}/>
           <Route path="/confirmEmail/:token" element={<ConfirmPage/>}/>
           <Route path="/noPermition" element={<NoPermitionPage/>}/>
         </Routes>
       </BrowserRouter>
-      {/* <ClassSchedulerPage/>
-      <RoomListPage/> */}
     </div>
   )
 }

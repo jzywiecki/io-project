@@ -54,7 +54,7 @@ export const prepareUserPreferences=(termWithIdIsSelected, termWithIdComments)=>
 
 export const checkAfterResponse=(error)=>{
     console.log(error)
-    if(error?.response?.data?.message==="Forbidden" || error?.response?.data?.message==="permission denied"){
+    if(error?.response?.data?.message==="Forbidden" || error?.response?.data?.message==="permission denied"||error?.response?.data?.message==="User does not have permission to access the room."){
         return "/noPermition"
     }else if(error?.response?.data?.message==="token expired"){
         return "/login"

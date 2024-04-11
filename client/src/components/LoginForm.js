@@ -19,6 +19,7 @@ const LoginForm=({setIsLogin})=>{
             console.log(response.data)
             localStorage.setItem("token",response.data);
             if(redirect!==""){
+                localStorage.setItem("redirect","");
                 navigate(redirect)
             }
         }catch(err){
