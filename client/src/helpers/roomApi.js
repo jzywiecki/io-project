@@ -1,6 +1,7 @@
 import axios from "axios"
 
-const url="/api/room"
+// const url="http://localhost:8080/api/room"
+const url = "/api/room"
 
 export const addRoom=(room)=>{
     return axios.post(url, room)
@@ -20,4 +21,7 @@ export const getRoomById=(id)=>{
 
 export const getRoomPreferencesById=(id)=>{
     return axios.get(url+`/get-preferences/${id}`)
+
+export const stopVoting=(roomId)=>{
+    return axios.post(url+`/stop-voting/${roomId}`)
 }

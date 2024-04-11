@@ -124,6 +124,10 @@ public class ResultService {
                                    .toLocalDate()
                                    .isAfter(LocalDateTime.now().toLocalDate());
 
+        if (room.getFinished()) {
+            return;
+        }
+
         if (!isAfterToday) {
             boolean isToday = room.getDeadlineDate()
                                   .toLocalDate()

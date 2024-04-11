@@ -27,6 +27,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/api/room")
 @AllArgsConstructor
+// @CrossOrigin(origins = "http://localhost:3000")
 public class RoomController {
     /**
      * Room service.
@@ -73,7 +74,7 @@ public class RoomController {
      * Runs the algorithm for a given room.
      * @param roomId room id
      */
-    @GetMapping("/stop-voting/{roomId}")
+    @PostMapping("/stop-voting/{roomId}")
     public final void stopVoting(
             final @PathVariable Long roomId) {
         roomService.runAlgorithm(roomId);
@@ -93,6 +94,7 @@ public class RoomController {
                 .description(roomDto.description())
                 .deadlineDate(roomDto.deadlineDate())
                 .deadlineTime(roomDto.deadlineTime())
+                .finished(false)
                 .build();
         Room savedRoom = roomService.saveRoom(room);
         RoomDto savedRoomDto = RoomDto.builder()
