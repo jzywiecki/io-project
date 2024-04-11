@@ -4,12 +4,14 @@ import com.example.server.dto.RoomDto;
 import com.example.server.dto.RoomSummaryDto;
 import com.example.server.dto.TermDto;
 import com.example.server.model.Room;
+import com.example.server.services.AuthService;
 import com.example.server.services.RoomService;
 import com.example.server.services.TermService;
 import com.example.server.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +37,8 @@ public class RoomController {
      */
     private final UserService userService;
 
+    private final AuthService authService;
+
     /**
      * Get all rooms to which the user is assigned.
      * @param userId the user id.
@@ -43,6 +47,7 @@ public class RoomController {
     @GetMapping("/get-user-rooms/{userId}")
     public ResponseEntity<List<RoomDto>> getUserRooms(
             final @PathVariable Long userId) {
+        authService.verifyUser(userId);
         return ResponseEntity.ok(userService.getUserRooms(userId));
     }
 
@@ -55,7 +60,7 @@ public class RoomController {
     public ResponseEntity<List<TermDto>> getRoomTerms(
             final @PathVariable Long roomId,
             final @PathVariable Long userId) {
-        roomService.addUserToRoom(roomId, userId);
+        authService.checkUserPermissionsForRoom(roomId);
         List<TermDto> terms = termService.getRoomTerms(roomId);
         return ResponseEntity.ok(terms);
     }
@@ -65,6 +70,7 @@ public class RoomController {
      * Runs the algorithm for a given room.
      * @param roomId room id
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("/stop-voting/{roomId}")
     public final void stopVoting(
             final @PathVariable Long roomId) {
@@ -77,6 +83,7 @@ public class RoomController {
      * @param roomDto the room dto.
      * @return the room dto.
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("")
     public ResponseEntity<RoomDto> createRoom(
             final @RequestBody RoomDto roomDto) {
@@ -103,9 +110,10 @@ public class RoomController {
      * @param termsDto the terms dto.
      * @return the http status.
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/{id}/terms")
     public ResponseEntity<HttpStatus> assignTerms(
-            final@PathVariable Long id,
+            final @PathVariable Long id,
             final @RequestBody List<TermDto> termsDto) {
         roomService.assignTerms(id, termsDto);
         return new ResponseEntity<>(OK);
@@ -116,6 +124,7 @@ public class RoomController {
      * @param id the room id.
      * @return the room.
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("/{id}")
     public ResponseEntity<RoomSummaryDto> getRoom(final @PathVariable Long id) {
         RoomSummaryDto roomSummaryDto = roomService.getRoomInfo(id);
@@ -126,6 +135,7 @@ public class RoomController {
      * Get all rooms.
      * @return the rooms.
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("")
     public ResponseEntity<List<RoomDto>> getRooms() {
         List<RoomDto> rooms =  roomService.getRooms().stream()

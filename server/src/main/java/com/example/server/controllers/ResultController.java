@@ -2,9 +2,11 @@ package com.example.server.controllers;
 
 import com.example.server.dto.ResultsDto;
 import com.example.server.dto.UserResultsDto;
+import com.example.server.services.AuthService;
 import com.example.server.services.ResultService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,6 +22,7 @@ public class ResultController {
      * Result service.
      */
     private final ResultService resultService;
+    private final AuthService authService;
 
     /**
      * Get the results of all users in a room.
@@ -27,6 +30,7 @@ public class ResultController {
      * @return the results of all users in a room.
      */
     @CrossOrigin
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("/get-results/{roomId}")
     public ResponseEntity<ResultsDto> getResults(
             final @PathVariable long roomId) {
@@ -45,6 +49,8 @@ public class ResultController {
     public ResponseEntity<UserResultsDto> getResultsByUser(
            final @PathVariable int roomId,
            final @PathVariable int userId) {
+
+        authService.verifyUser(userId);
         return ResponseEntity.ok(resultService.getUserResults(roomId, userId));
     }
 
