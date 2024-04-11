@@ -26,7 +26,8 @@ public class AuthController {
         return ResponseEntity.ok(token);
     }
     @GetMapping("/email-confirmation/{token}")
-    public String confirmEmail(final @PathVariable String token) {
-        return authService.confirmEmail(token);
+    public ResponseEntity<String> confirmEmail(final @PathVariable String token) {
+        authService.confirmEmail(token);
+        return ResponseEntity.ok("Potwierdzono e-mail");
     }
 }

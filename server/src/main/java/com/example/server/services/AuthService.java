@@ -38,7 +38,7 @@ public class AuthService {
         String token = jwtUtil.generateConfirmationToken(userDto.email());
 
         String msg = "Potwierdź swój email, klikając w link:\n"
-                + "http://localhost:8080/api/auth/email-confirmation/"
+                + "http://54.166.152.243/confirmEmail/"
                 + token;
 
         mailService.send(userDto.email(), "Potwierdź swój email", msg);
@@ -61,18 +61,11 @@ public class AuthService {
         return jwtUtil.generateAccessToken(email);
     }
 
-    public String confirmEmail(String token) {
-        String email;
-        try {
-            email = jwtUtil.extractEmailFromConfirmationToken(token);
-        } catch (ExpiredJwtException ex) {
-            return "Przekroczono czas";
-        }
+    public void confirmEmail(String token) {
+        String email = jwtUtil.extractEmailFromConfirmationToken(token);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
-
         user.setActive(true);
         userRepository.save(user);
-        return "Adres e-mail potwierdzony";
     }
 }
