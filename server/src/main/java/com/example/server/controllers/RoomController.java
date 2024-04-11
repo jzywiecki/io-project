@@ -41,13 +41,11 @@ public class RoomController {
 
     /**
      * Get all rooms to which the user is assigned.
-     * @param userId the user id.
      * @return the rooms.
      */
-    @GetMapping("/get-user-rooms/{userId}")
-    public ResponseEntity<List<RoomDto>> getUserRooms(
-            final @PathVariable Long userId) {
-        authService.verifyUser(userId);
+    @GetMapping("/get-user-rooms")
+    public ResponseEntity<List<RoomDto>> getUserRooms() {
+        long userId = authService.getUserIdFromContext();
         return ResponseEntity.ok(userService.getUserRooms(userId));
     }
 
@@ -56,10 +54,9 @@ public class RoomController {
      * @param roomId the room id.
      * @return the terms.
      */
-    @GetMapping("/get-terms-in-room/{roomId}/{userId}")
+    @GetMapping("/get-terms-in-room/{roomId}")
     public ResponseEntity<List<TermDto>> getRoomTerms(
-            final @PathVariable Long roomId,
-            final @PathVariable Long userId) {
+            final @PathVariable Long roomId) {
         authService.checkUserPermissionsForRoom(roomId);
         List<TermDto> terms = termService.getRoomTerms(roomId);
         return ResponseEntity.ok(terms);

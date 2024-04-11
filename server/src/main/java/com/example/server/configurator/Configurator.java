@@ -80,7 +80,7 @@ public class Configurator {
                         .firstName("Jan")
                         .lastName("Kowalski")
                         .email("jankowalski@student.agh.edu.pl")
-                        .password("password")
+                        .password(passwordEncoder.encode("password"))
                         .role(Role.STUDENT)
                         .active(true)
                         .build();
