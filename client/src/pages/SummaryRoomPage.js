@@ -1,13 +1,16 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { getRoomById } from "../helpers/roomApi";
+import { getRoomPreferencesById } from "../helpers/roomApi";
 import { Div } from "../ui/div";
 import { useParams } from "react-router-dom";
 import Calendar from "../components/Calendar";
-import Sharing from "../components/linkSharing/linkSharing"
+import Table from "../components/preferencesTable/preferencesTable";
+
 const SummaryRoomPage=()=>{
     const {roomId}=useParams()
     const [room,setRoom]=useState(null)
+    const [roomPreferences,setRoomPreferences]=useState(null)
     const [isAlert,setIsAlert] = useState(false)
     useEffect(()=>{
         const getRoomDetails=async()=>{
@@ -23,10 +26,22 @@ const SummaryRoomPage=()=>{
         getRoomDetails()
         return ()=>{}
     },[])
+    useEffect(()=>{
+        const getRoomPreferences=async()=>{
+            try{
+                let response=await getRoomPreferencesById(roomId);
+                setRoomPreferences(response.data)
+            }catch(err){
+                setIsAlert(true)
+            }
+        }
+        getRoomPreferences()
+        return ()=>{}
+    },[])
 
 
     return(<div className="SummaryRoomPage flex items-center flex-col justify-center h-screen">
-        {!isAlert&&(room===null?<div>loading</div>:
+        {!isAlert&&((room===null||roomPreferences===null)?<div>loading</div>:
         <>
             <Div className="flex justify-between">
                 <div>
@@ -52,8 +67,24 @@ const SummaryRoomPage=()=>{
                 </div>
                 {room.description===""?"brak":room.description}
             </Div>
-            <Calendar roomID={roomId} noEditTerms={room.terms} className="w-3/4 h-full"/>
-            <Sharing roomID={roomId}/>
+            <Div className='flex justify-between style items-center'>
+                <div>
+                    <span className="font-bold">Link do wybierania preferencji:&nbsp;</span>
+                    {new URL(window.location.href).origin + "/enroll/" + roomId}
+                </div>
+                <button onClick={() => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = new URL(window.location.href).origin + "/enroll/" + roomId;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                }} className="copy-button">
+                    Copy
+                </button>
+            </Div>
+            <Calendar roomPreferences={roomPreferences} noEditTerms={room.terms} className="w-3/4"/>
+            {Object.keys(roomPreferences.userPreferencesMap).length>0?<Table terms={room.terms} roomPreferences={roomPreferences}/>:<></>}
         </>
         )}
         {isAlert&&<div className="alert alert-danger w-fit flex text-center absolute right-3 bottom-0" role="alert">

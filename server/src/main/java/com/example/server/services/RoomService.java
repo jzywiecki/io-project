@@ -11,13 +11,7 @@ import com.example.server.utils.Utils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -135,9 +129,11 @@ public class RoomService {
                                 + " not found.")
                 );
 
+        Set<UserDto> users = new HashSet<>();
         Map<Long, UserPreferences> userPreferencesMap = new HashMap<>();
 
         for (User user : room.getJoinedUsers()) {
+            users.add(new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail()));
             List<Long> selectedTerms = new ArrayList<>();
             List<CommentDto> commentsDto = new ArrayList<>();
 
@@ -157,6 +153,7 @@ public class RoomService {
 
         return new RoomUsersPreferencesDto(
                 roomId,
+                users,
                 userPreferencesMap);
     }
 

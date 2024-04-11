@@ -1,19 +1,7 @@
-import { getRoomVotesSummaryById } from "../helpers/roomApi";
-import { useEffect, useState } from "react";
 import { CardDescription, Card } from "../ui/card";
+import "./preferencesTable/preferencesTable.css";
 
-const NoEditTerm=({term ,minHour, roomID})=>{
-    const [roomSummaryVotes,setRoomSummaryVotes]=useState(null)
-    useEffect(()=>{
-        const getRoomSummaryVotes=async()=>{
-            try{
-                let response=await getRoomVotesSummaryById(roomID);
-                setRoomSummaryVotes(response.data)
-            }catch(err){}
-        }
-        getRoomSummaryVotes()
-        return ()=>{}
-    },[])
+const NoEditTerm=({term ,minHour, roomPreferences})=>{
 
     const convertDayOfWeekToNumber=(dayOfWeekString)=>{
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -28,6 +16,16 @@ const NoEditTerm=({term ,minHour, roomID})=>{
     const endHour = endTime.slice(0,2);
     const endMinute = endTime.slice(3,5);
     const startMinute = startTime.slice(3,5);
+
+    let numberOfVotes = 0;
+    for (let user in roomPreferences.userPreferencesMap) { 
+        let terms = roomPreferences.userPreferencesMap[user].selectedTerms;
+        for (let t in terms) {
+            if (terms[t] === term.id) {
+                numberOfVotes++;
+            }   
+        }
+    }
 
     const hour = startHour;
     let minute = startMinute;
@@ -55,23 +53,54 @@ const NoEditTerm=({term ,minHour, roomID})=>{
             }}  
         >
             <Card
-                className={`bg-emerald-300 flex h-full w-full flex-col items-center justify-center rounded font-medium z-2`}
+                className={`bg-emerald-300 flex h-full w-full flex-col items-center justify-center rounded font-medium z-2 hint`}
             >
                 <CardDescription className={`flex justify-between cursor-default`}>
                     <span className="">{startHour}:{startMinute==0?"00":startMinute}</span>
                     <span className="text-md">-</span>
                     <span className="">{endHour}:{endMinute==0?"00":endMinute}</span>
                 </CardDescription>
-                <CardDescription>
-                    {(roomSummaryVotes===null?<div>loading</div>:
+                <CardDescription className={`cursor-default`} style={{position:"absolute", left:"5%", bottom:"5%"}}>
+                    {(
                     <>
-                    {roomSummaryVotes.termVotesCount[term.id] === 1 ? `${roomSummaryVotes.termVotesCount[term.id]} głos` :
-                        roomSummaryVotes.termVotesCount[term.id] > 1 && roomSummaryVotes.termVotesCount[term.id] < 5 ? `${roomSummaryVotes.termVotesCount[term.id]} głosy` :
-                        roomSummaryVotes.termVotesCount[term.id] > 4 ? `${roomSummaryVotes.termVotesCount[term.id]} głosów` : ``
+                    {
+                        numberOfVotes === 1 ? `${numberOfVotes} głos` :
+                        numberOfVotes > 1 && numberOfVotes < 5 ? `${numberOfVotes} głosy` :
+                        numberOfVotes > 4 ? `${numberOfVotes} głosów` : ``
                     }
                     </>
                     )}
                 </CardDescription>
+                {numberOfVotes>0?
+                <div className="hint-text">
+                    {Object.keys(roomPreferences.userPreferencesMap).map(
+                        (user) => {
+                            if (roomPreferences.userPreferencesMap[user].selectedTerms.includes(term.id)) {
+                                return (
+                                    <div key={user}>
+                                        {   
+                                            roomPreferences.users.map(u => {
+                                                if (u.userId == user) {
+                                                  return (
+                                                    <span key={u.userId}>
+                                                      {u.firstName} {u.lastName}{" "}
+                                                      <span style={{ color: "#aaa" }}>{u.email}</span>
+                                                    </span>
+                                                  );
+                                                }
+                                                return null;
+                                            })
+                                            
+                                        }
+                                    </div>
+                                );
+                            } else {
+                                return null;
+                            }
+                        }
+                    )}
+                </div>
+                :<></>}
             </Card>
         </div>
     </>)

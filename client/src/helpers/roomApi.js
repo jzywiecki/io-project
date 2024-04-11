@@ -18,6 +18,6 @@ export const getRoomById=(id)=>{
     return axios.get(url+`/${id}`)
 }
 
-export const getRoomVotesSummaryById=(id)=>{
+export const getRoomPreferencesById=(id)=>{
     return axios.get(url+`/get-preferences/${id}`)
 }
