@@ -1,5 +1,6 @@
 package com.example.server.auth;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,13 +25,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtUtil.resolveToken(request);
         if (token != null) {
-            String email = jwtUtil.extractEmailFromAccessToken(token);
+            try {
+                String email = jwtUtil.extractEmailFromAccessToken(token);
                 if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
                     Authentication authentication =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
+            } catch (ExpiredJwtException exception) {
+                response.sendError(401, "token expired");
+            } catch (Exception exception) {
+                response.sendError(403, "permission denied");
+            }
+
         }
         filterChain.doFilter(request, response);
     }

@@ -8,6 +8,8 @@ import VotingPage from './pages/VotingPage';
 import AllUsersResults from './components/allUsersResults/allUsersResults';
 import Results from './components/userResults/userResults';
 import LoginAndRegisterPage from "./pages/LoginAndRegisterPage";
+import ConfirmPage from "./pages/ConfirmPage";
+import NoPermitionPage from "./pages/NoPermitionPage";
 
 function App () {
   return (
@@ -21,6 +23,8 @@ function App () {
           <Route path="/results/:roomId" element={<AllUsersResults />}/>
           <Route path="/result/:roomId/:userId" element={<Results />}/>
           <Route path="/login" element={<LoginAndRegisterPage/>}/>
+          <Route path="/confirmEmail/:token" element={<ConfirmPage/>}/>
+          <Route path="/noPermition" element={<NoPermitionPage/>}/>
         </Routes>
       </BrowserRouter>
       {/* <ClassSchedulerPage/>

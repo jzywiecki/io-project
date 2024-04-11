@@ -12,7 +12,7 @@ import java.util.Date;
 public class JwtUtil {
     private static final String ACCESS_SECRET_KEY = "accessSecretKey";
     private static final String CONFIRMATION_SECRET_KEY = "confirmationSecretKey";
-    private static final long EXPIRATION_TIME = 1000 * 60 * 1;
+    private static final long EXPIRATION_TIME = 1000 * 60 * 15;
     private static final String TOKEN_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";
 

@@ -1,10 +1,18 @@
 import { values } from "lodash";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form"
+import { registerUser } from "../helpers/loginApi";
 const RegisterForm=({setIsLogin})=>{
     const { handleSubmit, register, formState: { errors }, watch } = useForm();
-    const submit=(values)=>{
+    const submit=async(values)=>{
         console.log(values)
+        try{
+            let response=await registerUser(values)
+            console.log(response.data);
+        }catch(err){
+
+        }
+        
     }
     return(<div className="RegisterForm flex flex-col justify-center h-screen items-center">
             

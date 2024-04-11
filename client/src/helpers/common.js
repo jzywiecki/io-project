@@ -1,3 +1,5 @@
+import { Navigate } from "react-router-dom";
+
 export const getDayNumber=(day)=> {
     switch (day) {
         case "MONDAY": return 0;
@@ -50,4 +52,8 @@ export const prepareUserPreferences=(termWithIdIsSelected, termWithIdComments)=>
     }
 
     return dataBackendFormat;
+}
+
+export const checkAfterResponse=(error)=>{
+    Navigate("/login");
 }
