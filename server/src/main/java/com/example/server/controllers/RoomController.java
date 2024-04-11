@@ -2,7 +2,7 @@ package com.example.server.controllers;
 
 import com.example.server.dto.RoomDto;
 import com.example.server.dto.RoomSummaryDto;
-import com.example.server.dto.RoomVotesDto;
+import com.example.server.dto.RoomUsersPreferencesDto;
 import com.example.server.dto.TermDto;
 import com.example.server.model.Room;
 import com.example.server.services.RoomService;
@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -151,12 +150,12 @@ public class RoomController {
 
     /**
      * Get all preferences.
-     * @return room votes summary
+     * @return all users preferences in the room
      */
     @GetMapping(value="/get-preferences/{roomId}")
-    public ResponseEntity<RoomVotesDto> getPreferences(
+    public ResponseEntity<RoomUsersPreferencesDto> getPreferences(
             final @PathVariable long roomId
     ) {
-        return ResponseEntity.ok(roomService.getRoomVotes(roomId));
+        return ResponseEntity.ok(roomService.getRoomPreferences(roomId));
     }
 }

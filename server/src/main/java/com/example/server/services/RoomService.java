@@ -2,18 +2,11 @@ package com.example.server.services;
 
 import com.example.server.algorithm.Algorithm;
 import com.example.server.dto.*;
-import com.example.server.repositories.ResultRepository;
-import com.example.server.model.Term;
-import com.example.server.model.Room;
-import com.example.server.model.User;
-import com.example.server.model.Result;
-import com.example.server.model.Vote;
+import com.example.server.model.*;
+import com.example.server.repositories.*;
 import com.example.server.exceptions.RoomNotFoundException;
 import com.example.server.exceptions.TermNotFoundException;
 import com.example.server.exceptions.UserNotFoundException;
-import com.example.server.repositories.RoomRepository;
-import com.example.server.repositories.TermRepository;
-import com.example.server.repositories.UserRepository;
 import com.example.server.utils.Utils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -131,7 +124,9 @@ public class RoomService {
         return resultMap;
     }
 
-    public RoomVotesDto getRoomVotes(long roomId) {
+    private final CommentRepository commentRepository;
+
+    public RoomUsersPreferencesDto getRoomPreferences(long roomId) {
         Room room = roomRepository
                 .findById(roomId)
                 .orElseThrow(
@@ -140,19 +135,29 @@ public class RoomService {
                                 + " not found.")
                 );
 
-        Map<Long, Integer> termVotesCount = new HashMap<>();
+        Map<Long, UserPreferences> userPreferencesMap = new HashMap<>();
 
-        for (Vote vote : room.getVotes()) {
-            Long termId = vote.getTerm().getId();
-            if (!termVotesCount.containsKey(termId)) {
-                termVotesCount.put(termId, 0);
+        for (User user : room.getJoinedUsers()) {
+            List<Long> selectedTerms = new ArrayList<>();
+            List<CommentDto> commentsDto = new ArrayList<>();
+
+            for (Vote vote : room.getVotes()) {
+                if (user.equals(vote.getUser())) {
+                    selectedTerms.add(vote.getTerm().getId());
+                }
             }
-            termVotesCount.put(termId, termVotesCount.get(termId)+1);
+
+            List<Comment> comments = commentRepository.findAllByRoomIdAndUserId(roomId, user.getId());
+            for (Comment comment : comments) {
+                commentsDto.add(new CommentDto(comment.getTerm().getId(), comment.getContent()));
+            }
+
+            userPreferencesMap.put(user.getId(), new UserPreferences(selectedTerms, commentsDto));
         }
 
-        return new RoomVotesDto(
+        return new RoomUsersPreferencesDto(
                 roomId,
-                termVotesCount);
+                userPreferencesMap);
     }
 
     private final UserRepository userRepository;
