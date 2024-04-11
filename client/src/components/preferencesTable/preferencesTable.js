@@ -10,7 +10,11 @@ function Table({terms, roomPreferences}) {
             <table className="preferencesTable">
             <tbody>
             <tr>
-                <th/>
+                <th>
+                    Legenda: <br/>
+                    &#10003; - głos,
+                    ? - dodany komentarz
+                </th>
                 {terms.map(
                     (term) => {
                         return (
@@ -47,12 +51,32 @@ function Table({terms, roomPreferences}) {
                                 {   
                                     terms.map(
                                         (term) => {
+                                            let comments = roomPreferences.userPreferencesMap[user].comments;
+                                            let comment_value = null;
+                                            for (let comment in comments) {
+                                                if (comments[comment].termId == term.id) {
+                                                    comment_value = comments[comment].comment;
+                                                }
+                                            }
+
+                                            if (roomPreferences.userPreferencesMap[user].selectedTerms.includes(term.id) && comment_value!=null) {
+                                                counter++;
+                                                return (
+                                                    <td key={term.id}><strong>&#10003;</strong> + <strong>?</strong>: {comment_value}</td>
+                                                );
+                                            }
                                             if (roomPreferences.userPreferencesMap[user].selectedTerms.includes(term.id)) {
                                                 counter++;
                                                 return (
-                                                    <td key={term.id}>&#10003;</td>
+                                                    <td key={term.id}><strong>&#10003;</strong></td>
                                                 );
-                                            } else {
+                                            }
+                                            if (comment_value!=null) {
+                                                return (
+                                                    <td key={term.id}><strong>?</strong>: {comment_value}</td>
+                                                );
+                                            }
+                                            else {
                                                 return (
                                                     <td key={term.id}></td>
                                                 );

@@ -18,11 +18,18 @@ const NoEditTerm=({term ,minHour, roomPreferences})=>{
     const startMinute = startTime.slice(3,5);
 
     let numberOfVotes = 0;
+    let numberOfComments = 0;
     for (let user in roomPreferences.userPreferencesMap) { 
         let terms = roomPreferences.userPreferencesMap[user].selectedTerms;
         for (let t in terms) {
             if (terms[t] === term.id) {
                 numberOfVotes++;
+            }   
+        }
+        let comments = roomPreferences.userPreferencesMap[user].comments;
+        for (let c in comments) {
+            if (comments[c].termId === term.id) {
+                numberOfComments++;
             }   
         }
     }
@@ -60,33 +67,57 @@ const NoEditTerm=({term ,minHour, roomPreferences})=>{
                     <span className="text-md">-</span>
                     <span className="">{endHour}:{endMinute==0?"00":endMinute}</span>
                 </CardDescription>
+                <CardDescription className={`cursor-default`} style={{position:"absolute", left:"5%", top:"5%"}}>
+                    <strong>{numberOfVotes} &#10003;</strong>
+                </CardDescription>
                 <CardDescription className={`cursor-default`} style={{position:"absolute", left:"5%", bottom:"5%"}}>
-                    {(
-                    <>
-                    {
-                        numberOfVotes === 1 ? `${numberOfVotes} głos` :
-                        numberOfVotes > 1 && numberOfVotes < 5 ? `${numberOfVotes} głosy` :
-                        numberOfVotes > 4 ? `${numberOfVotes} głosów` : ``
-                    }
-                    </>
-                    )}
+                    <strong>{numberOfComments} ?</strong>
                 </CardDescription>
                 {numberOfVotes>0?
                 <div className="hint-text">
                     {Object.keys(roomPreferences.userPreferencesMap).map(
                         (user) => {
-                            if (roomPreferences.userPreferencesMap[user].selectedTerms.includes(term.id)) {
+                            let preferences = roomPreferences.userPreferencesMap[user];
+                            let comments = roomPreferences.userPreferencesMap[user].comments;
+                            let comment_value = null;
+                            for (let comment in comments) {
+                                if (comments[comment].termId == term.id) {
+                                    comment_value = comments[comment].comment;
+                                }
+                            }
+                            if (preferences.selectedTerms.includes(term.id) || comment_value!=null) {
                                 return (
                                     <div key={user}>
                                         {   
                                             roomPreferences.users.map(u => {
                                                 if (u.userId == user) {
-                                                  return (
-                                                    <span key={u.userId}>
-                                                      {u.firstName} {u.lastName}{" "}
-                                                      <span style={{ color: "#aaa" }}>{u.email}</span>
-                                                    </span>
-                                                  );
+                                                    if (preferences.selectedTerms.includes(term.id) && comment_value!=null) {
+                                                        return (
+                                                            <span key={u.userId}>
+                                                                <strong>&#10003;</strong> + <strong>?</strong>{" "}
+                                                                {u.firstName} {u.lastName}{" "}
+                                                                <span style={{ color: "#aaa" }}>{u.email}</span>
+                                                            </span>
+                                                        );
+                                                    }
+                                                    if (preferences.selectedTerms.includes(term.id)) {
+                                                        return (
+                                                            <span key={u.userId}>
+                                                                <strong>&#10003;</strong>{" "}
+                                                                {u.firstName} {u.lastName}{" "}
+                                                                <span style={{ color: "#aaa" }}>{u.email}</span>
+                                                            </span>
+                                                        );
+                                                    }
+                                                    if (comment_value!=null) {
+                                                        return (
+                                                            <span key={u.userId}>
+                                                                <strong>?</strong>{" "}
+                                                                {u.firstName} {u.lastName}{" "}
+                                                                <span style={{ color: "#aaa" }}>{u.email}</span>
+                                                            </span>
+                                                        );
+                                                    }
                                                 }
                                                 return null;
                                             })
