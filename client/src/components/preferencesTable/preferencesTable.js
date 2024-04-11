@@ -36,7 +36,7 @@ function Table({terms, roomPreferences}) {
                             <td>
                                 {
                                     roomPreferences.users.map(u => {
-                                        if (u.userId == user) {
+                                        if (u.userId === parseInt(user)) {
                                           return (
                                             <span key={u.userId}>
                                                 <div>{u.firstName} {u.lastName}{"\n"}</div>
@@ -54,7 +54,7 @@ function Table({terms, roomPreferences}) {
                                             let comments = roomPreferences.userPreferencesMap[user].comments;
                                             let comment_value = null;
                                             for (let comment in comments) {
-                                                if (comments[comment].termId == term.id) {
+                                                if (comments[comment].termId === term.id) {
                                                     comment_value = comments[comment].comment;
                                                 }
                                             }

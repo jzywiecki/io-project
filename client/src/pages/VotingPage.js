@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "../ui/button";
 import React from 'react';
 import { useParams } from "react-router-dom";
-import { getVotingPage, vote } from "../helpers/voteApi";
+import { getVotingPage } from "../helpers/voteApi";
 import { getTermFromDto } from "../helpers/common";
 import { savePreferences } from "../helpers/voteApi";
 import { prepareUserPreferences } from "../helpers/common";

@@ -1,5 +1,4 @@
 import axios from "axios"
-import { forEach } from "lodash"
 
 // const url="http://localhost:8080/api/vote"
 const url = "/api/vote"

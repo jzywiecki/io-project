@@ -19,7 +19,7 @@ const ClassSchedulerPage=()=>{
         console.log(termsToSend)
         try{
             let response = await setTermsInRoom(termsToSend, roomId)
-            if(response.status==200){
+            if(response.status===200){
                 navigate(`/room/${roomId}`)
             }
         }catch(err){

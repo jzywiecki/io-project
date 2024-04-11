@@ -63,15 +63,15 @@ const NoEditTerm=({term ,minHour, roomPreferences})=>{
                 className={`bg-emerald-300 flex h-full w-full flex-col items-center justify-center rounded font-medium z-2 hint`}
             >
                 <CardDescription className={`flex justify-between cursor-default`}>
-                    <span className="">{startHour}:{startMinute==0?"00":startMinute}</span>
+                    <span className="">{startHour}:{startMinute===0?"00":startMinute}</span>
                     <span className="text-md">-</span>
-                    <span className="">{endHour}:{endMinute==0?"00":endMinute}</span>
+                    <span className="">{endHour}:{endMinute===0?"00":endMinute}</span>
                 </CardDescription>
                 <CardDescription className={`cursor-default`} style={{position:"absolute", left:"5%", top:"5%"}}>
-                    <strong>{numberOfVotes} &#10003;</strong>
+                    {(numberOfVotes>0)?(<strong>{numberOfVotes} &#10003;</strong>):(<></>)}
                 </CardDescription>
                 <CardDescription className={`cursor-default`} style={{position:"absolute", left:"5%", bottom:"5%"}}>
-                    <strong>{numberOfComments} ?</strong>
+                    {(numberOfComments>0)?(<strong>{numberOfComments} ?</strong>):(<></>)}
                 </CardDescription>
                 {numberOfVotes>0?
                 <div className="hint-text">
@@ -81,7 +81,7 @@ const NoEditTerm=({term ,minHour, roomPreferences})=>{
                             let comments = roomPreferences.userPreferencesMap[user].comments;
                             let comment_value = null;
                             for (let comment in comments) {
-                                if (comments[comment].termId == term.id) {
+                                if (comments[comment].termId === term.id) {
                                     comment_value = comments[comment].comment;
                                 }
                             }
@@ -90,7 +90,7 @@ const NoEditTerm=({term ,minHour, roomPreferences})=>{
                                     <div key={user}>
                                         {   
                                             roomPreferences.users.map(u => {
-                                                if (u.userId == user) {
+                                                if (u.userId === parseInt(user)) {
                                                     if (preferences.selectedTerms.includes(term.id) && comment_value!=null) {
                                                         return (
                                                             <span key={u.userId}>
