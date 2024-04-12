@@ -1,26 +1,28 @@
 import Calendar from "../components/Calendar";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Button } from "../ui/button";
 import React from 'react';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getVotingPage, vote } from "../helpers/voteApi";
-import { getTermFromDto } from "../helpers/common";
+import { checkAfterResponse, getTermFromDto } from "../helpers/common";
 import { savePreferences } from "../helpers/voteApi";
 import { prepareUserPreferences } from "../helpers/common";
+import { loginContext } from "../contexts/Login.context";
 
 
 const VotingPage = () => {
-    const { roomId, userId } = useParams();
+    const { roomId } = useParams();
     const [availableTerms, setAvailableTerms] = useState([]);
     const [votingStatus, setVotingStatus] = useState("");
     const [isAlert, setIsAlert] = useState(false);
     const termWithIdIsSelectedRef = useRef(null);
     const termWithIdCommentsRef = useRef(null);
-
+    const {setIsLogoutAlert}=useContext(loginContext)
+    const navigate = useNavigate();
     useEffect(() => {
         const getVotingPageData = async () => {
             try {
-                const response = await getVotingPage(roomId, userId);
+                const response = await getVotingPage(roomId);
                 const data = response.data;
                 const availableTermsData = data.availableTerms.map((termDto) => getTermFromDto(termDto));
 
@@ -29,17 +31,25 @@ const VotingPage = () => {
                 termWithIdCommentsRef.current = new Map(Object.entries(data.termWithIdComments));
             } catch (error) {
                 console.error('Error while fetching voting page data:', error);
+               
+                let redirect=checkAfterResponse(error)
+                if(redirect==="/login"){
+                    setIsLogoutAlert(true);
+                }
+                if(redirect){
+                    navigate(redirect);
+                }
                 setIsAlert(true);
             }
         };
         getVotingPageData();
-    }, [roomId, userId]);
+    }, [roomId]);
 
     const sendTerms = async () => {
         setVotingStatus("Trwa wysyłanie głosów...");
 
         try {
-            const response = await savePreferences(roomId, userId, 
+            const response = await savePreferences(roomId, 
                 prepareUserPreferences(termWithIdIsSelectedRef.current, termWithIdCommentsRef.current)
             );
 
@@ -50,6 +60,13 @@ const VotingPage = () => {
             setVotingStatus("Głosowanie zakończone pomyślnie.");
         } catch (error) {
             console.error('Error:', error);
+            let redirect=checkAfterResponse(error)
+            if(redirect==="/login"){
+                localStorage.setItem("redirect",`/enroll/${roomId}`)
+            }
+            if(redirect){
+                navigate(redirect);
+            }
             setVotingStatus("Ups... błąd podczas głosowania :(");
         }
     }

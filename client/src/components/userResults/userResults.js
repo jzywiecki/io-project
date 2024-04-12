@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./userResults.css";
+import { checkAfterResponse } from "../../helpers/common";
+import { getUserResult } from "../../helpers/resultApi";
 
 // const url = "http://localhost:8080"
 const url = ""
@@ -16,35 +18,32 @@ const daysMap = {
 };
 
 function Results() {
-  const {roomId, userId} = useParams();
+  const {roomId} = useParams();
   const [results, setResults] = useState([]);
-
+  const navigate=useNavigate()
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const res = await fetch(
-          url+`/api/result/get-results/${roomId}/${userId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-          },
-        );
-        const data = await res.json();
-
+        const res = await getUserResult(roomId);
+        const data = res.data
         data.result.day = daysMap[data.result.day];
         console.log(data);
 
         setResults(data);
       } catch (error) {
-        console.error(error);
+        let redirect=checkAfterResponse(error)
+        if(redirect==="/login"){
+            localStorage.setItem("redirect",`/result/${roomId}`)
+        }
+        if(redirect){
+            navigate(redirect)
+        }
+        console.log(error)
       }
     };
 
     fetchResults();
-  }, [roomId, userId]);
+  }, [roomId]);
 
   if (results.length === 0) {
     return null;

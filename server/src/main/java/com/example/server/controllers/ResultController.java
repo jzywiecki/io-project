@@ -2,9 +2,11 @@ package com.example.server.controllers;
 
 import com.example.server.dto.ResultsDto;
 import com.example.server.dto.UserResultsDto;
+import com.example.server.services.AuthService;
 import com.example.server.services.ResultService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,6 +22,7 @@ public class ResultController {
      * Result service.
      */
     private final ResultService resultService;
+    private final AuthService authService;
 
     /**
      * Get the results of all users in a room.
@@ -27,7 +30,8 @@ public class ResultController {
      * @return the results of all users in a room.
      */
     @CrossOrigin
-    @GetMapping("/get-results/{roomId}")
+    @PreAuthorize("hasRole('TEACHER')")
+    @GetMapping("/teacher/{roomId}")
     public ResponseEntity<ResultsDto> getResults(
             final @PathVariable long roomId) {
         System.out.println("getResults");
@@ -37,14 +41,13 @@ public class ResultController {
     /**
      * Get the results of a user in a room.
      * @param roomId the room id.
-     * @param userId the user id.
      * @return the results of a user in a room.
      */
     @CrossOrigin
-    @GetMapping("/get-results/{roomId}/{userId}")
+    @GetMapping("/user/{roomId}")
     public ResponseEntity<UserResultsDto> getResultsByUser(
-           final @PathVariable int roomId,
-           final @PathVariable int userId) {
+           final @PathVariable int roomId) {
+        long userId = authService.getUserIdFromContext();
         return ResponseEntity.ok(resultService.getUserResults(roomId, userId));
     }
 

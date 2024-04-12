@@ -2,6 +2,7 @@ package com.example.server.controllers;
 
 import com.example.server.dto.UserPreferences;
 import com.example.server.dto.VotingPageDto;
+import com.example.server.services.AuthService;
 import com.example.server.services.VoteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,29 +17,31 @@ public class VoteController {
      * Vote service.
      */
     private final VoteService voteService;
+    private final AuthService authService;
 
     /**
      * Adding new user votes and deleting previous ones.
-     * @param roomId, userId.
+     * @param roomId
      */
-    @GetMapping("/get-voting-page/{roomId}/{userId}")
+    @GetMapping("/voting-page/{roomId}")
     public ResponseEntity<VotingPageDto> getVotingPage(
-            final @PathVariable long roomId,
-            final @PathVariable long userId
-    ) {
+            final @PathVariable long roomId) {
+        long userId = authService.getUserIdFromContext();
+        authService.checkUserPermissionsForRoom(roomId);
         return ResponseEntity.ok(voteService.getVotingPage(roomId, userId));
     }
 
     /**
      * Save user preferences.
-     * @param roomId, userId, votingPageDto.
+     * @param roomId, votingPageDto.
      */
-    @PostMapping(value="/save-preferences/{roomId}/{userId}", consumes="application/json")
+    @PostMapping(value="/save-preferences/{roomId}", consumes="application/json")
     public ResponseEntity<Void> savePreferences(
             final @PathVariable long roomId,
-            final @PathVariable long userId,
             final @RequestBody UserPreferences votingPageDto
     ) {
+        long userId = authService.getUserIdFromContext();
+        authService.checkUserPermissionsForRoom(roomId);
         voteService.savePreferences(roomId, userId, votingPageDto);
         return ResponseEntity.ok().build();
     }

@@ -35,7 +35,7 @@ class RoomServiceTest {
         long id = 0;
         when(roomRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(RoomNotFoundException.class, () -> roomService.getRoom(id));
+        assertThrows(RoomNotFoundException.class, () -> roomService.getRoomInfo(id));
     }
 
     @Test

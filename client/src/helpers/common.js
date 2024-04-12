@@ -51,3 +51,11 @@ export const prepareUserPreferences=(termWithIdIsSelected, termWithIdComments)=>
 
     return dataBackendFormat;
 }
+
+export const checkAfterResponse=(error)=>{
+    console.log(error)
+    if(error?.response?.data?.message==="token expired"){
+        return "/login"
+    }
+    return "/noPermition"
+}
