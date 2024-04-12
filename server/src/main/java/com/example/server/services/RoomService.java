@@ -135,6 +135,7 @@ public class RoomService {
                 System.out.println("Votes in room " + room.getId() + ": " + room.getVotes().size());
                 runAlgorithm(room.getId());
                 room.setFinished(true);
+                roomRepository.save(room);
             }
         }
     }
