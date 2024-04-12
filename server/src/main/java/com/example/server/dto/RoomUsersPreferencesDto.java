@@ -5,7 +5,7 @@ import java.util.Set;
 
 public record RoomUsersPreferencesDto(
         Long roomId,
-        Set<UserDto> users,
+        Set<UserDataDto> users,
         Map<Long, UserPreferences> userPreferencesMap
 ) {
 }

@@ -152,11 +152,11 @@ public class RoomService {
                                 + " not found.")
                 );
 
-        Set<UserDto> users = new HashSet<>();
+        Set<UserDataDto> users = new HashSet<>();
         Map<Long, UserPreferences> userPreferencesMap = new HashMap<>();
 
         for (User user : room.getJoinedUsers()) {
-            users.add(new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail()));
+            users.add(new UserDataDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail()));
             List<Long> selectedTerms = new ArrayList<>();
             List<CommentDto> commentsDto = new ArrayList<>();
 
