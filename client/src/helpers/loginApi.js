@@ -1,6 +1,6 @@
 import axios from "axios"
-// const url="/api/auth"
-const url="http://localhost:8080/api/auth"
+const url="/api/auth"
+// const url="http://localhost:8080/api/auth"
 
 export const confirmEmail=(token)=>{
     return axios.get(url+`/email-confirmation/${token}`)
