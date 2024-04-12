@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useEffect, useState } from "react";
 import { getRoomById } from "../helpers/roomApi";
 import { Div } from "../ui/div";
@@ -7,11 +7,13 @@ import Calendar from "../components/Calendar";
 import Sharing from "../components/linkSharing/linkSharing"
 import { checkAfterResponse } from "../helpers/common";
 import { useNavigate } from "react-router-dom";
+import { loginContext } from "../contexts/Login.context";
 const SummaryRoomPage=()=>{
     const navigate=useNavigate()
     const {roomId}=useParams()
     const [room,setRoom]=useState(null)
     const [isAlert,setIsAlert] = useState(false)
+    const {setIsLogoutAlert}=useContext(loginContext)
     useEffect(()=>{
         const getRoomDetails=async()=>{
             try{
@@ -21,7 +23,7 @@ const SummaryRoomPage=()=>{
             }catch(err){
                 let redirect=checkAfterResponse(err)
                 if(redirect==="/login"){
-                    localStorage.setItem("redirect",`/room/${roomId}`)
+                    setIsLogoutAlert(true);
                 }
                 if(redirect){
                     navigate(redirect)

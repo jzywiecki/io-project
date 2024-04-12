@@ -1,5 +1,5 @@
 import Calendar from "../components/Calendar";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Button } from "../ui/button";
 import React from 'react';
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,6 +7,7 @@ import { getVotingPage, vote } from "../helpers/voteApi";
 import { checkAfterResponse, getTermFromDto } from "../helpers/common";
 import { savePreferences } from "../helpers/voteApi";
 import { prepareUserPreferences } from "../helpers/common";
+import { loginContext } from "../contexts/Login.context";
 
 
 const VotingPage = () => {
@@ -16,6 +17,7 @@ const VotingPage = () => {
     const [isAlert, setIsAlert] = useState(false);
     const termWithIdIsSelectedRef = useRef(null);
     const termWithIdCommentsRef = useRef(null);
+    const {setIsLogoutAlert}=useContext(loginContext)
     const navigate = useNavigate();
     useEffect(() => {
         const getVotingPageData = async () => {
@@ -32,7 +34,7 @@ const VotingPage = () => {
                
                 let redirect=checkAfterResponse(error)
                 if(redirect==="/login"){
-                    localStorage.setItem("redirect",`/enroll/${roomId}`)
+                    setIsLogoutAlert(true);
                 }
                 if(redirect){
                     navigate(redirect);

@@ -25,7 +25,6 @@ const ClassSchedulerPage=()=>{
         }catch(err){
             setIsAlert(true)
         }
-        
     }
     let terms = Array.from({ length: 5 }, (_, i) => {
         const dayTerms = [];

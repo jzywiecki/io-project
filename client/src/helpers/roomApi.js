@@ -43,3 +43,11 @@ export const stopVoting=(roomId)=>{
         }
     })
 }
+
+export const getUserRooms=()=>{
+    return axios.get(url+`/get-user-rooms`,{
+        headers:{
+            'Authorization': 'Bearer ' + localStorage.getItem("token")
+        }
+    })
+}

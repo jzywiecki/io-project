@@ -44,7 +44,7 @@ public class RoomController {
      * Get all rooms to which the user is assigned.
      * @return the rooms.
      */
-    @GetMapping("/get-user-rooms")
+        @GetMapping("/get-user-rooms")
     public ResponseEntity<List<RoomDto>> getUserRooms() {
         long userId = authService.getUserIdFromContext();
         return ResponseEntity.ok(userService.getUserRooms(userId));
