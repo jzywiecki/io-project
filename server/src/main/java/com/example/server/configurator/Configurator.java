@@ -22,6 +22,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Configuration
 @EnableTransactionManagement
@@ -110,20 +112,6 @@ public class Configurator {
                 userRepository.save(exampleStudent2);
                 userRepository.save(exampleTeacher);
 
-                Room exampleRoom = Room.builder()
-                        .deadlineTime(
-                                LocalTime.of(exampleHour, exampleMinute))
-                        .deadlineDate(java.sql.Date.valueOf(
-                                LocalDateTime.now().toLocalDate()))
-                        .description("Example room description")
-                        .name("Example room")
-                        .joinedUsers(new HashSet<>())
-                        .finished(false)
-                        .build();
-
-                //save example room
-                roomRepository.save(exampleRoom);
-
                 //save terms
                 final int days = 5;
                 final int termsPerDay = 7;
@@ -133,6 +121,8 @@ public class Configurator {
                 final int durationMinute = 30;
                 final int intervalHour = 1;
                 final int intervalMinute = 45;
+
+                Set<Term> terms = new HashSet<>();
 
                 for (int i = 0; i < days; i++) {
                     DayOfWeek day = DayOfWeek.of(i + 1);
@@ -146,11 +136,32 @@ public class Configurator {
                                         .plusMinutes(durationMinute))
                                 .build();
                         termRepository.save(term);
+
                         time = time
                                 .plusHours(intervalHour)
                                 .plusMinutes(intervalMinute);
+
+                        if ((i+j) % 5 == 0) {
+                            terms.add(term);
+                        }
                     }
                 }
+
+                Room exampleRoom = Room.builder()
+                        .deadlineTime(
+                                LocalTime.of(exampleHour, exampleMinute))
+                        .deadlineDate(java.sql.Date.valueOf(
+                                LocalDateTime.now().plusYears(1).toLocalDate()))
+                        .description("Example room description")
+                        .name("Example room")
+                        .joinedUsers(new HashSet<>())
+                        .finished(false)
+                        .build();
+
+                //save example room
+                roomRepository.save(exampleRoom);
+
+                exampleRoom.setTerms(terms);
 
                 //init user
                 User user = User.builder()
