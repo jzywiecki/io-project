@@ -69,7 +69,7 @@ public class RoomController {
      */
     @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("/stop-voting/{roomId}")
-    public final void stopVoting(
+    public void stopVoting(
             final @PathVariable Long roomId) {
         roomService.runAlgorithm(roomId);
     }

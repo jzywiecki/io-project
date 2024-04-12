@@ -12,7 +12,7 @@ function AllUsersResults() {
     useEffect(() => {
         const fetchResults = async () => {
             try {
-                const res = await getTeacherResult()
+                const res = await getTeacherResult(roomId)
                 const data = res.data
 
                 console.log(data);

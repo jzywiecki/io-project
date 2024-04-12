@@ -7,7 +7,7 @@ const LoginForm=({setIsLogin})=>{
     const { handleSubmit, register, formState: { errors } } = useForm();
     const [message,setMessage]=useState(null)
     const navigate=useNavigate()
-    const redirect=(localStorage.getItem("redirect")).slice()
+    const redirect=(localStorage.getItem("redirect"))?.slice()
     console.log(redirect)
     // useEffect(()=>{
     //     localStorage.setItem("redirect","");
