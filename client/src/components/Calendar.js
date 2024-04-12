@@ -5,6 +5,7 @@ import VotingTerm from "./VotingTerm";
 
 const Calendar=({terms, setPickedTerms, noEditTerms, className, votingTerms, termWithIdIsSelected, termWithIdComments, roomPreferences })=>{
     console.log(terms)
+    console.log(noEditTerms)
     const minHour = 8
     const maxHour = 20
     

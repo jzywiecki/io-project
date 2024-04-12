@@ -5,20 +5,15 @@ import com.example.server.dto.RoomSummaryDto;
 import com.example.server.dto.RoomUsersPreferencesDto;
 import com.example.server.dto.TermDto;
 import com.example.server.model.Room;
+import com.example.server.services.AuthService;
 import com.example.server.services.RoomService;
 import com.example.server.services.TermService;
 import com.example.server.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,14 +39,15 @@ public class RoomController {
      */
     private final UserService userService;
 
+    private final AuthService authService;
+
     /**
      * Get all rooms to which the user is assigned.
-     * @param userId the user id.
      * @return the rooms.
      */
-    @GetMapping("/get-user-rooms/{userId}")
-    public ResponseEntity<List<RoomDto>> getUserRooms(
-            final @PathVariable Long userId) {
+        @GetMapping("/get-user-rooms")
+    public ResponseEntity<List<RoomDto>> getUserRooms() {
+        long userId = authService.getUserIdFromContext();
         return ResponseEntity.ok(userService.getUserRooms(userId));
     }
 
@@ -60,11 +56,10 @@ public class RoomController {
      * @param roomId the room id.
      * @return the terms.
      */
-    @GetMapping("/get-terms-in-room/{roomId}/{userId}")
+    @GetMapping("/get-terms-in-room/{roomId}")
     public ResponseEntity<List<TermDto>> getRoomTerms(
-            final @PathVariable Long roomId,
-            final @PathVariable Long userId) {
-        roomService.addUserToRoom(roomId, userId);
+            final @PathVariable Long roomId) {
+        authService.checkUserPermissionsForRoom(roomId);
         List<TermDto> terms = termService.getRoomTerms(roomId);
         return ResponseEntity.ok(terms);
     }
@@ -74,8 +69,9 @@ public class RoomController {
      * Runs the algorithm for a given room.
      * @param roomId room id
      */
-    @PostMapping("/stop-voting/{roomId}")
-    public final void stopVoting(
+    @PreAuthorize("hasRole('TEACHER')")
+    @GetMapping("/stop-voting/{roomId}")
+    public void stopVoting(
             final @PathVariable Long roomId) {
         roomService.runAlgorithm(roomId);
     }
@@ -86,6 +82,7 @@ public class RoomController {
      * @param roomDto the room dto.
      * @return the room dto.
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("")
     public ResponseEntity<RoomDto> createRoom(
             final @RequestBody RoomDto roomDto) {
@@ -113,9 +110,10 @@ public class RoomController {
      * @param termsDto the terms dto.
      * @return the http status.
      */
-    @PutMapping("/{id}/terms")
+    @PreAuthorize("hasRole('TEACHER')")
+    @PostMapping("/{id}/terms")
     public ResponseEntity<HttpStatus> assignTerms(
-            final@PathVariable Long id,
+            final @PathVariable Long id,
             final @RequestBody List<TermDto> termsDto) {
         roomService.assignTerms(id, termsDto);
         return new ResponseEntity<>(OK);
@@ -126,6 +124,7 @@ public class RoomController {
      * @param id the room id.
      * @return the room.
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("/{id}")
     public ResponseEntity<RoomSummaryDto> getRoom(final @PathVariable Long id) {
         RoomSummaryDto roomSummaryDto = roomService.getRoomInfo(id);
@@ -136,6 +135,7 @@ public class RoomController {
      * Get all rooms.
      * @return the rooms.
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("")
     public ResponseEntity<List<RoomDto>> getRooms() {
         List<RoomDto> rooms =  roomService.getRooms().stream()
@@ -149,7 +149,7 @@ public class RoomController {
                 .toList();
         return new ResponseEntity<>(rooms, OK);
     }
-
+  
     /**
      * Get all preferences.
      * @return all users preferences in the room
@@ -159,5 +159,10 @@ public class RoomController {
             final @PathVariable long roomId
     ) {
         return ResponseEntity.ok(roomService.getRoomPreferences(roomId));
+    }
+  
+    @GetMapping("/isFinished/{roomId}")
+    public ResponseEntity<Boolean> isFinished(final @PathVariable Long roomId) {
+        return ResponseEntity.ok(roomService.isFinished(roomId));
     }
 }

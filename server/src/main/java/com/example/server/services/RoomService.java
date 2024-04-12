@@ -124,6 +124,8 @@ public class RoomService {
                     .isBefore(java.time.LocalTime.now())) {
                 System.out.println("Votes in room " + room.getId() + ": " + room.getVotes().size());
                 runAlgorithm(room.getId());
+                room.setFinished(true);
+                roomRepository.save(room);
             }
         }
     }
@@ -215,7 +217,7 @@ public class RoomService {
      * @param id the room id.
      * @return the room.
      */
-    public Room getRoom(final Long id) {
+    private Room getRoom(final Long id) {
         return roomRepository.findById(id)
                 .orElseThrow(() ->
                         new RoomNotFoundException("Room with id: "
@@ -254,4 +256,9 @@ public class RoomService {
         roomRepository.save(room);
     }
 
+    public Boolean isFinished(Long roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RoomNotFoundException(""));
+        return room.getFinished();
+    }
 }

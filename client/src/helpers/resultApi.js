@@ -1,20 +1,18 @@
 import axios from "axios"
-
 // const url="http://localhost:8080"
 const url=""
-
-export const getVotingPage=(roomId)=>{
-    return axios.get(url+`/api/vote/voting-page/${roomId}`,{
+export const getTeacherResult=(roomId)=>{
+    return axios.get(url+`/api/result/teacher/${roomId}`,{
         headers:{
             'Authorization': 'Bearer ' + localStorage.getItem("token")
         }
     })
 }
 
-export const savePreferences = (roomId, userPreferences) => {    
-    return axios.post(url+`/api/vote/save-preferences/${roomId}`, userPreferences,{
+export const getUserResult=(roomId)=>{
+    return axios.get(url+`/api/result/user/${roomId}`,{
         headers:{
             'Authorization': 'Bearer ' + localStorage.getItem("token")
         }
-    }) ;
+    })
 }

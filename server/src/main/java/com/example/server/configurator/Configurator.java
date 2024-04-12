@@ -4,18 +4,15 @@ import com.example.server.model.Role;
 import com.example.server.model.Room;
 import com.example.server.model.Term;
 import com.example.server.model.User;
-import com.example.server.repositories.ResultRepository;
-import com.example.server.repositories.RoomRepository;
-import com.example.server.repositories.TermRepository;
-import com.example.server.repositories.UserRepository;
-import com.example.server.repositories.VoteRepository;
+import com.example.server.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
@@ -24,6 +21,7 @@ import javax.sql.DataSource;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashSet;
 
 @Configuration
 @EnableTransactionManagement
@@ -37,9 +35,12 @@ public class Configurator {
      *  Constructor.
      * @param environment environment.
      */
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     public Configurator(final Environment environment) {
         this.env = environment;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
     /**
      *  Data source.
@@ -81,7 +82,7 @@ public class Configurator {
                         .firstName("Jan")
                         .lastName("Kowalski")
                         .email("jankowalski@student.agh.edu.pl")
-                        .password("password")
+                        .password(passwordEncoder.encode("password"))
                         .role(Role.STUDENT)
                         .active(true)
                         .build();
@@ -99,7 +100,7 @@ public class Configurator {
                         .firstName("Piotr")
                         .lastName("Nowak")
                         .email("piotrnowak@agh.edu.pl")
-                        .password("password")
+                        .password(passwordEncoder.encode("password"))
                         .role(Role.TEACHER)
                         .active(true)
                         .build();
@@ -116,6 +117,7 @@ public class Configurator {
                                 LocalDateTime.now().toLocalDate()))
                         .description("Example room description")
                         .name("Example room")
+                        .joinedUsers(new HashSet<>())
                         .finished(false)
                         .build();
 
@@ -149,6 +151,17 @@ public class Configurator {
                                 .plusMinutes(intervalMinute);
                     }
                 }
+
+                //init user
+                User user = User.builder()
+                        .email("malysz@student.agh.edu.pl")
+                        .active(false)
+                        .role(Role.STUDENT)
+                        .build();
+                userRepository.save(user);
+
+                exampleRoom.getJoinedUsers().add(user);
+                roomRepository.save(exampleRoom);
             }
         };
     }

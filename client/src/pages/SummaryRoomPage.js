@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useEffect, useState } from "react";
 import { getRoomById } from "../helpers/roomApi";
 import { getRoomPreferencesById } from "../helpers/roomApi";
@@ -6,20 +6,32 @@ import { Div } from "../ui/div";
 import { useParams } from "react-router-dom";
 import Calendar from "../components/Calendar";
 import Table from "../components/preferencesTable/preferencesTable";
+import { checkAfterResponse } from "../helpers/common";
+import { useNavigate } from "react-router-dom";
+import { loginContext } from "../contexts/Login.context";
+import { Button } from "bootstrap";
 
 const SummaryRoomPage=()=>{
+    const navigate=useNavigate()
     const {roomId}=useParams()
     const [room,setRoom]=useState(null)
     const [roomPreferences,setRoomPreferences]=useState(null)
     const [isAlert,setIsAlert] = useState(false)
+    const {setIsLogoutAlert}=useContext(loginContext)
     useEffect(()=>{
         const getRoomDetails=async()=>{
             try{
                 let response=await getRoomById(roomId);
                 setRoom(response.data)
-                console.log("here")
                 console.log(response)
             }catch(err){
+                let redirect=checkAfterResponse(err)
+                if(redirect==="/login"){
+                    setIsLogoutAlert(true);
+                }
+                if(redirect){
+                    navigate(redirect)
+                }
                 setIsAlert(true)
             }
         }
