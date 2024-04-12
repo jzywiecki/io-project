@@ -148,4 +148,9 @@ public class RoomController {
                 .toList();
         return new ResponseEntity<>(rooms, OK);
     }
+
+    @GetMapping("/isFinished/{roomId}")
+    public ResponseEntity<Boolean> isFinished(final @PathVariable Long roomId) {
+        return ResponseEntity.ok(roomService.isFinished(roomId));
+    }
 }

@@ -134,6 +134,7 @@ public class RoomService {
                     .isBefore(java.time.LocalTime.now())) {
                 System.out.println("Votes in room " + room.getId() + ": " + room.getVotes().size());
                 runAlgorithm(room.getId());
+                room.setFinished(true);
             }
         }
     }
@@ -225,4 +226,9 @@ public class RoomService {
         roomRepository.save(room);
     }
 
+    public Boolean isFinished(Long roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RoomNotFoundException(""));
+        return room.getFinished();
+    }
 }
