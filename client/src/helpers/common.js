@@ -54,7 +54,7 @@ export const prepareUserPreferences=(termWithIdIsSelected, termWithIdComments)=>
 
 export const checkAfterResponse=(error)=>{
     console.log(error)
-    if(error?.response?.data?.message==="token expired"){
+    if(error?.response?.data?.message==="token expired"||!localStorage.getItem("token")){
         return "/login"
     }
     return "/noPermition"

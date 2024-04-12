@@ -57,7 +57,7 @@ const LoginForm=({setIsLogin})=>{
                 </div>
                 
             </form>
-            {isLogoutAlert&&<div className="alert alert-danger w-full flex text-center absolute top-0 justify-center">
+            {localStorage.getItem("token")&&isLogoutAlert&&<div className="alert alert-danger w-full flex text-center absolute top-0 justify-center">
                 Sesja wygasła
             </div>}
             {isEmailAlert&&<div className="text-center alert alert-success absolute w-full top-0">
