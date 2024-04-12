@@ -31,7 +31,7 @@ function Results() {
       } catch (error) {
         let redirect=checkAfterResponse(error)
         if(redirect==="/login"){
-            localStorage.setItem("redirect",`/room/${roomId}`)
+            localStorage.setItem("redirect",`/result/${roomId}`)
         }
         if(redirect){
             navigate(redirect)

@@ -21,7 +21,7 @@ function AllUsersResults() {
             } catch (error) {
                 let redirect=checkAfterResponse(error)
                 if(redirect==="/login"){
-                    localStorage.setItem("redirect",`/room/${roomId}`)
+                    localStorage.setItem("redirect",`/results/${roomId}`)
                 }
                 if(redirect){
                     navigate(redirect)
