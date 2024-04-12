@@ -17,16 +17,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-<<<<<<< HEAD
-import java.util.*;
-=======
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Set;
->>>>>>> main
 import java.util.stream.Collectors;
 
 @Service
@@ -41,15 +37,12 @@ public class RoomService {
     /** Mail service. */
     private final MailService mailService;
 
-<<<<<<< HEAD
-=======
     /**
      * Runs algorithm, before marks room as finished (it means that the algorithm has been already calculated)
      * If room is empty we just return, because the algorithm fails and throws an error if there is no votes
      *
      * @param roomID id of the room
      */
->>>>>>> main
     public final void runAlgorithm(final long roomID) {
         Optional<Room> roomOptional = roomRepository.findById(roomID);
         if (roomOptional.isPresent()) {

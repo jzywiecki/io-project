@@ -1,6 +1,7 @@
 package com.example.server.controllers;
 
 import com.example.server.dto.LoginFormDto;
+import com.example.server.dto.LoginResponse;
 import com.example.server.dto.UserDto;
 import com.example.server.services.AuthService;
 import lombok.AllArgsConstructor;
@@ -21,9 +22,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginFormDto loginFormDto) {
-        String token = authService.login(loginFormDto.email(), loginFormDto.password());
-        return ResponseEntity.ok(token);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginFormDto loginFormDto) {
+         return ResponseEntity.ok(authService.login(loginFormDto.email(), loginFormDto.password()));
     }
     @GetMapping("/email-confirmation/{token}")
     public ResponseEntity<String> confirmEmail(final @PathVariable String token) {

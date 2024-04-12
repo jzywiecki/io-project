@@ -1,6 +1,7 @@
 package com.example.server.services;
 
 import com.example.server.auth.JwtUtil;
+import com.example.server.dto.LoginResponse;
 import com.example.server.dto.UserDto;
 import com.example.server.exceptions.*;
 import com.example.server.model.Room;
@@ -45,7 +46,7 @@ public class AuthService {
         return token;
     }
 
-    public String login(String email, String password) {
+    public LoginResponse login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(""));
 
@@ -57,7 +58,8 @@ public class AuthService {
             throw new WrongPasswordException();
         }
 
-        return jwtUtil.generateAccessToken(email);
+        String token = jwtUtil.generateAccessToken(email);
+        return new LoginResponse(token, user.getRole());
     }
 
     public void confirmEmail(String token) {
