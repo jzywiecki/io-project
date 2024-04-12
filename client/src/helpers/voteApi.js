@@ -1,6 +1,7 @@
 import axios from "axios"
-import { forEach } from "lodash"
+
 const url="http://localhost:8080"
+
 export const getVotingPage=(roomId)=>{
     return axios.get(url+`/api/vote/voting-page/${roomId}`,{
         headers:{

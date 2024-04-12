@@ -4,6 +4,9 @@ import "./userResults.css";
 import { checkAfterResponse } from "../../helpers/common";
 import { getUserResult } from "../../helpers/resultApi";
 
+// const url = "http://localhost:8080"
+const url = ""
+
 const daysMap = {
   MONDAY: "Poniedziałek",
   TUESDAY: "Wtorek",
@@ -23,7 +26,6 @@ function Results() {
       try {
         const res = await getUserResult(roomId);
         const data = res.data
-
         data.result.day = daysMap[data.result.day];
         console.log(data);
 

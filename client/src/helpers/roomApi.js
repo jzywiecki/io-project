@@ -2,6 +2,7 @@ import axios from "axios"
 
 // const url="/api/room"
 const url="http://localhost:8080/api/room"
+
 export const addRoom=(room)=>{
     return axios.post(url, room,{
         headers:{
@@ -29,6 +30,14 @@ export const getRoomList=()=>{
 
 export const getRoomById=(id)=>{
     return axios.get(url+`/${id}`,{
+        headers:{
+            'Authorization': 'Bearer ' + localStorage.getItem("token")
+        }
+    })
+}
+
+export const stopVoting=(roomId)=>{
+    return axios.post(url+`/stop-voting/${roomId}`,{
         headers:{
             'Authorization': 'Bearer ' + localStorage.getItem("token")
         }

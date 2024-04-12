@@ -14,9 +14,19 @@ import com.example.server.repositories.TermRepository;
 import com.example.server.repositories.UserRepository;
 import com.example.server.utils.Utils;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+<<<<<<< HEAD
 import java.util.*;
+=======
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Set;
+>>>>>>> main
 import java.util.stream.Collectors;
 
 @Service
@@ -28,83 +38,109 @@ public class RoomService {
     private final TermRepository termRepository;
     /** Result repository. */
     private final ResultRepository resultRepository;
-
+    /** Mail service. */
     private final MailService mailService;
 
+<<<<<<< HEAD
+=======
+    /**
+     * Runs algorithm, before marks room as finished (it means that the algorithm has been already calculated)
+     * If room is empty we just return, because the algorithm fails and throws an error if there is no votes
+     *
+     * @param roomID id of the room
+     */
+>>>>>>> main
     public final void runAlgorithm(final long roomID) {
-        List<Term> terms = termRepository.findAllByRoomId(roomID);
+        Optional<Room> roomOptional = roomRepository.findById(roomID);
+        if (roomOptional.isPresent()) {
+            Room room = roomOptional.get();
+            room.setFinished(true);
+            roomRepository.save(room);
 
-        Map<Term, Integer> termToIdx = new HashMap<>();
-        Map<Integer, Term> idxToTerm = new HashMap<>();
-        int tIdx = 0;
-        for (Term term:terms) {
-            termToIdx.put(term, tIdx);
-            idxToTerm.put(tIdx, term);
-            tIdx++;
-        }
+            if (room.getVotes().isEmpty()) {
+                System.out.println("No votes in room " + room.getId() + ". Skipping algorithm.");
+                return;
+            }
 
-        Optional<Room> room = roomRepository.findById(roomID);
-        if (room.isPresent()) {
-            Map<User, List<Term>> map = getUserChoices(room.get());
+            List<Term> terms = termRepository.findAllByRoomId(roomID);
+            Map<User, List<Term>> userChoices = getUserChoices(room);
+            int termCount = terms.size();
+
             Map<Integer, User> idxToUser = new HashMap<>();
-            Map<User, Integer> userToIdx = new HashMap<>();
             Map<Integer, int[]> choices = new HashMap<>();
 
-            int uIdx = 0;
-            for (Map.Entry<User, List<Term>> entry:map.entrySet()) {
-                idxToUser.put(uIdx, entry.getKey());
-                userToIdx.put(entry.getKey(), uIdx);
+            int idx = 0;
+            for (Map.Entry<User, List<Term>> entry : userChoices.entrySet()) {
+                User user = entry.getKey();
+                List<Term> userTerms = entry.getValue();
+                idxToUser.put(idx, user);
 
-                int n = entry.getValue().size();
-                int[] entryChoices = new int[n];
+                int[] userChoicesIdx = userTerms.stream()
+                        .mapToInt(terms::indexOf)
+                        .toArray();
+                choices.put(idx, userChoicesIdx);
 
-                for (int i = 0; i < n; i++) {
-                    entryChoices[i] = termToIdx.get(entry.getValue().get(i));
-                }
-
-                choices.put(userToIdx.get(entry.getKey()), entryChoices);
-
-                uIdx++;
+                idx++;
             }
 
-            Algorithm algorithm = new Algorithm(terms.size(), choices);
+            System.out.println("Running algorithm for room " + room.getId() + " with " + userChoices.size() + " users and " + termCount + " terms.");
+            Algorithm algorithm = new Algorithm(termCount, choices);
             int[] assignment = algorithm.run();
-            System.out.println(Arrays.toString(assignment));
-            Map<User, Term> dbAssignment = new HashMap<>();
+            Map<User, Term> userTermMap = new HashMap<>();
             for (int i = 0; i < assignment.length; i++) {
                 User user = idxToUser.get(i);
-                Term term = idxToTerm.get(assignment[i]);
-                dbAssignment.put(user, term);
-                //System.out.println(user.getId() + " : " + term.getId());
+                Term term = terms.get(assignment[i]);
+                userTermMap.put(user, term);
             }
 
-            for (Map.Entry<User, Term> entry : dbAssignment.entrySet()) {
-                Result res = Result.builder()
-                        .room(room.get())
-                        .user(entry.getKey())
-                        .term(entry.getValue())
+            userTermMap.forEach((user, term) -> {
+                Result result = Result.builder()
+                        .room(room)
+                        .user(user)
+                        .term(term)
                         .build();
-                resultRepository.save(res);
-            }
+                resultRepository.save(result);
+            });
 
             // send email to all users
-            for (Map.Entry<User, Term> entry : dbAssignment.entrySet()) {
+            for (Map.Entry<User, Term> entry : userTermMap.entrySet()) {
                 System.out.println("Sending email to "
-                        + entry.getKey().getEmail()
-                        + " for term "
-                        + entry.getValue().getDay()
-                        + " "
-                        + entry.getValue().getStartTime());
+                + entry.getKey().getEmail()
+                + " for term "
+                + entry.getValue().getDay()
+                + " "
+                + entry.getValue().getStartTime());
                 mailService.send(entry.getKey().getEmail(),
-                "[Plan AGH] Twój plan już jest dla przedmiotu "
-                        + room.get().getName()
-                        + "!", "Otrzymany przez Ciebie termin to "
-                        + Utils.getDayInPolish(entry.getValue().getDay())
-                        + " "
-                        + entry.getValue().getStartTime()
-                        + " - "
-                        + entry.getValue().getEndTime()
-                        + "!");
+                        "[Plan AGH] Twój plan już jest dla przedmiotu "
+                                + room.getName()
+                                + "!", "Otrzymany przez Ciebie termin to "
+                                + Utils.getDayInPolish(entry.getValue().getDay())
+                                + " "
+                                + entry.getValue().getStartTime()
+                                + " - "
+                                + entry.getValue().getEndTime()
+                                + "!");
+            }
+        }
+    }
+
+    // checking every minute
+    @Scheduled(cron = "0 * * * * *")
+    public void runAlgorithmIfRoomDeadlinePassed() {
+        List<Room> rooms = roomRepository.findAll();
+        System.out.println("Checking rooms deadlines");
+        for (Room room : rooms) {
+            if (!room.getFinished()
+                    && (room.getDeadlineDate()
+                    .toLocalDate()
+                    .isBefore(java.time.LocalDate.now())
+                    || room.getDeadlineDate()
+                    .toLocalDate()
+                    .isEqual(java.time.LocalDate.now()))
+                    && room.getDeadlineTime()
+                    .isBefore(java.time.LocalTime.now())) {
+                System.out.println("Votes in room " + room.getId() + ": " + room.getVotes().size());
+                runAlgorithm(room.getId());
             }
         }
     }
@@ -130,16 +166,16 @@ public class RoomService {
     public void assignTerms(final Long id, final List<TermDto> termsDto) {
         Room room = getRoom(id);
         Set<Term> terms = termsDto.stream()
-                        .map(term -> termRepository
-                                .findByDayAndStartTime(term.day(),
-                                                    term.startTime())
-                                .orElseThrow(() ->
-                                        new TermNotFoundException("Term "
-                                                + term.day()
-                                                + " "
-                                                + term.startTime()
-                                                + "not found.")))
-                        .collect(Collectors.toSet());
+                .map(term -> termRepository
+                        .findByDayAndStartTime(term.day(),
+                                term.startTime())
+                        .orElseThrow(() ->
+                                new TermNotFoundException("Term "
+                                        + term.day()
+                                        + " "
+                                        + term.startTime()
+                                        + "not found.")))
+                .collect(Collectors.toSet());
         room.setTerms(terms);
         roomRepository.save(room);
     }
