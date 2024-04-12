@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import RoomForm from "../components/RoomForm";
 import { setTermsInRoom } from "../helpers/roomApi";
 import { useNavigate } from "react-router-dom";
+import PrivateRoute from "../components/PrivateRoute";
 const ClassSchedulerPage=()=>{
     const [roomId,setRoomId] = useState(null)
     const [isAlert,setIsAlert] = useState(false)
@@ -48,15 +49,17 @@ const ClassSchedulerPage=()=>{
     terms = terms.flat(1)
     console.log(terms)
     const [pickedTerms,setPickedTerms] = useState([])
-    return(<div className={"ClassSchedulerPage p-5" + roomId !== null?"flex flex-col justify-center h-screen":""}>
-        {roomId === null&&<RoomForm setRoomId={setRoomId} setAlert={setIsAlert}/>}
-        {roomId !==null&&<h1 className="text-center text-3xl font-bold absolute top-5 w-full">Wybierz terminy</h1>}
-        {roomId !== null&&<Calendar terms={terms} setPickedTerms={setPickedTerms}/>}
-        {roomId !== null&&<Button className="mt-5 w-1/2 justify-self-center" onClick={()=>{sendTerms(pickedTerms)}}>Wyślij</Button>}
-        {isAlert&&<div className="alert alert-danger w-fit flex text-center absolute right-3 bottom-0" role="alert">
-            Spróbuj ponownie później
-        </div>}
-    </div>)
+    return(<PrivateRoute>
+        <div className={"ClassSchedulerPage p-5" + roomId !== null?"flex flex-col justify-center h-screen":""}>
+            {roomId === null&&<RoomForm setRoomId={setRoomId} setAlert={setIsAlert}/>}
+            {roomId !==null&&<h1 className="text-center text-3xl font-bold absolute top-5 w-full">Wybierz terminy</h1>}
+            {roomId !== null&&<Calendar terms={terms} setPickedTerms={setPickedTerms}/>}
+            {roomId !== null&&<Button className="mt-5 w-1/2 justify-self-center" onClick={()=>{sendTerms(pickedTerms)}}>Wyślij</Button>}
+            {isAlert&&<div className="alert alert-danger w-fit flex text-center absolute right-3 bottom-0" role="alert">
+                Spróbuj ponownie później
+            </div>}
+        </div>
+    </PrivateRoute>)
 }
 
 export default ClassSchedulerPage;

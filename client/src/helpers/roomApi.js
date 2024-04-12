@@ -51,3 +51,10 @@ export const getUserRooms=()=>{
         }
     })
 }
+
+export const getRoomStatus=(roomId)=>{
+    return axios.get(url+`/isFinished/${roomId}`,{
+        headers:{
+            'Authorization': 'Bearer ' + localStorage.getItem("token")
+        }})
+}

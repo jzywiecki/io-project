@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { Div } from "../ui/div"
 import { useContext, useEffect, useState } from "react"
-import { getUserRooms } from "../helpers/roomApi"
+import { getRoomStatus, getUserRooms } from "../helpers/roomApi"
 import { checkAfterResponse } from "../helpers/common"
 import { loginContext } from "../contexts/Login.context"
 const UserRoomList=(props)=>{
@@ -33,11 +33,36 @@ const UserRoomList=(props)=>{
         }
         getRooms()
     },[])
-
+    const navigateHandler=async(roomId)=>{
+        try{
+            let response = await getRoomStatus(roomId)
+            console.log(response)
+            if(response.status===200){
+                if(response.data===true){
+                    // console.log("enroll")
+                    navigate(`result/${roomId}`)
+                }else{
+                    navigate(`enroll/${roomId}`)
+                }
+            }else{
+                setIsAlert(true)
+            }
+        }catch(err){
+            console.log(err)
+            let redirect=checkAfterResponse(err)
+            if(redirect==="/login"){
+                setIsLogoutAlert(true);
+            }
+            if(redirect){
+                navigate(redirect)
+            }
+            setIsAlert(true)
+        }
+    }
     return (<div className="h-screen">
             <h1 className="text-center font-bold text-3xl w-full my-3">Lista zajęć</h1>
             <div className="RoomListPage flex flex-col items-center h-fit justify-center">
-                {roomList.map(room=>(<Div key={room.id} className="flex justify-between hover:bg-slate-100 cursor-default" onClick={()=>{navigate(`/room/${room.id}`)}}>
+                {roomList.map(room=>(<Div key={room.id} className="flex justify-between hover:bg-slate-100 cursor-default" onClick={()=>{navigateHandler(room.id)}}>
                     <div>
                         <span className="font-bold">Nazwa:&nbsp;</span> 
                         {room.name}

@@ -13,9 +13,6 @@ import NoPermitionPage from "./pages/NoPermitionPage";
 import LoginContext from "./contexts/Login.context";
 
 function App () {
-  // useEffect(()=>{
-  //   localStorage.setItem("redirect","")
-  // },[])
   return (
     <div className='App' >
       <LoginContext>

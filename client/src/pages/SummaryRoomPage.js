@@ -8,6 +8,7 @@ import Sharing from "../components/linkSharing/linkSharing"
 import { checkAfterResponse } from "../helpers/common";
 import { useNavigate } from "react-router-dom";
 import { loginContext } from "../contexts/Login.context";
+import { Button } from "bootstrap";
 const SummaryRoomPage=()=>{
     const navigate=useNavigate()
     const {roomId}=useParams()

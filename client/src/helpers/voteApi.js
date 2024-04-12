@@ -1,6 +1,7 @@
 import axios from "axios"
 
-const url="http://localhost:8080"
+// const url="http://localhost:8080"
+const url=""
 
 export const getVotingPage=(roomId)=>{
     return axios.get(url+`/api/vote/voting-page/${roomId}`,{

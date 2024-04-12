@@ -2,10 +2,12 @@ import { values } from "lodash";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form"
 import { registerUser } from "../helpers/loginApi";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { loginContext } from "../contexts/Login.context";
 const RegisterForm=({setIsLogin})=>{
     const { handleSubmit, register, formState: { errors }, watch } = useForm();
     const [message,setMessage]=useState(null)
+    const {setIsEmailAlert}=useContext(loginContext)
     const submit=async(values)=>{
         console.log(values)
         try{
@@ -14,6 +16,7 @@ const RegisterForm=({setIsLogin})=>{
             console.log(response)
             if(response.data){
                 setIsLogin(true)
+                setIsEmailAlert(true)
             }
         }catch(err){
             console.log(err)
