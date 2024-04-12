@@ -25,7 +25,7 @@ const SummaryRoomPage=()=>{
         }
         getRoomDetails()
         return ()=>{}
-    })
+    }, [])
     useEffect(()=>{
         const getRoomPreferences=async()=>{
             try{
@@ -37,7 +37,7 @@ const SummaryRoomPage=()=>{
         }
         getRoomPreferences()
         return ()=>{}
-    })
+    }, [])
 
 
     return(<div className="SummaryRoomPage flex items-center flex-col justify-center h-screen">
