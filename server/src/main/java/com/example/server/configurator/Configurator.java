@@ -22,6 +22,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Configuration
@@ -121,6 +122,8 @@ public class Configurator {
                 final int intervalHour = 1;
                 final int intervalMinute = 45;
 
+                Set<Term> terms = new HashSet<>();
+
                 for (int i = 0; i < days; i++) {
                     DayOfWeek day = DayOfWeek.of(i + 1);
                     LocalTime time = LocalTime.of(startHour, startMinute);
@@ -133,9 +136,14 @@ public class Configurator {
                                         .plusMinutes(durationMinute))
                                 .build();
                         termRepository.save(term);
+
                         time = time
                                 .plusHours(intervalHour)
                                 .plusMinutes(intervalMinute);
+
+                        if ((i+j) % 5 == 0) {
+                            terms.add(term);
+                        }
                     }
                 }
 
@@ -152,12 +160,6 @@ public class Configurator {
 
                 //save example room
                 roomRepository.save(exampleRoom);
-
-                Set<Term> terms = Set.of(
-                        termRepository.findById(1L).get(),
-                        termRepository.findById(5L).get(),
-                        termRepository.findById(20L).get(),
-                        termRepository.findById(30L).get());
 
                 exampleRoom.setTerms(terms);
 
