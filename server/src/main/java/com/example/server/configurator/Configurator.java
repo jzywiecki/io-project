@@ -22,6 +22,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
+import java.util.Set;
 
 @Configuration
 @EnableTransactionManagement
@@ -110,20 +111,6 @@ public class Configurator {
                 userRepository.save(exampleStudent2);
                 userRepository.save(exampleTeacher);
 
-                Room exampleRoom = Room.builder()
-                        .deadlineTime(
-                                LocalTime.of(exampleHour, exampleMinute))
-                        .deadlineDate(java.sql.Date.valueOf(
-                                LocalDateTime.now().toLocalDate()))
-                        .description("Example room description")
-                        .name("Example room")
-                        .joinedUsers(new HashSet<>())
-                        .finished(false)
-                        .build();
-
-                //save example room
-                roomRepository.save(exampleRoom);
-
                 //save terms
                 final int days = 5;
                 final int termsPerDay = 7;
@@ -151,6 +138,28 @@ public class Configurator {
                                 .plusMinutes(intervalMinute);
                     }
                 }
+
+                Room exampleRoom = Room.builder()
+                        .deadlineTime(
+                                LocalTime.of(exampleHour, exampleMinute))
+                        .deadlineDate(java.sql.Date.valueOf(
+                                LocalDateTime.now().plusYears(1).toLocalDate()))
+                        .description("Example room description")
+                        .name("Example room")
+                        .joinedUsers(new HashSet<>())
+                        .finished(false)
+                        .build();
+
+                //save example room
+                roomRepository.save(exampleRoom);
+
+                Set<Term> terms = Set.of(
+                        termRepository.findById(1L).get(),
+                        termRepository.findById(5L).get(),
+                        termRepository.findById(20L).get(),
+                        termRepository.findById(30L).get());
+
+                exampleRoom.setTerms(terms);
 
                 //init user
                 User user = User.builder()
