@@ -8,14 +8,19 @@ function AddUsers({roomId}) {
 
     const { handleSubmit, register, formState: { errors } } = useForm();
     const [emails, setEmails] = useState([]);
+    const [alert,setAlert] = useState(null);
     const navigate = useNavigate();
 
     const submit = (value) => {
         setEmails([...emails, value.email]);
+        document.querySelector('.EmailInput').value = '';
     };
 
     const handleSend = async() => {
-        console.log(emails);
+        //if (emails.length === 0) {
+        //  setAlert("Nie wprowadzono żadych emailów");
+        //  return;
+        //}
         try{
             let response = await setUsersInRoom(emails, roomId);
             if (response.status===200) {
@@ -23,7 +28,7 @@ function AddUsers({roomId}) {
                 console.log("yey");
             }
         }catch(err){
-            //setIsAlert(true)
+          setAlert("Spróbuj ponownie później");
         }
     };
 
@@ -34,11 +39,15 @@ function AddUsers({roomId}) {
     };
 
     return (
+        alert!==null?<div className="alert alert-danger w-fit flex text-center absolute right-3 bottom-0" role="alert">
+          {alert}
+        </div>:
+        <>
         <div className="RoomFormPage">
           <div className="BookForm flex justify-center items-center">
             <form className="lg:w-1/3 md:w-1/2 w-3/4 flex justify-center flex-col my-20 p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
               <h1 className="text-center font-bold mb-3">Emaile użytkowników:</h1>
-              <div className="self-center">
+              <div className="self-center mb-3">
                 {
                     emails.map((email, index) => (
                         <div className="flex justify-between style items-center" key={index}>
@@ -54,10 +63,11 @@ function AddUsers({roomId}) {
                     ))
                 }
                 </div>
+              {errors.email && <p className="text-red-600">{errors.email.message}</p>}
               <div className="mb-5 mt-2 flex justify-between style items-center">
                 <input
                   placeholder="example@student.agh.edu.pl"
-                  className="mr-5 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="EmailInput mr-5 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   name="email"
                   {...register("email", {
                     required: {
@@ -76,11 +86,11 @@ function AddUsers({roomId}) {
                     Dodaj email
                 </button>
               </div>
-              {errors.emails && <p className="text-red-600">{errors.emails.message}</p>}
               <Button className="p-2 bg-sky-500 rounded w-full self-center text-white" type="button" onClick={handleSend}>Zakończ i wyślij</Button>
             </form>
           </div>
         </div>
+        </>
       );
       
 }
