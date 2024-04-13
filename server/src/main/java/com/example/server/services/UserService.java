@@ -2,8 +2,10 @@ package com.example.server.services;
 
 import com.example.server.dto.RoomDto;
 import com.example.server.exceptions.UserNotFoundException;
+import com.example.server.model.Role;
 import com.example.server.model.Room;
 import com.example.server.model.User;
+import com.example.server.repositories.RoomRepository;
 import com.example.server.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,25 @@ public class UserService {
      * User repository.
      */
     private final UserRepository userRepository;
+    private final RoomRepository roomRepository;
+
+    /**
+     * Assign users to the room.
+     * @param emails the user emails list.
+     */
+    public void setUsersInTheRoom(Long roomId, List<String> emails) {
+        Room room = roomRepository.getReferenceById(roomId);
+        for (String email : emails) {
+            User user = User.builder()
+                    .email(email)
+                    .active(false)
+                    .role(Role.STUDENT)
+                    .build();
+            userRepository.save(user);
+            room.getJoinedUsers().add(user);
+        }
+        roomRepository.save(room);
+    }
 
     /**
      * Get all rooms where user is a member.
