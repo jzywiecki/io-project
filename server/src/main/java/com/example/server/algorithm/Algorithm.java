@@ -1,5 +1,6 @@
 package com.example.server.algorithm;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 
@@ -14,7 +15,7 @@ public class Algorithm {
      * Initial temperature for simulated annealing.
      * Determines how many iterations the algorithm will perform.
      */
-    static final double INITIAL_T = 20_000;
+    static final double INITIAL_T = 30_000;
     /**
      * Determines the curve of temperature's decrease
      * and therefore how many iterations the algorithm will perform.
@@ -24,7 +25,8 @@ public class Algorithm {
     static final double MIN_T = 0.0001;
     /** How many random changes are tried for each achieved temperature. */
     static final int INNER_ITER_COUNT = 10;
-    // private int iterationCount = 223_316;
+    /** How hard is stepping over the term limit punished.*/
+    static final int PUNISHMENT = 10;
 
     /** Constructor for the algorithm.
      * @param terms numbers of available terms
@@ -41,14 +43,15 @@ public class Algorithm {
      * @return An array arr where arr[student_id] = assigned_term_id.
      */
     public final int[] run() {
-        return this.run(MetricType.ONE);
+        return this.run(-1);
     }
     /**
      * Runs the algorithm with parameters as they currently are.
-     * @param type one of the available metric types.
+     * @param maxTermsNum maximum number of terms to assign people to.
+     *                    -1 means no limit.
      * @return An array arr where arr[student_id] = assigned_term_id.
      */
-    public final int[] run(final MetricType type) {
+    public final int[] run(final int maxTermsNum) {
         Random random = new Random();
         int studentsNum = this.choices.size();
         int[] assignment = new int[studentsNum];
@@ -57,7 +60,7 @@ public class Algorithm {
             assignment[i] = random.nextInt(0, termsNum);
         }
 
-        double energy = this.metric(assignment, type);
+        double energy = this.metric(assignment, maxTermsNum);
 
         int[] bestAssignment = copyArray(assignment);
         double lowestEnergy = energy;
@@ -71,7 +74,7 @@ public class Algorithm {
                 int oldVal = assignment[pos];
 
                 assignment[pos] = newVal;
-                newEnergy = this.metric(assignment, type);
+                newEnergy = this.metric(assignment, maxTermsNum);
                 // maybe necessary:
                 // newEnergy = newEnergy == 0 ? newEnergy + 0.00001 : newEnergy
 
@@ -85,8 +88,9 @@ public class Algorithm {
                 } else {
                     double probability = Math.exp(-(newEnergy - energy) / t);
                     double rand = Math.random();
-                    // Unlikely improvement: test without sqrt and <= over >
-                    if (Math.sqrt(rand) > probability) {
+                    // Used to be >, but <= gives way better
+                    // results with maxTermsNum != -1
+                    if (Math.sqrt(rand) <= probability) {
                         assignment[pos] = oldVal;
                     }
                 }
@@ -121,7 +125,7 @@ public class Algorithm {
         return bestAssignment;
     }
 
-    private double metric(final int[] assignment, final MetricType type) {
+    private double metric(final int[] assignment, final int maxTermsNum) {
         int[] termStats = new int[termsNum];
         int gotPreferred = 0;
         int possibleSwaps = 0;
@@ -147,22 +151,25 @@ public class Algorithm {
                 }
             }
         }
-        int delta = getDelta(termStats);
+        int delta = getDelta(termStats, maxTermsNum);
 
-        return switch (type) {
-            case TWO -> (double) delta
-                    + (double) possibleSwaps - Math.sqrt(gotPreferred);
-            case THREE -> ((double) delta - (double) gotPreferred)
-                    / (double) choices.size()
-                    + (double) possibleSwaps
-                    / (double) (termsNum + choices.size());
-            default -> (double) delta
-                    + ((double) possibleSwaps - (double) gotPreferred)
-                    / (double) choices.size();
-        };
+        return (double) delta
+               + ((double) possibleSwaps - (double) gotPreferred)
+               / (double) choices.size();
 
+//        return switch (maxTermsNum) {
+//            case TWO -> (double) delta
+//                    + (double) possibleSwaps - Math.sqrt(gotPreferred);
+//            case THREE -> ((double) delta - (double) gotPreferred)
+//                    / (double) choices.size()
+//                    + (double) possibleSwaps
+//                    / (double) (termsNum + choices.size());
+//            case -1 ->
+//            default ->
+//
+//        };
+//
     }
-
     private static boolean arrayContains(final int[] array, final int value) {
         for (int j : array) {
             if (j == value) {
@@ -172,12 +179,31 @@ public class Algorithm {
         return false;
     }
 
-    private static int getDelta(final int[] array) {
+    private static int getDelta(final int[] array, final int maxTermsNum) {
         int min = Integer.MAX_VALUE;
         int max = 0;
-        for (int j : array) {
-            min = Integer.min(min, j);
-            max = Integer.max(max, j);
+        if (maxTermsNum == -1) {
+            for (int j : array) {
+                min = Integer.min(min, j);
+                max = Integer.max(max, j);
+            }
+        } else {
+            int[] copied = copyArray(array);
+            Arrays.sort(copied);
+            for (int i = 0;
+                 i < Integer.divideUnsigned(copied.length, 2);
+                 i++) {
+                int temp = copied[i];
+                copied[i] = copied[copied.length - 1 - i];
+                copied[copied.length - 1 - i] = temp;
+            }
+            for (int i = 0; i < Math.min(maxTermsNum, copied.length); i++) {
+                min = Integer.min(min, copied[i]);
+                max = Integer.max(max, copied[i]);
+            }
+            for (int i = maxTermsNum; i < copied.length; i++) {
+                max += copied[i] * PUNISHMENT;
+            }
         }
         return max - min;
     }
@@ -186,22 +212,6 @@ public class Algorithm {
         int[] copied = new int[array.length];
         System.arraycopy(array, 0, copied, 0, array.length);
         return copied;
-    }
-
-    public enum MetricType {
-
-        /**
-         * The default, usually best performing, metric.
-         */
-        ONE,
-        /**
-         * Punishes swaps more and puts more emphasis no students' preferences.
-         */
-        TWO,
-        /**
-         * Less emphasis on swaps (as they are removed manually later).
-         */
-        THREE
     }
 
 }
