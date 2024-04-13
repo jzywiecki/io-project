@@ -1,5 +1,6 @@
 package com.example.server.services;
 
+import com.example.server.auth.JwtUtil;
 import com.example.server.dto.RoomDto;
 import com.example.server.exceptions.UserNotFoundException;
 import com.example.server.model.Role;
@@ -22,6 +23,7 @@ public class UserService {
      */
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
+    private final MailService mailService;
 
     /**
      * Assign users to the room.
@@ -29,11 +31,12 @@ public class UserService {
      */
     public void setUsersInTheRoom(Long roomId, List<String> emails) {
         Room room = roomRepository.getReferenceById(roomId);
+        String msgContent;
         for (String email : emails) {
             Optional<User> user = userRepository.findByEmail(email);
             if (user.isPresent()) {
-                userRepository.save(user.get());
                 room.getJoinedUsers().add(user.get());
+                msgContent = "Zaloguj się: ";
             } else {
                 User newUser = User.builder()
                         .email(email)
@@ -42,7 +45,13 @@ public class UserService {
                         .build();
                 userRepository.save(newUser);
                 room.getJoinedUsers().add(newUser);
+                msgContent = "Zarejestruj się: ";
             }
+            String msg = "Dodano Cię do pokoju " + room.getName() + "(" + room.getDescription() + ")" + ".\n"
+                    + msgContent + "http://54.166.152.243/login, aby zagłosować.\n"
+                    + "Masz czas do: " + room.getDeadlineDate().toString() + " " + room.getDeadlineTime().toString();
+
+            mailService.send(email, "Dodano Cię do pokoju " + room.getName(), msg);
         }
         roomRepository.save(room);
     }
