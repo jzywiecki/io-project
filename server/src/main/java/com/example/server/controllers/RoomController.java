@@ -154,6 +154,7 @@ public class RoomController {
      * Get all preferences.
      * @return all users preferences in the room
      */
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping(value="/get-preferences/{roomId}")
     public ResponseEntity<RoomUsersPreferencesDto> getPreferences(
             final @PathVariable long roomId
