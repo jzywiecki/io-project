@@ -37,7 +37,7 @@ function AddUsers({roomId}) {
         <div className="RoomFormPage">
           <div className="BookForm flex justify-center items-center">
             <form className="lg:w-1/3 md:w-1/2 w-3/4 flex justify-center flex-col my-20 p-5 bg-white rounded text-left" onSubmit={handleSubmit(submit)}>
-              <h1 className="text-center font-bold mb-3">Dodaj maile użytkowników</h1>
+              <h1 className="text-center font-bold mb-3">Emaile użytkowników:</h1>
               <div className="self-center">
                 {
                     emails.map((email, index) => (
@@ -54,23 +54,29 @@ function AddUsers({roomId}) {
                     ))
                 }
                 </div>
-              <label className="form-label text-mb">Adres email:</label>
-              <input
-                className="mb-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                name="email"
-                {...register("email", {
-                  required: {
-                    value: true,
-                    message: "Pole wymagane"},
-                    pattern:{
-                        value:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                        message:"Nieprawidłowy email"
-                  },
-                })}
-              ></input>
+              <div className="mb-5 mt-2 flex justify-between style items-center">
+                <input
+                  placeholder="example@student.agh.edu.pl"
+                  className="mr-5 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  name="email"
+                  {...register("email", {
+                    required: {
+                      value: true,
+                      message: "Pole wymagane"},
+                      pattern:{
+                          value:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                          message:"Nieprawidłowy email"
+                    },
+                  })}
+                ></input>
+                <button
+                    type="submit"
+                    className="text-green-500 text-nowrap"
+                >
+                    Dodaj email
+                </button>
+              </div>
               {errors.emails && <p className="text-red-600">{errors.emails.message}</p>}
-      
-              <Button className="p-2 bg-sky-500 rounded w-full self-center text-white mb-3" type="submit">Dodaj email</Button>
               <Button className="p-2 bg-sky-500 rounded w-full self-center text-white" type="button" onClick={handleSend}>Zakończ i wyślij</Button>
             </form>
           </div>
