@@ -2,6 +2,7 @@ package com.example.server.controllers;
 
 import com.example.server.dto.RoomDto;
 import com.example.server.dto.RoomSummaryDto;
+import com.example.server.dto.RoomUsersPreferencesDto;
 import com.example.server.dto.TermDto;
 import com.example.server.model.Room;
 import com.example.server.services.AuthService;
@@ -148,7 +149,18 @@ public class RoomController {
                 .toList();
         return new ResponseEntity<>(rooms, OK);
     }
-
+  
+    /**
+     * Get all preferences.
+     * @return all users preferences in the room
+     */
+    @GetMapping(value="/get-preferences/{roomId}")
+    public ResponseEntity<RoomUsersPreferencesDto> getPreferences(
+            final @PathVariable long roomId
+    ) {
+        return ResponseEntity.ok(roomService.getRoomPreferences(roomId));
+    }
+  
     @GetMapping("/isFinished/{roomId}")
     public ResponseEntity<Boolean> isFinished(final @PathVariable Long roomId) {
         return ResponseEntity.ok(roomService.isFinished(roomId));

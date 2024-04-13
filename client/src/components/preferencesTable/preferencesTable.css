@@ -1,0 +1,53 @@
+.copy-button {
+    padding: 0.5rem 1rem;
+    background-color: #48BBEC;
+    border-radius: 0.25rem;
+    display: block;
+    color: #FFFFFF;
+    text-align: center;
+    cursor: pointer;
+}
+.preferencesTableDiv {
+    overflow-y: auto;
+    height: min-content;
+    max-height: 300px;
+    margin: 30px 0;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+.hint {
+    position: relative;
+    z-index: 1;
+}
+
+.hint-text {
+    position: absolute;
+    z-index: 3;
+}
+
+.hint .hint-text {
+    visibility: hidden;
+    background-color: #fff;
+    color: #000;
+    border-color: #000;
+    border-width: 1px;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    left: 70%;
+    top: 70%;
+    min-width: 150px;
+    white-space: nowrap;
+}
+
+.hint:hover .hint-text {
+    visibility: visible;
+}
