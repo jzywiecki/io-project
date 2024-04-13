@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,13 +30,19 @@ public class UserService {
     public void setUsersInTheRoom(Long roomId, List<String> emails) {
         Room room = roomRepository.getReferenceById(roomId);
         for (String email : emails) {
-            User user = User.builder()
-                    .email(email)
-                    .active(false)
-                    .role(Role.STUDENT)
-                    .build();
-            userRepository.save(user);
-            room.getJoinedUsers().add(user);
+            Optional<User> user = userRepository.findByEmail(email);
+            if (user.isPresent()) {
+                userRepository.save(user.get());
+                room.getJoinedUsers().add(user.get());
+            } else {
+                User newUser = User.builder()
+                        .email(email)
+                        .active(false)
+                        .role(Role.STUDENT)
+                        .build();
+                userRepository.save(newUser);
+                room.getJoinedUsers().add(newUser);
+            }
         }
         roomRepository.save(room);
     }

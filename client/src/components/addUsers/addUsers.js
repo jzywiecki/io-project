@@ -12,7 +12,9 @@ function AddUsers({roomId}) {
     const navigate = useNavigate();
 
     const submit = (value) => {
-        setEmails([...emails, value.email]);
+        if(!emails.includes(value.email)) {
+          setEmails([...emails, value.email]);
+        }
         document.querySelector('.EmailInput').value = '';
     };
 
