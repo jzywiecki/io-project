@@ -37,7 +37,11 @@ export const getRoomById=(id)=>{
 }
 
 export const getRoomPreferencesById=(id)=>{
-    return axios.get(url+`/get-preferences/${id}`)
+    return axios.get(url+`/get-preferences/${id}`,{
+        headers:{
+            'Authorization': 'Bearer ' + localStorage.getItem("token")
+        }
+    })
 }
 
 export const stopVoting=(roomId)=>{
