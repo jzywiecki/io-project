@@ -152,8 +152,9 @@ public class VoteService {
                                 + " not found.")
                 );
 
-        commentRepository.deleteAllByUserIdAndRoomId(userId, roomId);
         voteRepository.deleteAllByUserIdAndRoomId(userId, roomId);
+        commentRepository.deleteAllByUserIdAndRoomId(userId, roomId);
+
 
         List<Vote> votes = new ArrayList<>();
         List<Comment> comments = new ArrayList<>();
@@ -194,7 +195,8 @@ public class VoteService {
             comments.add(comment);
         }
 
-        voteRepository.saveAll(votes);
+
         commentRepository.saveAll(comments);
+        voteRepository.saveAll(votes);
     }
 }
