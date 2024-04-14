@@ -8,7 +8,7 @@ const LogoutButton=({className,...props})=>{
         localStorage.setItem("token","");navigate("/")
     }
     return (<>
-    <i className={"fa fa-sign-out text-2xl cursor-pointer "+className} onClick={onClickHandler}></i>
+    {currentPath!="/login"&&<i className={"fa fa-sign-out text-2xl cursor-pointer "+className} onClick={onClickHandler}></i>}
     </>)
 }
 
