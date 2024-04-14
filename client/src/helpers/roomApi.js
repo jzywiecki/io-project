@@ -36,8 +36,8 @@ export const getRoomById=(id)=>{
     })
 }
 
-export const stopVoting=(roomId)=>{
-    return axios.post(url+`/stop-voting/${roomId}`,{
+export const stopVoting=(roomId, maxTerms)=>{
+    return axios.get(url+`/stop-voting/${roomId}/${maxTerms}`,{
         headers:{
             'Authorization': 'Bearer ' + localStorage.getItem("token")
         }

@@ -9,6 +9,8 @@ import { checkAfterResponse } from "../helpers/common";
 import { useNavigate } from "react-router-dom";
 import { loginContext } from "../contexts/Login.context";
 import { Button } from "bootstrap";
+import StopVotingButton from "../components/stopVotingButton/stopVotingButton";
+
 const SummaryRoomPage=()=>{
     const navigate=useNavigate()
     const {roomId}=useParams()
@@ -71,7 +73,7 @@ const SummaryRoomPage=()=>{
         {isAlert&&<div className="alert alert-danger w-fit flex text-center absolute right-3 bottom-0" role="alert">
             Spróbuj ponownie później
         </div>}
-        
+        <StopVotingButton roomId={roomId}/> 
     </div>)
 }
 

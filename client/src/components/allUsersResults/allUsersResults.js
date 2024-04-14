@@ -5,9 +5,10 @@ import daysMap from '../common'
 import "./allUsersResults.css";
 import { getTeacherResult } from "../../helpers/resultApi";
 import { checkAfterResponse } from "../../helpers/common";
+import StopVotingButton from "../stopVotingButton/stopVotingButton";
 
-const url = "http://localhost:8080"
-// const url = ""
+// const url = "http://localhost:8080"
+const url = ""
 
 function AllUsersResults() {
     const {roomId} = useParams();
@@ -91,6 +92,7 @@ function AllUsersResults() {
                         ))}
                 </tbody>
             </table>
+            <StopVotingButton roomId={roomId} />
             <ResultsExport results={resultsArray}/>
         </div>
     );
