@@ -43,12 +43,16 @@ public class RoomService {
      *
      * @param roomID id of the room
      */
-    public final void runAlgorithm(final long roomID) {
+    public final void runAlgorithm(final long roomID, final int maxTerms) {
         Optional<Room> roomOptional = roomRepository.findById(roomID);
         if (roomOptional.isPresent()) {
             Room room = roomOptional.get();
+            if (room.getFinished()) {
+                resultRepository.deleteAllByRoomId(roomID);
+            }
             room.setFinished(true);
             roomRepository.save(room);
+
 
             if (room.getVotes().isEmpty()) {
                 System.out.println("No votes in room " + room.getId() + ". Skipping algorithm.");
@@ -78,7 +82,9 @@ public class RoomService {
 
             System.out.println("Running algorithm for room " + room.getId() + " with " + userChoices.size() + " users and " + termCount + " terms.");
             Algorithm algorithm = new Algorithm(termCount, choices);
-            int[] assignment = algorithm.run();
+            int[] assignment = algorithm.run(
+                    maxTerms != -1 && maxTerms < 1 ? -1 : maxTerms
+            );
             Map<User, Term> userTermMap = new HashMap<>();
             for (int i = 0; i < assignment.length; i++) {
                 User user = idxToUser.get(i);
@@ -95,25 +101,36 @@ public class RoomService {
                 resultRepository.save(result);
             });
 
-            // send email to all users
-            for (Map.Entry<User, Term> entry : userTermMap.entrySet()) {
-                System.out.println("Sending email to "
-                + entry.getKey().getEmail()
-                + " for term "
-                + entry.getValue().getDay()
-                + " "
-                + entry.getValue().getStartTime());
-                mailService.send(entry.getKey().getEmail(),
-                        "[Plan AGH] Twój plan już jest dla przedmiotu "
-                                + room.getName()
-                                + "!", "Otrzymany przez Ciebie termin to "
-                                + Utils.getDayInPolish(entry.getValue().getDay())
-                                + " "
-                                + entry.getValue().getStartTime()
-                                + " - "
-                                + entry.getValue().getEndTime()
-                                + "!");
-            }
+        }
+    }
+
+    /**
+     * Send an email with results to every person in a given room.
+     * @param roomId the room id.
+     */
+    public void sendResultEmails(long roomId) {
+        List<Result> results = resultRepository.findAllByRoomId(roomId);
+        if (results.size() == 0) {
+            System.out.println("Nie ma jeszcze wyników dla tego przedmiotu.");
+            return;
+        }
+        for (Result result : results) {
+            System.out.println("Sending email to "
+                    + result.getUser().getEmail()
+                    + " for term "
+                    + result.getTerm().getDay()
+                    + " "
+                    + result.getTerm().getStartTime());
+            mailService.send(result.getUser().getEmail(),
+                    "[Plan AGH] Twój plan już jest dla przedmiotu "
+                            + result.getRoom().getName()
+                            + "!", "Otrzymany przez Ciebie termin to "
+                            + Utils.getDayInPolish(result.getTerm().getDay())
+                            + " "
+                            + result.getTerm().getStartTime()
+                            + " - "
+                            + result.getTerm().getEndTime()
+                            + "!");
         }
     }
 
@@ -133,7 +150,7 @@ public class RoomService {
                     && room.getDeadlineTime()
                     .isBefore(java.time.LocalTime.now())) {
                 System.out.println("Votes in room " + room.getId() + ": " + room.getVotes().size());
-                runAlgorithm(room.getId());
+                runAlgorithm(room.getId(), -1);
                 room.setFinished(true);
                 roomRepository.save(room);
             }
