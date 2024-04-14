@@ -5,10 +5,11 @@ const LogoutButton=({className,...props})=>{
     const navigate=useNavigate()
     console.log(currentPath)
     const onClickHandler=()=>{
-        localStorage.setItem("token","");navigate("/")
+        localStorage.setItem("token","")
+        navigate("/login")
     }
     return (<>
-    {currentPath!="/login"&&<i className={"fa fa-sign-out text-2xl cursor-pointer "+className} onClick={onClickHandler}></i>}
+    {currentPath!=="/login"&&<i className={"fa fa-sign-out text-2xl cursor-pointer "+className} onClick={onClickHandler}></i>}
     </>)
 }
 

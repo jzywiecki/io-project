@@ -12,6 +12,7 @@ import ConfirmPage from "./pages/ConfirmPage";
 import NoPermitionPage from "./pages/NoPermitionPage";
 import LoginContext from "./contexts/Login.context";
 import LogoutButton from "./components/LogoutButton";
+import HomeButton from "./components/HomeButton";
 
 function App () {
   return (
@@ -19,6 +20,7 @@ function App () {
       <LoginContext>
         <BrowserRouter>
           <LogoutButton className={"absolute top-0 right-2"}/>
+          <HomeButton className={"aboslute top-0 left-2"}/>
           <Routes>
             <Route path="/" element={<RoomListPage />}/>
             <Route path="/room/:roomId" element={<SummaryRoomPage />}/>
