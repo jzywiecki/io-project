@@ -93,7 +93,25 @@ public class Configurator {
                         .firstName("Anna")
                         .lastName("Kowalska")
                         .email("annakowalska@student.agh.edu.pl")
-                        .password("password")
+                        .password(passwordEncoder.encode("password"))
+                        .role(Role.STUDENT)
+                        .active(true)
+                        .build();
+
+                User exampleStudent3 = User.builder()
+                        .firstName("Adam")
+                        .lastName("Trybus")
+                        .email("adamtrybus@student.agh.edu.pl")
+                        .password(passwordEncoder.encode("password"))
+                        .role(Role.STUDENT)
+                        .active(true)
+                        .build();
+
+                User exampleStudent4 = User.builder()
+                        .firstName("Piotr")
+                        .lastName("Olszak")
+                        .email("piotrolszak@student.agh.edu.pl")
+                        .password(passwordEncoder.encode("password"))
                         .role(Role.STUDENT)
                         .active(true)
                         .build();
@@ -110,6 +128,8 @@ public class Configurator {
                 //save example users
                 userRepository.save(exampleStudent1);
                 userRepository.save(exampleStudent2);
+                userRepository.save(exampleStudent3);
+                userRepository.save(exampleStudent4);
                 userRepository.save(exampleTeacher);
 
                 //save terms
