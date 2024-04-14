@@ -11,12 +11,14 @@ import LoginAndRegisterPage from "./pages/LoginAndRegisterPage";
 import ConfirmPage from "./pages/ConfirmPage";
 import NoPermitionPage from "./pages/NoPermitionPage";
 import LoginContext from "./contexts/Login.context";
+import LogoutButton from "./components/LogoutButton";
 
 function App () {
   return (
     <div className='App' >
       <LoginContext>
         <BrowserRouter>
+          <LogoutButton className={"absolute top-0 right-2"}/>
           <Routes>
             <Route path="/" element={<RoomListPage />}/>
             <Route path="/room/:roomId" element={<SummaryRoomPage />}/>
