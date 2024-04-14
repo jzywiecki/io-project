@@ -8,7 +8,7 @@ const HomeButton=({className,...props})=>{
         navigate("/")
     }
     return (<>
-    {currentPath!=="/"&&<i className={"fa fa-home text-2xl "+className} onClick={onClickHandler}></i>}
+    {currentPath!=="/"&&<i className={"fa fa-home text-2xl cursor-pointer "+className} onClick={onClickHandler}></i>}
     </>)
 }
 
