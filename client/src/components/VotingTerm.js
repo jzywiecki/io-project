@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, CardDescription } from '../ui/card'; 
-import { isEqual } from 'lodash';
+import { Card, CardDescription } from '../ui/card';
 
 const VotingTerm = ({
     term,

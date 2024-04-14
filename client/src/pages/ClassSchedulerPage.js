@@ -2,13 +2,13 @@ import Calendar from "../components/Calendar";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import RoomForm from "../components/RoomForm";
+import AddUsers from "../components/addUsers/addUsers";
 import { setTermsInRoom } from "../helpers/roomApi";
-import { useNavigate } from "react-router-dom";
 import PrivateRoute from "../components/PrivateRoute";
 const ClassSchedulerPage=()=>{
     const [roomId,setRoomId] = useState(null)
+    const [isTermsSent,setIsTermsSent] = useState(false)
     const [isAlert,setIsAlert] = useState(false)
-    const navigate = useNavigate()
     const addZero=(time)=>{
         if(time<10){
             return `0${time}`
@@ -20,8 +20,8 @@ const ClassSchedulerPage=()=>{
         console.log(termsToSend)
         try{
             let response = await setTermsInRoom(termsToSend, roomId)
-            if(response.status==200){
-                navigate(`/room/${roomId}`)
+            if(response.status===200){
+                setIsTermsSent(true);
             }
         }catch(err){
             setIsAlert(true)
@@ -52,9 +52,10 @@ const ClassSchedulerPage=()=>{
     return(<PrivateRoute>
         <div className={"ClassSchedulerPage p-5" + roomId !== null?"flex flex-col justify-center h-screen":""}>
             {roomId === null&&<RoomForm setRoomId={setRoomId} setAlert={setIsAlert}/>}
-            {roomId !==null&&<h1 className="text-center text-3xl font-bold absolute top-5 w-full">Wybierz terminy</h1>}
-            {roomId !== null&&<Calendar terms={terms} setPickedTerms={setPickedTerms}/>}
-            {roomId !== null&&<Button className="mt-5 w-1/2 justify-self-center" onClick={()=>{sendTerms(pickedTerms)}}>Wyślij</Button>}
+            {roomId !==null&&isTermsSent === false&&<h1 className="text-center text-3xl font-bold absolute top-5 w-full">Wybierz terminy</h1>}
+            {roomId !== null&&isTermsSent === false&&<Calendar terms={terms} setPickedTerms={setPickedTerms}/>}
+            {roomId !== null&&isTermsSent === false&&<Button className="mt-5 w-1/2 justify-self-center" onClick={()=>{sendTerms(pickedTerms)}}>Wyślij</Button>}
+            {roomId !== null&&isTermsSent === true&&<AddUsers roomId={roomId}/>}
             {isAlert&&<div className="alert alert-danger w-fit flex text-center absolute right-3 bottom-0" role="alert">
                 Spróbuj ponownie później
             </div>}

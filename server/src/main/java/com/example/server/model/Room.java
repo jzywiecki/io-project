@@ -82,8 +82,7 @@ public class Room {
     /**
      *  Room votes.
      */
-    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER,
-            cascade = { CascadeType.PERSIST})
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
     private List<Vote> votes;
 
     /**

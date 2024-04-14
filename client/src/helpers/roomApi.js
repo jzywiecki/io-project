@@ -36,6 +36,7 @@ export const getRoomById=(id)=>{
     })
 }
 
+
 export const stopVoting=(roomId, maxTerms)=>{
     return axios.get(url+`/stop-voting/${roomId}/${maxTerms}`,{
         headers:{
@@ -43,6 +44,16 @@ export const stopVoting=(roomId, maxTerms)=>{
         }
     })
 }
+
+export const getRoomPreferencesById=(id)=>{
+    return axios.get(url+`/get-preferences/${id}`,{
+        headers:{
+            'Authorization': 'Bearer ' + localStorage.getItem("token")
+        }
+    })
+}
+
+
 
 export const getUserRooms=()=>{
     return axios.get(url+`/get-user-rooms`,{
