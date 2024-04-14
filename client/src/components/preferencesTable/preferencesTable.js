@@ -26,7 +26,7 @@ function Table({terms, roomPreferences}) {
                         );
                     }
                 )}
-                <th>Total</th>
+                <th>Suma głosów</th>
             </tr>
             {Object.keys(roomPreferences.userPreferencesMap).map(
                 (user) => {

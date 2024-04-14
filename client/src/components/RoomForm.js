@@ -55,7 +55,7 @@ const RoomForm=({setRoomId,setAlert})=>{
                 />
                 {errors.deadlineTime&&<p className="text-red-600">{errors.deadlineTime.message}</p>}
 
-                <Button className="p-2 bg-sky-500 rounded w-full self-center text-white" type='submit'>submit</Button>
+                <Button className="p-2 bg-sky-500 rounded w-full self-center text-white" type='submit'>Dodaj</Button>
             </form>
         </div> 
     </div>)
