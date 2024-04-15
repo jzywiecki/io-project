@@ -88,8 +88,7 @@ public class Room {
     /**
      *  Represents the results of the algorithm for the room after stop voting.
      */
-    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER,
-            cascade = { CascadeType.PERSIST})
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
     private List<Result> results;
 
     /**

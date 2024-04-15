@@ -105,6 +105,12 @@ const SummaryRoomPage=()=>{
             Spróbuj ponownie później
         </div>}
         <StopVotingButton roomId={roomId}/> 
+        <button
+                onClick={() => navigate("/results/" + roomId)}
+                style={{ backgroundColor: "green", color: "white", padding: "10px 20px", borderRadius: "5px", marginTop: "20px" }}
+            >
+                Wyniki
+            </button>
     </div>)
 }
 

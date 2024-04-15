@@ -5,14 +5,23 @@ import daysMap from '../common'
 import "./allUsersResults.css";
 import { getTeacherResult } from "../../helpers/resultApi";
 import { checkAfterResponse } from "../../helpers/common";
-import StopVotingButton from "../stopVotingButton/stopVotingButton";
+import { sendMail } from "../../helpers/mailApi";
 
-// const url = "http://localhost:8080"
-const url = ""
+
+
+
+
 
 function AllUsersResults() {
     const {roomId} = useParams();
     const [results, setResults] = useState([]);
+    const [isMailSent, setIsMailSent] = useState(false);
+
+    function handleSendEmail(roomId) {
+        sendMail(roomId)
+        setIsMailSent(true); // Ustaw stan na true po wysłaniu maila
+    }
+
     const navigate=useNavigate()
     useEffect(() => {
         const fetchResults = async () => {
@@ -92,8 +101,14 @@ function AllUsersResults() {
                         ))}
                 </tbody>
             </table>
-            <StopVotingButton roomId={roomId} />
             <ResultsExport results={resultsArray}/>
+            <button
+                onClick={() => handleSendEmail(roomId)}
+                style={{ backgroundColor: isMailSent ? "green" : "blue", color: "white", padding: "10px 20px", borderRadius: "5px", marginTop: "20px" }}
+                disabled={isMailSent} // Zablokuj przycisk, jeśli mail został już wysłany
+            >
+                {isMailSent ? "Wysłano" : "Wyślij maila z wynikami"}
+            </button>
         </div>
     );
 

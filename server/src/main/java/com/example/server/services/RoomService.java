@@ -11,6 +11,7 @@ import com.example.server.utils.Utils;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +34,8 @@ public class RoomService {
      *
      * @param roomID id of the room
      */
-    public final void runAlgorithm(final long roomID, final int maxTerms) {
+    @Transactional
+    public void runAlgorithm(final long roomID, final int maxTerms) {
         Optional<Room> roomOptional = roomRepository.findById(roomID);
         if (roomOptional.isPresent()) {
             Room room = roomOptional.get();
@@ -72,6 +74,8 @@ public class RoomService {
 
             System.out.println("Running algorithm for room " + room.getId() + " with " + userChoices.size() + " users and " + termCount + " terms.");
             Algorithm algorithm = new Algorithm(termCount, choices);
+            System.out.println("Max terms:");
+            System.out.println(maxTerms != -1 && maxTerms < 1 ? -1 : maxTerms);
             int[] assignment = algorithm.run(
                     maxTerms != -1 && maxTerms < 1 ? -1 : maxTerms
             );

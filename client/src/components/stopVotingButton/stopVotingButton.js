@@ -4,8 +4,8 @@ import { getRoomById, stopVoting } from '../../helpers/roomApi';
 
 function StopVotingButton({ roomId }) {
     const [maxTerms, setMaxTerms] = useState(0);
-    const [selectedTerms, setSelectedTerms] = useState(0);
-    const [buttonText, setButtonText] = useState("Zakończ głosowanie wcześniej");
+    const [selectedTerms, setSelectedTerms] = useState(1);
+    const [buttonText, setButtonText] = useState("Uruchom algorytm");
     
     useEffect(() => {
         getRoomById(roomId).then((response) => {
@@ -16,7 +16,7 @@ function StopVotingButton({ roomId }) {
 
     const handleStopVoting = () => {
         stopVoting(roomId, selectedTerms);
-        setButtonText("Zatrzymano głosowanie!");
+        setButtonText("Uruchomiono algorytm");
         console.log(roomId, selectedTerms)
     }
 
