@@ -51,7 +51,7 @@ const NoEditTerm=({term ,minHour, roomPreferences})=>{
 
     return(<>
         <div
-            className={`z-[2] mx-4 my-1`}
+            className={`z-[2] mx-4 my-1 hover:z-10`}
             style={{
                 gridRow: 1 + (hour - minHour) * 4 + minute,
                 gridRowEnd:
