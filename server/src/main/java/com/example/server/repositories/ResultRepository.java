@@ -24,4 +24,10 @@ public interface ResultRepository extends JpaRepository<Result, Long> {
      * @return result of user in room.
      */
     Optional<Result> findByRoomIdAndUserId(long roomId, long userId);
+
+    /**
+     * Delete all results for a given room (to re-run algorithm)
+     * @param roomId the room id.
+     */
+    void deleteAllByRoomId(long roomId);
 }

@@ -73,7 +73,29 @@ public class RoomController {
     @GetMapping("/stop-voting/{roomId}")
     public void stopVoting(
             final @PathVariable Long roomId) {
-        roomService.runAlgorithm(roomId);
+        roomService.runAlgorithm(roomId, -1);
+    }
+    /**
+     * Runs the algorithm for a given room.
+     * @param roomId room id
+     * @param maxTerms maximum number of terms to assign
+     */
+    @PreAuthorize("hasRole('TEACHER')")
+    @GetMapping("/stop-voting/{roomId}/{maxTerms}")
+    public void stopVoting(
+            final @PathVariable Long roomId,
+            final @PathVariable int maxTerms) {
+        roomService.runAlgorithm(roomId, maxTerms);
+    }
+    /**
+     * Runs the algorithm for a given room.
+     * @param roomId room id
+     */
+    @PreAuthorize("hasRole('TEACHER')")
+    @GetMapping("/send-results/{roomId}")
+    public void sendResults(
+            final @PathVariable Long roomId) {
+        roomService.sendResultEmails(roomId);
     }
 
 

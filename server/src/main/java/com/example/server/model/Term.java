@@ -57,7 +57,6 @@ public class Term {
     /**
      * Represents the term that was selected in the algorithm.
      */
-    @OneToMany(mappedBy = "term", fetch = FetchType.EAGER,
-            cascade = { CascadeType.PERSIST})
+    @OneToMany(mappedBy = "term", fetch = FetchType.EAGER)
     private List<Result> results;
 }
